@@ -11,7 +11,8 @@ function handler(socket) {
   });
 }
 
-// testing function to emit time series data to all websocket clients
+// Testing function to emit time series data to all websocket clients.
+// This is to test graphing data obtained from websockets
 function sendTestWSData(wsClients) {
   setTimeout(function() {
     var d = new Date();
@@ -19,12 +20,10 @@ function sendTestWSData(wsClients) {
 
     for (var i = 0; i < wsClients.length; i++) {
       var wsClient = wsClients[i];
-      if (wsClient !== undefined) {
-        wsClient.emit('chartData', {
-          time: time_ms,
-          value: Math.cos(time_ms) + 1
-        });
-      }
+      wsClient.emit('chartData', {
+        time: time_ms,
+        value: Math.cos(time_ms) + 1
+      });
     }
     sendTestWSData(wsClients);
   }, 1000);
