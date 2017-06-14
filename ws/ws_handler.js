@@ -1,7 +1,13 @@
+var clients = []; // keeps track of websocket clients
+
 function handler(socket) {
-  socket.emit('news', { hello: 'world' });
-  socket.on('my other event', function (data) {
+  clients.push(socket);
+
+  socket.emit('ackConnect', { data: 'connect acknowledged.' });
+
+  socket.on('dataReceived', function (data) {
     console.log(data);
   });
 }
-module.exports = handler;
+
+module.exports = { handler: handler, clients: clients };

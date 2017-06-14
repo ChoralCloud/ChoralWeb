@@ -1,0 +1,32 @@
+extends layout
+
+block content
+  #areaChart(style="width: 800px; height: 200px")
+
+  script.
+    document.addEventListener("DOMContentLoaded", function(event) {
+      var areaChartData = [
+        {
+          label: "Chart layer 1",
+          values: []
+        }];
+
+      window.chart = $('#areaChart').epoch({
+        type: 'time.area',
+        data: areaChartData
+      });
+
+      var socket = io.connect('//'+document.location.hostname+':'+document.location.port);
+      socket.on('chartData', function (data) {
+        console.log(data);
+
+        window.chart.push([{
+          time: data.time,
+          y: data.value
+        }]);
+        socket.emit('dataReceived', { data: 'received the data' });
+      });
+      socket.on('ackConnect', function (data) {
+        console.log(data);
+      });
+    });
