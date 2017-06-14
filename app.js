@@ -14,32 +14,15 @@ var app = express();
 // Setup websocket connection
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
-var wsHandler = require('./ws/ws_handler').handler;
-var wsClients = require('./ws/ws_handler').clients;
+var sockets = require('./ws/sockets');
+var wsHandler = sockets.handler;
+var wsClients = sockets.clients;
 
 io.on('connection', function (socket) {
   wsHandler(socket);
 });
 
-// testing function to emit time series data to all websocket clients
-function sendWSData() {
-  setTimeout(function() {
-    var d = new Date();
-    var time_ms = d.getTime(); // millis
-
-    for (var i = 0; i < wsClients.length; i++) {
-      var wsClient = wsClients[i];
-      if (wsClient !== undefined) {
-        wsClient.emit('chartData', {
-          time: time_ms,
-          value: Math.cos(time_ms) + 1
-        });
-      }
-    }
-    sendWSData();
-  }, 1000);
-}
-sendWSData();
+sockets.sendTestWSData(wsClients);
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
