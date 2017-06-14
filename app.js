@@ -15,10 +15,10 @@ var app = express();
 // Setup websocket connection
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
-var ws_handler = require('./ws/ws_handler');
+var wsHandler = require('./ws/ws_handler');
 
 io.on('connection', function (socket) {
-  ws_handler(socket);
+  wsHandler(socket);
 });
 
 // view engine setup
