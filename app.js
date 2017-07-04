@@ -47,14 +47,6 @@ app.use('/', function(req, res, next){
   res.render('index');
 });
 
-// only let through the requests that are authenticated after this.
-//app.use(function (req, res, next) {
-//  if (req.isAuthenticated()) {
-//    return next()
-//  }
-//  res.redirect('/')
-//});
-
 app.use(bodyParser.urlencoded({
   extended: false
 }))
@@ -96,7 +88,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 app.use('/', index);
-app.use('/users', users);
 app.use('/ws', ws);
 
 // catch 404 and forward to error handler
