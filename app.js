@@ -15,7 +15,6 @@ var users = require('./routes/users');
 var ws = require('./routes/websocket');
 const config = require('./config')
 
-
 var app = express();
 
 // session stuff
@@ -35,17 +34,26 @@ app.use(passport.session())
 // authentication stuff
 app.use(require('./routes/auth.js').router)
 
+// view engine setup
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'pug');
 // render the index page and any of the static files without authentication
-app.use('/', index);
 app.use(express.static(path.join(__dirname, 'public')));
 
-// only let through the requests that are authenticated after this.
-app.use(function (req, res, next) {
-  if (req.isAuthenticated()) {
-    return next()
+app.use('/', function(req, res, next){
+  if(req.isAuthenticated()){
+    return next();
   }
-  res.redirect('/')
+  res.render('index');
 });
+
+// only let through the requests that are authenticated after this.
+//app.use(function (req, res, next) {
+//  if (req.isAuthenticated()) {
+//    return next()
+//  }
+//  res.redirect('/')
+//});
 
 app.use(bodyParser.urlencoded({
   extended: false
@@ -81,16 +89,13 @@ function sendWSData() {
 }
 sendWSData();
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'pug');
-
 // uncomment after placing your favicon in /public
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
+app.use('/', index);
 app.use('/users', users);
 app.use('/ws', ws);
 
