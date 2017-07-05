@@ -3,15 +3,19 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www"
+    "start": "nodemon ./bin/www"
   },
   "dependencies": {
     "body-parser": "~1.17.1",
+    "connect-redis": "^3.3.0",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.3",
     "epoch-charting": "^0.8.4",
     "express": "~4.15.2",
+    "express-session": "^1.15.3",
     "morgan": "~1.8.1",
+    "passport": "^0.3.2",
+    "passport-google-oauth20": "^1.0.0",
     "pug": "~2.0.0-beta11",
     "serve-favicon": "~2.4.2",
     "socket.io": "^2.0.3"

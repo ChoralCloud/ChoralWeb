@@ -5,11 +5,51 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 
+// auth stuff
+const session = require('express-session')
+const passport = require('passport')
+const RedisStore = require('connect-redis')(session)
+
 var index = require('./routes/index');
-var users = require('./routes/users');
 var chartTest = require('./routes/chartTest');
+const config = require('./config')
 
 var app = express();
+
+// session stuff
+app.use(session({
+  store: new RedisStore({
+    url: config.redisStore.url
+  }),
+  secret: config.redisStore.secret,
+  resave: false,
+  saveUninitialized: false
+}))
+
+app.use(passport.initialize())
+app.use(passport.session())
+// end session stuff
+
+// authentication stuff
+app.use(require('./routes/auth.js').router)
+
+// view engine setup
+app.set('views', path.join(__dirname, 'views'));
+app.set('view engine', 'pug');
+// render the index page and any of the static files without authentication
+app.use(express.static(path.join(__dirname, 'public')));
+
+// only continue if the request is authenticated
+app.use(function(req, res, next){
+  if(req.isAuthenticated()){
+    return next();
+  }
+  res.render('index');
+});
+
+app.use(bodyParser.urlencoded({
+  extended: false
+}))
 
 // Setup websocket connection
 var server = require('http').Server(app);
@@ -24,19 +64,13 @@ io.on('connection', function (socket) {
 
 sockets.sendTestWSData(wsClients);
 
-// view engine setup
-app.set('views', path.join(__dirname, 'views'));
-app.set('view engine', 'pug');
-
 // uncomment after placing your favicon in /public
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
-app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', index);
-app.use('/users', users);
 app.use('/chart_test', chartTest);
 
 // catch 404 and forward to error handler
