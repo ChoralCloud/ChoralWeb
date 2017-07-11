@@ -19,7 +19,8 @@ var app = express();
 // session stuff
 app.use(session({
   store: new RedisStore({
-    url: config.redisStore.url
+    url: config.redisStore.url,
+    logErrors: true
   }),
   secret: config.redisStore.secret,
   resave: false,

@@ -1,6 +1,4 @@
-const session = require('express-session')
 const passport = require('passport')
-const RedisStore = require('connect-redis')(session)
 const GoogleStrategy = require('passport-google-oauth20').Strategy
 const config = require('../config')
 var express = require('express');
