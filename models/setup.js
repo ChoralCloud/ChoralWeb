@@ -1,6 +1,8 @@
 var mongoose = require('mongoose');
+const config = require('../config')
 
 // set up the MongoDB connection
-mongoose.connect('mongodb://localhost/choralweb');
+console.log("Starting Mongo: at " + config.mongo.url)
+mongoose.connect(config.mongo.url);
 
 module.exports = mongoose;
