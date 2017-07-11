@@ -19,7 +19,11 @@ var app = express();
 // session stuff
 app.use(session({
   store: new RedisStore({
-    url: config.redisStore.url
+    url: config.redisStore.url,
+    logErrors: function() {
+      console.log('ERROR!!!: There was an error opening the redis connection. Ensure the redis container is up. Exiting.')
+      process.exit();
+    }
   }),
   secret: config.redisStore.secret,
   resave: false,
