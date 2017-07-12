@@ -46,10 +46,16 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 // only continue if the request is authenticated
 app.use(function(req, res, next){
-  if(req.isAuthenticated()){
-    return next();
-  }
+  if (req.isAuthenticated()) return next();
   res.render('index');
+});
+
+// Fetch from the database or create a new document for the authenticated user
+app.use(function(req, res, next){
+  User.findOrCreateBefore(req.user, (userModel) => {
+    res.locals.userModel = userModel;
+    next();
+  });
 });
 
 app.use(bodyParser.urlencoded({

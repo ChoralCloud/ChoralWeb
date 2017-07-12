@@ -12,7 +12,10 @@ function extractProfile (profile) {
   var ret = {
     id: profile.id,
     displayName: profile.displayName,
-    image: imageUrl
+    image: imageUrl,
+    emails: profile.emails.map((email) => email.value),
+    firstName: profile.name.givenName,
+    lastName: profile.name.familyName
   };
   return ret;
 }
@@ -44,13 +47,10 @@ passport.use(new GoogleStrategy({
 
 const app = express.Router();
 
-app.get(
-  // Login url
-  '/auth/google',
-
+// Called when "login" is clicked on the index page
+app.get('/auth/google', (req, res, next) => {
   // Save the url of the user's current page so the app can redirect back to
   // it after authorization
-  (req, res, next) => {
     if (req.query.return) {
       req.session.oauth2return = req.query.return;
     }
@@ -63,23 +63,20 @@ app.get(
 // [END authorize]
 
 // [START callback]
-app.get(
-  // OAuth 2 callback url. Use this url to configure your OAuth client in the
-  // Google Developers console
-  '/auth/google/callback',
-
-  // Finish OAuth 2 flow using Passport.js
-  passport.authenticate('google'),
-
-  // Redirect back to the original page, if any
+// OAuth 2 callback url. Use this url to configure your OAuth client in the
+// Google Developers console
+app.get('/auth/google/callback',
+  passport.authenticate('google'), // Finish OAuth 2 flow using Passport.js
   (req, res) => {
+    // Redirect back to the original page, if any
     const redirect = req.session.oauth2return || '/dashboard';
     delete req.session.oauth2return;
+
     res.redirect(redirect);
   }
 );
 
-app.get('/logout', function(req, res){
+app.get('/logout', (req, res) => {
   req.logout();
   res.redirect('/');
 });
