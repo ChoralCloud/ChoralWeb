@@ -1,0 +1,31 @@
+version: "3.3"
+services:
+  choralweb:
+    build: .
+    command: npm run-script dev
+    ports:
+      - "3000:3000"
+    volumes:
+      - .:/app
+    depends_on:
+      - mongodb
+      - redis
+    environment:
+      REDIS_STORE_URI: "redis://redis:6379"
+      REDIS_STORE_SECRET: "DEVELOPMENT_SECRET"
+      MONGO_URL: "mongodb://mongodb:27017"
+  redis:
+    container_name: "redis_db"
+    image: redis:latest
+  mongodb:
+    image: mongo:latest
+    container_name: "mongo_db"
+    environment:
+      - MONGO_DATA_DIR=/data/db
+      # do not keep track of the logs
+      - MONGO_LOG_DIR=/dev/null
+    volumes:
+      - ./data/db:/data/db
+    ports:
+        - 27017:27017
+    command: mongod --smallfiles --logpath=/dev/null # --quiet

@@ -8,9 +8,14 @@ config.redisStore = {
   secret: process.env.REDIS_STORE_SECRET
 }
 
+config.mongo = {
+  url: process.env.MONGO_URL,
+}
+
+
 config.google = {
-  clientID: "Your google client ID here",
-  clientSecret: "client secret here",
+  clientID: //"Your google client ID here",
+  clientSecret: //"client secret here",
   callbackURL: "http://localhost:3000/auth/google/callback"
 }
 

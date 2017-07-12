@@ -1,34 +1,22 @@
 # ChoralWeb
 
 ## Installation
-You need a instance of redis running easiest way to get it is with docker:
 
-```
-docker run -d --name redis -p 6379:6379 redis
-```
+You will need to create a new config file based on the template:
 
-This starts up a instance on localhost:6379 which is the defaut for the app
+`cp config/index.js.example config/index.js`
 
-You will also need  a running MongoDB instance, with a database named 'choralweb'.
+Now overwrite the config file with the correct clientID and clientSecret (you will need to get them from google).
 
-```
-git clone git@github.com:ChoralCloud/ChoralWeb.git \
-&& cd ChoralWeb \
-&& npm install
-```
+Finally run the command
 
-You will need to creat a new config file based on the template:
-```
-cp config/index.js.example config/index.js
-```
-Now overwrite the config file with the correct clientID and clientSecret you will need to get them from google.
+`docker-compose up`
 
-Start the server.
-```
-DEBUG=choralweb:* REDIS_STORE_SECRET="whateveryouwant" npm start
-```
+This will start the server in development mode.
 
-The server should be listening on localhost:3000.
+## Running in Production
+
+TODO: create a production docker compose file
 
 checkout localhost:3000/chart_test for a chart demo
 
