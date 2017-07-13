@@ -5,6 +5,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var User = require('./models/user');
+var redisPubSub = require('./redisPubSub');
 
 // auth stuff
 const session = require('express-session')
@@ -14,7 +15,6 @@ const RedisStore = require('connect-redis')(session)
 var index = require('./routes/index');
 var chartTest = require('./routes/chartTest');
 const config = require('./config')
-
 var app = express();
 
 // session stuff
@@ -74,6 +74,8 @@ io.on('connection', function (socket) {
 });
 
 sockets.sendTestWSData(wsClients);
+
+redisPubSub();
 
 // uncomment after placing your favicon in /public
 app.use(logger('dev'));
