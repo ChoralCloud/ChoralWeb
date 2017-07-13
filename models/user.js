@@ -28,9 +28,7 @@ userSchema.statics.findOrCreateBefore = function (user, cb) {
           console.log(err)
           return;
         }
-        else {
-          cb(userModel);
-        }
+        cb(userModel);
       });
     }
   });
