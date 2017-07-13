@@ -26,6 +26,7 @@
     "redis": "^2.7.1",
     "request": "^2.81.0",
     "secure-random-string": "^1.0.0",
+    "redis": "^2.7.1",
     "serve-favicon": "~2.4.2",
     "socket.io": "^2.0.3"
   },

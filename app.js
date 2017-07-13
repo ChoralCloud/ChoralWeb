@@ -7,6 +7,7 @@ var bodyParser = require('body-parser');
 var User = require('./models/user');
 var Choral = require('./models/choral');
 var flash = require('express-flash-2');
+var redisPubSub = require('./redisPubSub');
 
 // auth stuff
 const session = require('express-session')
@@ -18,7 +19,6 @@ var chartTest = require('./routes/chartTest');
 var choralsRoutes = require('./routes/chorals');
 var devicesRoutes = require('./routes/devices');
 const config = require('./config')
-
 var app = express();
 
 // session stuff
@@ -83,6 +83,8 @@ io.on('connection', function (socket) {
 });
 
 sockets.sendTestWSData(wsClients);
+
+redisPubSub();
 
 // uncomment after placing your favicon in /public
 app.use(logger('dev'));
