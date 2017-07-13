@@ -1,0 +1,41 @@
+mixin menu(user)
+  // Top container
+  .w3-bar.w3-top.w3-black.w3-large(style='z-index:4')
+    button.w3-bar-item.w3-button.w3-hide-large.w3-hover-none.w3-hover-text-light-grey(onclick='w3_open();')
+      i.fa.fa-bars
+      |   Menu
+    span.w3-bar-item.w3-right Choral Cloud
+  // Sidebar/menu
+  nav#mySidebar.w3-sidebar.w3-collapse.w3-white.w3-animate-left(style='z-index:3;width:300px;')
+    br
+    .w3-container.w3-row
+      .w3-col.s4
+        img.w3-circle.w3-margin-right(src=user.image, style='width:46px')
+      .w3-col.s8.w3-bar
+        span
+          | Welcome, 
+          strong #{user.displayName}
+        br
+        a.w3-bar-item.w3-button(href='#')
+          i.fa.fa-envelope
+        a.w3-bar-item.w3-button(href='#')
+          i.fa.fa-user
+        a.w3-bar-item.w3-button(href='#')
+          i.fa.fa-cog
+    hr
+    .w3-container
+      h5 Dashboard
+    .w3-bar-block
+      a.w3-bar-item.w3-button.w3-padding-16.w3-hide-large.w3-dark-grey.w3-hover-black(href='#', onclick='w3_close()', title='close menu')
+        i.fa.fa-remove.fa-fw
+        |   Close Menu
+      a.w3-bar-item.w3-button.w3-padding.w3-blue(href='/chorals')
+        i.fa.fa-share-alt.fa-fw
+        |   Chorals
+      a.w3-bar-item.w3-button.w3-padding(href='/logout')
+        i.fa.fa-sign-out.fa-fw
+        |   Log Out
+      br
+      br
+  // Overlay effect when opening sidebar on small screens
+  #myOverlay.w3-overlay.w3-hide-large.w3-animate-opacity(onclick='w3_close()', style='cursor:pointer', title='close side menu')
