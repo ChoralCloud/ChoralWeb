@@ -1,7 +1,13 @@
 extends layout
 
 block content
-  #areaChart(style="width: 800px; height: 200px")
+  header.w3-container(style='padding-top:22px')
+    h5
+      b
+        i.fa.fa-dashboard
+        |  My Dashboard
+  .w3-row-padding.w3-margin-bottom
+    #areaChart(style="z-index: -1; width: 800px; height: 200px")
 
   script.
     document.addEventListener("DOMContentLoaded", function(event) {

@@ -58,3 +58,11 @@
     -webkit-border-radius: 50%;
     border-radius: 50%;
 }
+
+/* Epoch js stupidly sets the z-index of their charts which makes them
+ * overlay ontop of our sidebar this sets the svg on the page to be beneath the sidebar
+ */
+svg
+{
+  z-index: -1;
+}

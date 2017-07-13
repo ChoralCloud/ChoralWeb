@@ -1,200 +1,195 @@
 extends layout
-include sidebar
 
 block content
-  body.w3-light-grey
-    +menu(user)
-    // !PAGE CONTENT!
-    .w3-main(style='margin-left:300px;margin-top:43px;')
-      // Header
-      header.w3-container(style='padding-top:22px')
-        h5
-          b
-            i.fa.fa-dashboard
-            |  My Dashboard
-      .w3-row-padding.w3-margin-bottom
-        .w3-quarter
-          .w3-container.w3-red.w3-padding-16
-            .w3-left
-              i.fa.fa-comment.w3-xxxlarge
-            .w3-right
-              h3 52
-            .w3-clear
-            h4 Messages
-        .w3-quarter
-          .w3-container.w3-blue.w3-padding-16
-            .w3-left
-              i.fa.fa-eye.w3-xxxlarge
-            .w3-right
-              h3 99
-            .w3-clear
-            h4 Views
-        .w3-quarter
-          .w3-container.w3-teal.w3-padding-16
-            .w3-left
-              i.fa.fa-share-alt.w3-xxxlarge
-            .w3-right
-              h3 23
-            .w3-clear
-            h4 Shares
-        .w3-quarter
-          .w3-container.w3-orange.w3-text-white.w3-padding-16
-            .w3-left
-              i.fa.fa-users.w3-xxxlarge
-            .w3-right
-              h3 50
-            .w3-clear
-            h4 Users
-      .w3-panel
-        .w3-row-padding(style='margin:0 -16px')
-          .w3-third
-            h5 Regions
-            img(src='https://www.w3schools.com/w3images/region.jpg', style='width:100%', alt='Google Regional Map')
-          .w3-twothird
-            h5 Feeds
-            table.w3-table.w3-striped.w3-white
-              tr
-                td
-                  i.fa.fa-user.w3-text-blue.w3-large
-                td New record, over 90 views.
-                td
-                  i 10 mins
-              tr
-                td
-                  i.fa.fa-bell.w3-text-red.w3-large
-                td Database error.
-                td
-                  i 15 mins
-              tr
-                td
-                  i.fa.fa-users.w3-text-yellow.w3-large
-                td New record, over 40 users.
-                td
-                  i 17 mins
-              tr
-                td
-                  i.fa.fa-comment.w3-text-red.w3-large
-                td New comments.
-                td
-                  i 25 mins
-              tr
-                td
-                  i.fa.fa-bookmark.w3-text-blue.w3-large
-                td Check transactions.
-                td
-                  i 28 mins
-              tr
-                td
-                  i.fa.fa-laptop.w3-text-red.w3-large
-                td CPU overload.
-                td
-                  i 35 mins
-              tr
-                td
-                  i.fa.fa-share-alt.w3-text-green.w3-large
-                td New shares.
-                td
-                  i 39 mins
-      hr
-      .w3-container
-        h5 General Stats
-        p New Visitors
-        .w3-grey
-          .w3-container.w3-center.w3-padding.w3-green(style='width:25%') +25%
-        p New Users
-        .w3-grey
-          .w3-container.w3-center.w3-padding.w3-orange(style='width:50%') 50%
-        p Bounce Rate
-        .w3-grey
-          .w3-container.w3-center.w3-padding.w3-red(style='width:75%') 75%
-      hr
-      .w3-container
-        h5 Countries
-        table.w3-table.w3-striped.w3-bordered.w3-border.w3-hoverable.w3-white
+  // !PAGE CONTENT!
+  header.w3-container(style='padding-top:22px')
+    h5
+      b
+        i.fa.fa-dashboard
+        |  My Dashboard
+  .w3-row-padding.w3-margin-bottom
+    .w3-quarter
+      .w3-container.w3-red.w3-padding-16
+        .w3-left
+          i.fa.fa-comment.w3-xxxlarge
+        .w3-right
+          h3 52
+        .w3-clear
+        h4 Messages
+    .w3-quarter
+      .w3-container.w3-blue.w3-padding-16
+        .w3-left
+          i.fa.fa-eye.w3-xxxlarge
+        .w3-right
+          h3 99
+        .w3-clear
+        h4 Views
+    .w3-quarter
+      .w3-container.w3-teal.w3-padding-16
+        .w3-left
+          i.fa.fa-share-alt.w3-xxxlarge
+        .w3-right
+          h3 23
+        .w3-clear
+        h4 Shares
+    .w3-quarter
+      .w3-container.w3-orange.w3-text-white.w3-padding-16
+        .w3-left
+          i.fa.fa-users.w3-xxxlarge
+        .w3-right
+          h3 50
+        .w3-clear
+        h4 Users
+  .w3-panel
+    .w3-row-padding(style='margin:0 -16px')
+      .w3-third
+        h5 Regions
+        img(src='https://www.w3schools.com/w3images/region.jpg', style='width:100%', alt='Google Regional Map')
+      .w3-twothird
+        h5 Feeds
+        table.w3-table.w3-striped.w3-white
           tr
-            td United States
-            td 65%
+            td
+              i.fa.fa-user.w3-text-blue.w3-large
+            td New record, over 90 views.
+            td
+              i 10 mins
           tr
-            td UK
-            td 15.7%
+            td
+              i.fa.fa-bell.w3-text-red.w3-large
+            td Database error.
+            td
+              i 15 mins
           tr
-            td Russia
-            td 5.6%
+            td
+              i.fa.fa-users.w3-text-yellow.w3-large
+            td New record, over 40 users.
+            td
+              i 17 mins
           tr
-            td Spain
-            td 2.1%
+            td
+              i.fa.fa-comment.w3-text-red.w3-large
+            td New comments.
+            td
+              i 25 mins
           tr
-            td India
-            td 1.9%
+            td
+              i.fa.fa-bookmark.w3-text-blue.w3-large
+            td Check transactions.
+            td
+              i 28 mins
           tr
-            td France
-            td 1.5%
+            td
+              i.fa.fa-laptop.w3-text-red.w3-large
+            td CPU overload.
+            td
+              i 35 mins
+          tr
+            td
+              i.fa.fa-share-alt.w3-text-green.w3-large
+            td New shares.
+            td
+              i 39 mins
+  hr
+  .w3-container
+    h5 General Stats
+    p New Visitors
+    .w3-grey
+      .w3-container.w3-center.w3-padding.w3-green(style='width:25%') +25%
+    p New Users
+    .w3-grey
+      .w3-container.w3-center.w3-padding.w3-orange(style='width:50%') 50%
+    p Bounce Rate
+    .w3-grey
+      .w3-container.w3-center.w3-padding.w3-red(style='width:75%') 75%
+  hr
+  .w3-container
+    h5 Countries
+    table.w3-table.w3-striped.w3-bordered.w3-border.w3-hoverable.w3-white
+      tr
+        td United States
+        td 65%
+      tr
+        td UK
+        td 15.7%
+      tr
+        td Russia
+        td 5.6%
+      tr
+        td Spain
+        td 2.1%
+      tr
+        td India
+        td 1.9%
+      tr
+        td France
+        td 1.5%
+    br
+    button.w3-button.w3-dark-grey
+      | More Countries  
+      i.fa.fa-arrow-right
+  hr
+  .w3-container
+    h5 Recent Users
+    ul.w3-ul.w3-card-4.w3-white
+      li.w3-padding-16
+        img.w3-left.w3-circle.w3-margin-right(src='https://www.w3schools.com/w3images/avatar2.png', style='width:35px')
+        span.w3-xlarge Mike
         br
-        button.w3-button.w3-dark-grey
-          | More Countries  
-          i.fa.fa-arrow-right
-      hr
-      .w3-container
-        h5 Recent Users
-        ul.w3-ul.w3-card-4.w3-white
-          li.w3-padding-16
-            img.w3-left.w3-circle.w3-margin-right(src='https://www.w3schools.com/w3images/avatar2.png', style='width:35px')
-            span.w3-xlarge Mike
-            br
-          li.w3-padding-16
-            img.w3-left.w3-circle.w3-margin-right(src='https://www.w3schools.com/w3images/avatar5.png', style='width:35px')
-            span.w3-xlarge Jill
-            br
-          li.w3-padding-16
-            img.w3-left.w3-circle.w3-margin-right(src='https://www.w3schools.com/w3images/avatar6.png', style='width:35px')
-            span.w3-xlarge Jane
-            br
-      hr
-      .w3-container
-        h5 Recent Comments
-        .w3-row
-          .w3-col.m2.text-center
-            img.w3-circle(src='https://www.w3schools.com/w3images/avatar3.png', style='width:96px;height:96px')
-          .w3-col.m10.w3-container
-            h4
-              | John 
-              span.w3-opacity.w3-medium Sep 29, 2014, 9:12 PM
-            p
-              | Keep up the GREAT work! I am cheering for you!! Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-            br
-        .w3-row
-          .w3-col.m2.text-center
-            img.w3-circle(src='https://www.w3schools.com/w3images/avatar1.png', style='width:96px;height:96px')
-          .w3-col.m10.w3-container
-            h4
-              | Bo 
-              span.w3-opacity.w3-medium Sep 28, 2014, 10:15 PM
-            p Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-            br
-      br
-      .w3-container.w3-dark-grey.w3-padding-32
-        .w3-row
-          .w3-container.w3-third
-            h5.w3-bottombar.w3-border-green Demographic
-            p Language
-            p Country
-            p City
-          .w3-container.w3-third
-            h5.w3-bottombar.w3-border-red System
-            p Browser
-            p OS
-            p More
-          .w3-container.w3-third
-            h5.w3-bottombar.w3-border-orange Target
-            p Users
-            p Active
-            p Geo
-            p Interests
-      // Footer
-      footer.w3-container.w3-padding-16.w3-light-grey
-        h4 Powered by Choral Cloud
+      li.w3-padding-16
+        img.w3-left.w3-circle.w3-margin-right(src='https://www.w3schools.com/w3images/avatar5.png', style='width:35px')
+        span.w3-xlarge Jill
+        br
+      li.w3-padding-16
+        img.w3-left.w3-circle.w3-margin-right(src='https://www.w3schools.com/w3images/avatar6.png', style='width:35px')
+        span.w3-xlarge Jane
+        br
+  hr
+  .w3-container
+    h5 Recent Comments
+    .w3-row
+      .w3-col.m2.text-center
+        img.w3-circle(src='https://www.w3schools.com/w3images/avatar3.png', style='width:96px;height:96px')
+      .w3-col.m10.w3-container
+        h4
+          | John 
+          span.w3-opacity.w3-medium Sep 29, 2014, 9:12 PM
         p
-          a.w3-btn.w3-black(href='https://github.com/ChoralCloud', target='_blank')
-            i.fa.fa-code-fork.w3-large
-            |  Check out the code
-      // End page content
+          | Keep up the GREAT work! I am cheering for you!! Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+        br
+    .w3-row
+      .w3-col.m2.text-center
+        img.w3-circle(src='https://www.w3schools.com/w3images/avatar1.png', style='width:96px;height:96px')
+      .w3-col.m10.w3-container
+        h4
+          | Bo 
+          span.w3-opacity.w3-medium Sep 28, 2014, 10:15 PM
+        p Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+        br
+  br
+  .w3-container.w3-dark-grey.w3-padding-32
+    .w3-row
+      .w3-container.w3-third
+        h5.w3-bottombar.w3-border-green Demographic
+        p Language
+        p Country
+        p City
+      .w3-container.w3-third
+        h5.w3-bottombar.w3-border-red System
+        p Browser
+        p OS
+        p More
+      .w3-container.w3-third
+        h5.w3-bottombar.w3-border-orange Target
+        p Users
+        p Active
+        p Geo
+        p Interests
+  // Footer
+  footer.w3-container.w3-padding-16.w3-light-grey
+    h4 Powered by Choral Cloud
+    p
+      a.w3-btn.w3-black(href='https://github.com/ChoralCloud', target='_blank')
+        i.fa.fa-code-fork.w3-large
+        |  Check out the code
+  // End page content

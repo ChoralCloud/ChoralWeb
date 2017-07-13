@@ -1,3 +1,5 @@
+include sidebar
+
 doctype html
 
 head
@@ -27,5 +29,12 @@ head
 
   style.
     html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
-body
-  block content
+
+body.w3-light-grey
+  // epoch js makes all the charts have a z-index of 999 or 1000 we want the
+  // menu to be above that
+  div(style="z-index=1001")
+    +menu(user)
+  .w3-main(style='margin-left:300px;margin-top:43px;')
+    .w3-container
+      block content
