@@ -50,7 +50,7 @@ app.use(function(req, res, next){
   res.render('index');
 });
 
-// Fetch from the database or create a new document for the authenticated user
+// // Fetch from the database or create a new document for the authenticated user
 app.use(function(req, res, next){
   User.findOrCreateBefore(req.user, (userModel) => {
     res.locals.userModel = userModel;
