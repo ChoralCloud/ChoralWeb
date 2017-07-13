@@ -15,25 +15,23 @@ userSchema.statics.findOrCreateBefore = function (user, cb) {
       console.log(err);
       return;
     }
+    if (userModel) {
+      cb(userModel);
+    }
     else {
-      if (userModel) {
-        cb(userModel);
-      }
-      else {
-        userModel = new User();
-        userModel.email = user.emails[0];
-        userModel.firstName = user.firstName;
-        userModel.lastName = user.lastName;
-        userModel.save((err) => {
-          if (err) {
-            console.log(err)
-            return;
-          }
-          else {
-            cb(userModel);
-          }
-        });
-      }
+      userModel = new User();
+      userModel.email = user.emails[0];
+      userModel.firstName = user.firstName;
+      userModel.lastName = user.lastName;
+      userModel.save((err) => {
+        if (err) {
+          console.log(err)
+          return;
+        }
+        else {
+          cb(userModel);
+        }
+      });
     }
   });
 }
