@@ -7,7 +7,7 @@ var bodyParser = require('body-parser');
 var User = require('./models/user');
 var Choral = require('./models/choral');
 var flash = require('express-flash-2');
-var redisPubSub = require('./redisPubSub');
+var redisPubSub = require('./ws/redisPubSub');
 
 // auth stuff
 const session = require('express-session')
@@ -84,7 +84,9 @@ io.on('connection', function (socket) {
 
 sockets.sendTestWSData(wsClients);
 
-redisPubSub();
+// subscribe to channel example for channel '0'
+// can unsubscribe with redisPubSub.redisUnsubscribe('0');
+redisPubSub.redisSubscribe('0');
 
 // uncomment after placing your favicon in /public
 app.use(logger('dev'));
