@@ -1,7 +1,8 @@
-var express = require('express');
-var router = express.Router();
+var express = require('express'),
+    router = express.Router(),
+    Choral = require('../models/chorals.js'),
+    User = require('../models/user.js')
 
-/* GET home page. */
 
 // if you get '/' (login page) and the user is already logged in,
 // then redirect them to the dashboard
@@ -14,6 +15,15 @@ router.get('/', function(req, res, next){
 
 router.get('/dashboard', function(req, res, next) {
   res.render('dashboard', { user: req.user });
+});
+
+router.get('/chorals', function(req, res, next) {
+  var chorals = [];
+
+  res.render('chorals', {
+    user: req.user,
+    choral: chorals
+  });
 });
 
 module.exports = router;

@@ -1,0 +1,48 @@
+extends layout
+include sidebar
+
+block content
+  body.w3-light-grey
+  +menu(user)
+  // !PAGE CONTENT!
+  .w3-main(style='margin-left:300px;margin-top:43px;')
+    // Header
+    header.w3-container(style='padding-top:22px')
+      h5
+        b
+          i.fa.fa-dashboard
+          |  My Chorals
+    .w3-row-padding.w3-margin-bottom
+      .w3-quarter
+        .w3-container.w3-red.w3-padding-16
+          .w3-left
+            i.fa.fa-comment.w3-xxxlarge
+          .w3-right
+            h3 52
+          .w3-clear
+          h4 Messages
+      .w3-quarter
+        .w3-container.w3-blue.w3-padding-16
+          .w3-left
+            i.fa.fa-eye.w3-xxxlarge
+          .w3-right
+            h3 99
+          .w3-clear
+          h4 Views
+      .w3-quarter
+        .w3-container.w3-teal.w3-padding-16
+          .w3-left
+            i.fa.fa-share-alt.w3-xxxlarge
+          .w3-right
+            h3 23
+          .w3-clear
+          h4 Shares
+      .w3-quarter
+        .w3-container.w3-orange.w3-text-white.w3-padding-16
+          .w3-left
+            i.fa.fa-users.w3-xxxlarge
+          .w3-right
+            h3 50
+          .w3-clear
+          h4 Users
+
