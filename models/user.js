@@ -12,7 +12,6 @@ var userSchema = new mongoose.Schema({
 userSchema.statics.findOrCreateBefore = function (user, cb) {
   this.findOne({ email: user.emails[0] }, (err, userModel) => {
     if (err) {
-      console.log(err);
       cb(err, null);
     }
     else {
@@ -26,7 +25,6 @@ userSchema.statics.findOrCreateBefore = function (user, cb) {
         userModel.lastName = user.lastName;
         userModel.save((err) => {
           if (err) {
-            console.log(err)
             cb(err, null);
           }
           else {

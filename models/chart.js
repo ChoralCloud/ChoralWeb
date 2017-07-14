@@ -24,7 +24,7 @@ chartSchema.statics.createNew = function (attrs, cb) {
       cb(err, null);
     }
     else {
-      cb();
+      cb(null, newChart);
     }
   });
 };
