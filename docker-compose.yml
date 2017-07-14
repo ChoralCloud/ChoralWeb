@@ -9,14 +9,25 @@ services:
       - .:/app
     depends_on:
       - mongodb
-      - redis
+      - redisweb
     environment:
-      REDIS_STORE_URI: "redis://redis:6379"
+      REDIS_STORE_URI: "redis://redisweb:6379"
       REDIS_STORE_SECRET: "DEVELOPMENT_SECRET"
       MONGO_URL: "mongodb://mongodb:27017"
-  redis:
-    container_name: "redis_db"
-    image: redis:latest
+  choralworker:
+    build: ./worker
+    command: npm run-script dev-worker
+    ports:
+      - "3001:3000"
+    volumes:
+      - .:/app
+    depends_on:
+      - mongodb
+    environment:
+      REDIS_STORE_URI: "redis://redis:6379"
+      MONGO_URL: "mongodb://mongodb:27017"
+    external_links:
+      - redis
   mongodb:
     image: mongo:latest
     container_name: "mongo_db"
@@ -29,3 +40,8 @@ services:
     ports:
         - 27017:27017
     command: mongod --smallfiles --logpath=/dev/null # --quiet
+
+networks:
+  default:
+    external:
+      name: choralstorm
