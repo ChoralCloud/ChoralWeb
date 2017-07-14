@@ -5,6 +5,7 @@ var logger = require('morgan');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var User = require('./models/user');
+var Choral = require('./models/choral');
 
 // auth stuff
 const session = require('express-session')
@@ -50,11 +51,13 @@ app.use(function(req, res, next){
   res.render('index');
 });
 
-// // Fetch from the database or create a new document for the authenticated user
+// Fetch the current user from the database or create
+// a new document for the user
 app.use(function(req, res, next){
-  User.findOrCreateBefore(req.user, (userModel) => {
+  User.findOrCreateBefore(req.user, (err, userModel) => {
+    if (err) return next(err);
     res.locals.userModel = userModel;
-    next();
+    return next();
   });
 });
 

@@ -12,6 +12,23 @@ var chartSchema = new mongoose.Schema({
   }
 });
 
+// Create a new chart belonging to attrs.user,
+// viewing the value of attrs.choral
+chartSchema.statics.createNew = function (attrs, cb) {
+  var newChart = new Chart();
+  newChart.userId = attrs.user.id;
+  newChart.rootChoralId = attrs.choral.id
+
+  newChart.save((err) => {
+    if (err) {
+      cb(err, null);
+    }
+    else {
+      cb();
+    }
+  });
+};
+
 var Chart = mongoose.model('Chart', chartSchema);
 
 module.exports = Chart;

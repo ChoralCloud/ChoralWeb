@@ -13,23 +13,27 @@ userSchema.statics.findOrCreateBefore = function (user, cb) {
   this.findOne({ email: user.emails[0] }, (err, userModel) => {
     if (err) {
       console.log(err);
-      return;
-    }
-    if (userModel) {
-      cb(userModel);
+      cb(err, null);
     }
     else {
-      userModel = new User();
-      userModel.email = user.emails[0];
-      userModel.firstName = user.firstName;
-      userModel.lastName = user.lastName;
-      userModel.save((err) => {
-        if (err) {
-          console.log(err)
-          return;
-        }
-        cb(userModel);
-      });
+      if (userModel) {
+        cb(null, userModel);
+      }
+      else {
+        userModel = new User();
+        userModel.email = user.emails[0];
+        userModel.firstName = user.firstName;
+        userModel.lastName = user.lastName;
+        userModel.save((err) => {
+          if (err) {
+            console.log(err)
+            cb(err, null);
+          }
+          else {
+            cb(null, userModel);
+          }
+        });
+      }
     }
   });
 }

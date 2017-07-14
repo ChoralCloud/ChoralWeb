@@ -1,3 +1,4 @@
+// TODO: validate that an added child choral is not already in the tree (prevent cycles)
 var mongoose = require('./setup'),
   ObjectId = mongoose.Schema.Types.ObjectId;
 var uniqueValidator = require('mongoose-unique-validator');
@@ -46,10 +47,11 @@ choralSchema.statics.createNew = function (attrs, cb) {
   newChoral.choralType = 'choral';
   newChoral.save((err) => {
     if (err) {
-      console.log(err)
-      return;
+      cb(err, null);
     }
-    cb();
+    else {
+      cb(null, newChoral);
+    }
   });
 };
 
