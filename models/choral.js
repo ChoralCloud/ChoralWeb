@@ -5,11 +5,19 @@ var uniqueValidator = require('mongoose-unique-validator');
 var srs = require('secure-random-string');
 
 var childSchema = new mongoose.Schema({
-  id: { type: ObjectId, required: '{PATH} is required!' }
+  childId: { type: ObjectId, required: '{PATH} is required!' }
 });
 
 var choralSchema = new mongoose.Schema({
-  children: [childSchema],
+  children: {
+    type: [childSchema],
+    validate: {
+      validator: function(children) { // ensure devices have no children
+        return this.choralType == 'device' ? (children == []) : true;
+      },
+      message: 'Device-type chorals are not allowed to have children!'
+    }
+  },
   userId: { type: ObjectId, required: '{PATH} is required!' },
   choralId: { // refers to choral_id in cassandra
     type: String,
@@ -44,13 +52,25 @@ choralSchema.statics.createNew = function (attrs, cb) {
   newChoral.func = attrs.func;
   newChoral.sampleRate = attrs.sampleRate;
   newChoral.choralId = srs({ length: 128 }); // if not unique, fails (should never happen)
-  newChoral.choralType = 'choral';
+  newChoral.choralType = attrs.type;
   newChoral.save((err) => {
     if (err) {
       cb(err, null);
     }
     else {
       cb(null, newChoral);
+    }
+  });
+};
+
+choralSchema.methods.addChild = function (child, cb) {
+  this.children.push({ childId: child._id });
+  this.save((err) => {
+    if (err) {
+      cb(err);
+    }
+    else {
+      cb(null);
     }
   });
 };
