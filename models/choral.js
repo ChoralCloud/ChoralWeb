@@ -39,7 +39,6 @@ var choralSchema = new mongoose.Schema({
 // Create a new choral belonging to the user passed in the arguments
 // user should be a user model
 choralSchema.statics.createNew = function (attrs, cb) {
-  console.log("CREATING CHORAL");
   var newChoral = new Choral();
   newChoral.userId = attrs.user.id;
   newChoral.func = attrs.func;
@@ -52,8 +51,6 @@ choralSchema.statics.createNew = function (attrs, cb) {
       console.log(err)
       return;
     }
-    console.log("CREATED CHORAL");
-    console.log(newChoral);
     cb();
   });
 };
