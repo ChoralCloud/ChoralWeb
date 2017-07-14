@@ -13,7 +13,7 @@ var choralSchema = new mongoose.Schema({
     type: [childSchema],
     validate: {
       validator: function(children) { // ensure devices have no children
-        return this.choralType == 'device' ? (children == []) : true;
+        return this.choralType == 'device' ? (children.length == 0) : true;
       },
       message: 'Device-type chorals are not allowed to have children!'
     }
@@ -42,7 +42,8 @@ var choralSchema = new mongoose.Schema({
     type: String,
     enum: ['choral', 'device'],
     required: '{PATH} is required!'
-  }
+  },
+  name: String
 });
 
 // Create a new choral belonging to attrs.user. attrs.user should be a user model
@@ -53,6 +54,7 @@ choralSchema.statics.createNew = function (attrs, cb) {
   newChoral.sampleRate = attrs.sampleRate;
   newChoral.choralId = srs({ length: 128 }); // if not unique, fails (should never happen)
   newChoral.choralType = attrs.type;
+  newChoral.name = attrs.name;
   newChoral.save((err) => {
     if (err) {
       cb(err, null);
