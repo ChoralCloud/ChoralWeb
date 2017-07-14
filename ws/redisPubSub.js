@@ -8,16 +8,14 @@ clients = ws.clients;
 
 redisSubscribe = function(deviceId) {
     // redis pub sub, for testing that we can listen to channel 0
-    subscriber.on("message", function( channel, message ) {
-        r.hgetall(deviceId, function(err,data) {
-            for( var i = 0; i < clients.length; i++ ) {
-                clients[i].emit('chartData', {
-                    time: data.device_timestamp,
-                    value: data.sensor_data/500
-                });
-            }
-            console.log(data);
-        });
+    subscriber.on("message", function( channel, jsonString ) {
+        data = JSON.parse(jsonString)
+        for( var i = 0; i < clients.length; i++ ) {
+            clients[i].emit('chartData', {
+                time: data.device_timestamp,
+                value: data.device_data.sensor_data/500
+            });
+        }
     });
     subscriber.subscribe(deviceId);
 }
