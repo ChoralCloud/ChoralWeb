@@ -42,8 +42,7 @@ choralSchema.statics.createNew = function (attrs, cb) {
   newChoral.userId = attrs.user.id;
   newChoral.func = attrs.func;
   newChoral.sampleRate = attrs.sampleRate;
-  // if this is not unique, the save will simply fail right now
-  newChoral.choralId = srs({ length: 128 });
+  newChoral.choralId = srs({ length: 128 }); // if not unique, fails (should never happen)
   newChoral.choralType = 'choral';
   newChoral.save((err) => {
     if (err) {
