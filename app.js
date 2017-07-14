@@ -19,6 +19,7 @@ var chartTest = require('./routes/chartTest');
 var choralsRoutes = require('./routes/chorals');
 var devicesRoutes = require('./routes/devices');
 const config = require('./config')
+
 var app = express();
 
 // session stuff
