@@ -18,6 +18,7 @@ var index = require('./routes/index');
 var chartTest = require('./routes/chartTest');
 var choralsRoutes = require('./routes/chorals');
 var devicesRoutes = require('./routes/devices');
+var choralDebug = require('./routes/choralDebug');
 const config = require('./config')
 
 var app = express();
@@ -81,13 +82,13 @@ var wsClients = sockets.clients;
 
 io.on('connection', function (socket) {
   wsHandler(socket);
+  redisPubSub.redisSubscribe('0');
+  socket.on('disconnect', function() {
+    console.log('disconnected from socket');
+    redisPubSub.redisUnsubscribe('0');
+  });
+  console.log('connected to socket');
 });
-
-sockets.sendTestWSData(wsClients);
-
-// subscribe to channel example for channel '0'
-// can unsubscribe with redisPubSub.redisUnsubscribe('0');
-redisPubSub.redisSubscribe('0');
 
 // uncomment after placing your favicon in /public
 app.use(logger('dev'));
@@ -99,6 +100,7 @@ app.use('/', index);
 app.use('/chart_test', chartTest);
 app.use('/chorals', choralsRoutes);
 app.use('/devices', devicesRoutes);
+app.use('/choral_debug', choralDebug);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
