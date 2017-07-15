@@ -3,7 +3,7 @@ var Choral = require('../models/choral')
 
 setInterval(() => {
   console.log("Updating New Chorals")
-  Choral.getAllChorals((err, chorals) => {
+  Choral.getAllChoralsWithChildren((err, chorals) => {
     chorals.forEach((choral) => {
       // if the choral isnt running run it here
     })
