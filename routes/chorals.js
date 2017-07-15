@@ -26,8 +26,42 @@ router.get('/', function(req, res, next) {
   });
 });
 
+router.post('/create', function(req, res, next) {
+  var googleUser = req.user;
+  var userModel = res.locals.userModel;
+
+  // grab post data
+  // try to create new user with the data
+
+  Choral.createNew(userModel, (err, chorals) => {
+    if (err) {
+      console.log(err);
+      return next(err);
+    }
+
+    // // serialize the chorals and pass to chorals view
+    // res.render('newChoral',
+    //   {
+    //     googleUser: googleUser,
+    //     userModel: userModel,
+    //     chorals: chorals,
+    //     viewHelpers: viewHelpers
+    //   }
+    // );
+  });
+});
+
 router.get('/new', function(req, res, next) {
-  res.render('newChoral');
+  var googleUser = req.user;
+  var userModel = res.locals.userModel;
+
+  res.render('newChoral',
+    {
+      googleUser: googleUser,
+      userModel: userModel,
+      viewHelpers: viewHelpers
+    }
+  );
 });
 
 module.exports = router;
