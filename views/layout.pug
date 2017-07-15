@@ -34,8 +34,8 @@ body.w3-light-grey
   // epoch js makes all the charts have a z-index of 999 or 1000 we want the
   // menu to be above that
   div(style="z-index=1001")
-    if user
-      +menu(user)
+    if googleUser
+      +menu(googleUser)
   .w3-main(style='margin-left:300px;margin-top:43px;')
     .w3-container
       block content
