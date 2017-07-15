@@ -1,0 +1,23 @@
+extends layout
+
+block content
+  header.w3-container(style='padding-top:22px')
+    h5
+      b
+        i.fa.fa-plus-square-o
+        |  Device Registration
+    form(method='POST' action='/devices')
+      div.row
+        div.form-group.col-md-4
+          label(for="deviceName") Device Name: 
+          input#deviceName.form-control(type='text' name='deviceName')
+      div.row
+        div.form-group.col-md-4
+          label(for='sampleRate') Sample Rate (ms): 
+          input#sampleRate.form-control(type='number' name='sampleRate' value='5' min='1')
+      div.row
+        button.btn.btn-primary(type='submit') Create Device
+
+    if devID
+      p Your new device ID is
+      p!= devID
