@@ -66,16 +66,9 @@ choralSchema.statics.createNew = function (attrs, cb) {
 };
 
 choralSchema.statics.findAllForUser = function (user, cb) {
-  console.log("user id: " + user._id);
   this.find({ userId: user._id }, (err, chorals) => {
-    if (err) {
-      cb(err, null);
-    }
-    else {
-      console.log("chorals");
-      console.log(chorals);
-      cb(null, chorals);
-    }
+    if (err) return cb(err, null);
+    cb(null, chorals);
   });
 };
 
