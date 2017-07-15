@@ -1,0 +1,35 @@
+extends layout
+
+block content
+  // !PAGE CONTENT!
+  header.w3-container(style='padding-top:22px')
+    h5
+      b
+        i.fa.fa-dashboard
+        |  Create A New Choral
+  form
+    .form-group
+      label(for='choralNameInput') Name
+      input#choralNameInput.form-control(placeholder='my awesome choral')
+    .form-group
+      label(for='choralDevice') Type (device or choral) -> make a dropdown
+      input#choralDeviceInput.form-control(placeholder='choral')
+    .form-group
+      label.sr-only(for='choralSampleRateInput') Sample Rate
+      .input-group
+        input#exampleInputAmount.form-control(type='text', placeholder='Amount')
+        .input-group-addon seconds >= 1
+    .checkbox
+      label
+        input(type='checkbox')
+        |  Check me out
+    button.btn.btn-default(type='submit') Submit
+
+  // Footer
+  footer.w3-container.w3-padding-16.w3-light-grey
+    h4 Powered by Choral Cloud
+    p
+      a.w3-btn.w3-black(href='https://github.com/ChoralCloud', target='_blank')
+        i.fa.fa-code-fork.w3-large
+        |  Check out the code
+  // End page content
