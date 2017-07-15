@@ -19,12 +19,10 @@ redisSubscribe = function(deviceId, socket) {
 
     sub.on('message', function(channel, jsonString) {
         data = JSON.parse(jsonString)
-        for( var i = 0; i < clients.length; i++ ) {
-            clients[i].socket.emit('chartData', {
-                time: data.device_timestamp,
-                value: data.device_data.sensor_data/500
-            });
-        }
+        socket.emit('chartData', {
+            time: data.device_timestamp,
+            value: data.device_data.sensor_data/500
+        });
     });
     sub.subscribe(deviceId);
 }
