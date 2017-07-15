@@ -15,7 +15,7 @@ const RedisStore = require('connect-redis')(session)
 var index = require('./routes/index');
 var chartTest = require('./routes/chartTest');
 var choralsRoutes = require('./routes/chorals');
-var devicesRoutes = require('./routes/deviceReg');
+var devicesRoutes = require('./routes/devices');
 const config = require('./config')
 
 var app = express();

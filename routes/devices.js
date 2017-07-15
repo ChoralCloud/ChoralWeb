@@ -3,7 +3,7 @@ var router = express.Router();
 var Choral = require('../models/choral');
 
 router.get('/new', function(req, res, next) {
-  res.render('deviceReg', {
+  res.render('newDevice', {
     googleUser: req.user 
   });
 });
@@ -21,7 +21,7 @@ router.post('/', function(req, res, next) {
       console.log(err);
       return next(err);
     }
-    res.render('deviceReg', {googleUser: req.user, devID: device.choralId});
+    res.render('newDevice', {googleUser: req.user, devID: device.choralId});
     console.log('Device Created!')
     console.log('Device Name: ' + req.body.deviceName);
     console.log('Device ID: ' + device.choralId);
