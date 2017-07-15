@@ -24,8 +24,8 @@ router.post('/', function(req, res, next) {
   }); 
 
   console.log('Device Created!')
-  console.log('Device Name:' + req.body.deviceName);
-  console.log('Device ID:' + device.choralId);
+  console.log('Device Name: ' + req.body.deviceName);
+  console.log('Device ID: ' + device.choralId);
   res.render('deviceReg', {googleUser: req.user, devID: device.choralId});
 });
 
