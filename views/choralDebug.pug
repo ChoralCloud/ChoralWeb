@@ -6,14 +6,15 @@ block content
       b
         i.fa.fa-dashboard
         |  My Dashboard
+    h4 Device #{deviceId} data
   .w3-row-padding.w3-margin-bottom
     div#dataIn(style="width: 800px; height:400px; overflow-y: scroll; background-color: white; border: 1px solid black;")
 
   script.
     document.addEventListener("DOMContentLoaded", function(event) {
+      console.log(#{deviceId})
       var socket = io.connect('//'+document.location.hostname+':'+document.location.port);
       socket.on('chartData', function (data) {
-        console.log(data);
 
         $('#dataIn').append("<div>data: " + data.value + "</div>")
       });

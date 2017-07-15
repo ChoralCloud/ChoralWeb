@@ -6,25 +6,29 @@ var redis = require('redis')
 
 clients = ws.clients;
 
-redisSubscribe = function(deviceId) {
-    // redis pub sub, for testing that we can listen to channel 0
-    subscriber.on("message", function( channel, jsonString ) {
+redisSubscribe = function(deviceId, socket) {
+    socket.on("disconnect", function() {
+        console.log('disconnected from socket!');
+        sub.unsubscribe(deviceId);
+    });
+
+    var sub = redis.createClient(config.redisData.url);
+    sub.on("subscribe", function(channel, count) {
+        console.log("Subscribed to " + channel + ". Now subscribe to " + count + " channel(s).");
+    });
+
+    sub.on('message', function(channel, jsonString) {
         data = JSON.parse(jsonString)
         for( var i = 0; i < clients.length; i++ ) {
-            clients[i].emit('chartData', {
+            clients[i].socket.emit('chartData', {
                 time: data.device_timestamp,
                 value: data.device_data.sensor_data/500
             });
         }
     });
-    subscriber.subscribe(deviceId);
-}
-
-redisUnsubscribe = function(deviceId) {
-    subscriber.unsubscribe(deviceId)
+    sub.subscribe(deviceId);
 }
 
 module.exports = {
-    redisSubscribe: redisSubscribe,
-    redisUnsubscribe: redisUnsubscribe
+    redisSubscribe: redisSubscribe
 }

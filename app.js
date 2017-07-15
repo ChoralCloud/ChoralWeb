@@ -82,11 +82,7 @@ var wsClients = sockets.clients;
 
 io.on('connection', function (socket) {
   wsHandler(socket);
-  redisPubSub.redisSubscribe('0');
-  socket.on('disconnect', function() {
-    console.log('disconnected from socket');
-    redisPubSub.redisUnsubscribe('0');
-  });
+  redisPubSub.redisSubscribe('0', socket);
   console.log('connected to socket');
 });
 

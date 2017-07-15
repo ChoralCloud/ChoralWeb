@@ -1,9 +1,11 @@
 var express = require('express');
 var router = express.Router();
 
-router.get('/', function(req, res, next) {
+router.get('/:deviceId', function(req, res, next) {
   res.render('choralDebug', {
-    user: req.user });
+    deviceId: req.params.deviceId,
+    user: req.user
+  });
 });
 
 module.exports = router;
