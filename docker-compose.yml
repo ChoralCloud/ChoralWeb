@@ -27,6 +27,7 @@ services:
     environment:
       REDIS_STORE_URI: "redis://redis:6379"
       MONGO_URL: "mongodb://mongodb:27017"
+      UPDATE_NEW_CHORALS: "3000"
     external_links:
       - redis
   mongodb:
