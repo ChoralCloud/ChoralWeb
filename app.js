@@ -15,7 +15,7 @@ const RedisStore = require('connect-redis')(session)
 var index = require('./routes/index');
 var chartTest = require('./routes/chartTest');
 var choralsRoutes = require('./routes/chorals');
-var deviceReg = require('./routes/deviceReg');
+var devicesRoutes = require('./routes/deviceReg');
 const config = require('./config')
 
 var app = express();
@@ -89,7 +89,7 @@ app.use(cookieParser());
 app.use('/', index);
 app.use('/chart_test', chartTest);
 app.use('/chorals', choralsRoutes);
-app.use('/devicereg', deviceReg);
+app.use('/devices', devicesRoutes);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

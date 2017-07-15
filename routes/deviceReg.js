@@ -2,9 +2,10 @@ var express = require('express');
 var router = express.Router();
 var Choral = require('../models/choral');
 
-router.get('/', function(req, res, next) {
+router.get('/new', function(req, res, next) {
   res.render('deviceReg', {
-    googleUser: req.user });
+    googleUser: req.user 
+  });
 });
 
 router.post('/', function(req, res, next) {  
@@ -15,18 +16,16 @@ router.post('/', function(req, res, next) {
     name: req.body.deviceName
   };
 
-  var device = Choral.createNew(attrs, (err, c) => {
+  Choral.createNew(attrs, (err, device) => {
     if(err){
       console.log(err);
       return next(err);
     }
-    console.log(c);
+    res.render('deviceReg', {googleUser: req.user, devID: device.choralId});
+    console.log('Device Created!')
+    console.log('Device Name: ' + req.body.deviceName);
+    console.log('Device ID: ' + device.choralId);
   }); 
-
-  console.log('Device Created!')
-  console.log('Device Name: ' + req.body.deviceName);
-  console.log('Device ID: ' + device.choralId);
-  res.render('deviceReg', {googleUser: req.user, devID: device.choralId});
 });
 
 module.exports = router;
