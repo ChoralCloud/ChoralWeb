@@ -1,4 +1,4 @@
-mixin menu(user)
+mixin menu(googleUser)
   // Top container
   .w3-bar.w3-top.w3-black.w3-large(style='z-index:4')
     button.w3-bar-item.w3-button.w3-hide-large.w3-hover-none.w3-hover-text-light-grey(onclick='w3_open();')
@@ -10,11 +10,11 @@ mixin menu(user)
     br
     .w3-container.w3-row
       .w3-col.s4
-        img.w3-circle.w3-margin-right(src=user.image, style='width:46px')
+        img.w3-circle.w3-margin-right(src=googleUser.image, style='width:46px')
       .w3-col.s8.w3-bar
         span
           | Welcome, 
-          strong #{user.displayName}
+          strong #{googleUser.displayName}
         br
         a.w3-bar-item.w3-button(href='#')
           i.fa.fa-envelope

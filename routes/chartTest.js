@@ -3,7 +3,7 @@ var router = express.Router();
 
 router.get('/', function(req, res, next) {
   res.render('chartTest', {
-    user: req.user });
+    googleUser: req.user });
 });
 
 module.exports = router;
