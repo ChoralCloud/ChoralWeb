@@ -61,6 +61,8 @@ choralSchema.statics.createNew = function (attrs, cb) {
     }
     else {
       cb(null, newChoral);
+      console.log('Device was created successfully');
+      return newChoral;
     }
   });
 };
