@@ -4,11 +4,11 @@ var Choral = require('../models/choral');
 
 router.get('/new', function(req, res, next) {
   res.render('newDevice', {
-    googleUser: req.user 
+    googleUser: req.user
   });
 });
 
-router.post('/', function(req, res, next) {  
+router.post('/', function(req, res, next) {
   var attrs = {
     user: res.locals.userModel,
     sampleRate: req.body.sampleRate,
@@ -25,7 +25,7 @@ router.post('/', function(req, res, next) {
     console.log('Device Created!')
     console.log('Device Name: ' + req.body.deviceName);
     console.log('Device ID: ' + device.choralId);
-  }); 
+  });
 });
 
 module.exports = router;
