@@ -7,23 +7,19 @@ block content
       b
         i.fa.fa-dashboard
         |  Create A New Choral
-  form
+  form.w3-container(method='POST' action="/chorals").new-choral-form
     .form-group
       label(for='choralNameInput') Name
-      input#choralNameInput.form-control(placeholder='my awesome choral')
+      input#choralNameInput.form-control(name='name' type='text')
     .form-group
-      label(for='choralDevice') Type (device or choral) -> make a dropdown
-      input#choralDeviceInput.form-control(placeholder='choral')
-    .form-group
-      label.sr-only(for='choralSampleRateInput') Sample Rate
+      label(for='choralSampleRateInput') Sample Rate (seconds)
       .input-group
-        input#exampleInputAmount.form-control(type='text', placeholder='Amount')
-        .input-group-addon seconds >= 1
-    .checkbox
-      label
-        input(type='checkbox')
-        |  Check me out
-    button.btn.btn-default(type='submit') Submit
+        input#choralSampleRateInput.form-control(name='sampleRate' type='text', placeholder='5')
+        .input-group-addon seconds (>= 1)
+    .form-group
+      label(for='choralFuncInput') Function
+      textarea#choralFuncInput.form-control(name='func' type='text' placeholder='function(data) { return data[0] || 1; }')
+    button.btn.btn-default(type='submit') Create Choral
 
   // Footer
   footer.w3-container.w3-padding-16.w3-light-grey

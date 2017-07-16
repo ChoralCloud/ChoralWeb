@@ -1,7 +1,7 @@
 var express = require('express');
 var router = express.Router();
 var Choral = require('../models/choral');
-var viewHelpers = require('../helpers/view_helpers');
+var viewHelpers = require('../helpers/viewHelpers');
 
 router.get('/', function(req, res, next) {
   var googleUser = req.user;
@@ -26,28 +26,26 @@ router.get('/', function(req, res, next) {
   });
 });
 
-router.post('/create', function(req, res, next) {
+router.post('/', function(req, res, next) {
   var googleUser = req.user;
   var userModel = res.locals.userModel;
 
-  // grab post data
-  // try to create new user with the data
+  var attrs = {
+    user: userModel,
+    sampleRate: req.body.sampleRate,
+    type: 'choral',
+    name: req.body.name,
+    func: req.body.func
+  };
 
-  Choral.createNew(userModel, (err, chorals) => {
-    if (err) {
+  Choral.createNew(attrs, (err, choral) => {
+    if(err){
       console.log(err);
+      res.flash('error', 'Choral validation failed: ' + err);
       return next(err);
     }
-
-    // // serialize the chorals and pass to chorals view
-    // res.render('newChoral',
-    //   {
-    //     googleUser: googleUser,
-    //     userModel: userModel,
-    //     chorals: chorals,
-    //     viewHelpers: viewHelpers
-    //   }
-    // );
+    res.flash('success', 'New choral created.');
+    res.redirect(req.baseUrl + '/new');
   });
 });
 
