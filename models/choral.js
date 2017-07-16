@@ -4,13 +4,11 @@ var mongoose = require('./setup'),
 var uniqueValidator = require('mongoose-unique-validator');
 var srs = require('secure-random-string');
 
-var childSchema = new mongoose.Schema({
-  childId: { type: ObjectId, required: '{PATH} is required!' }
-});
-
 var choralSchema = new mongoose.Schema({
   children: {
-    type: [childSchema],
+    // this didnt work when it was a separate schema, I have no idea why and I dont
+    // care to find out
+    type: [{ type: ObjectId, required: '{PATH} is required!', ref: 'Choral'  }],
     validate: {
       validator: function(children) { // ensure devices have no children
         return this.choralType == 'device' ? (children.length == 0) : true;
@@ -74,13 +72,12 @@ choralSchema.statics.findAllForUser = function (user, cb) {
 
 // get all chorals that require processing and return the result as a list
 choralSchema.statics.getAllChoralsWithChildren = function (cb) {
-    Choral.find({ choralType: "choral", children: { $gt: [] } }, (err, chorals) => {
-      if(err) return cb(err, null);
-      cb(null, chorals);
-    })
+  Choral.find({ choralType: "choral", children: { $gt: [] } })
+    // this follows the object ids in the children array and
+    // populates them with the choral info
+    .populate("children", "choralId name")
+    .exec(cb);
 };
-
-
 
 choralSchema.methods.addChild = function (child, cb) {
   this.children.push({ childId: child._id });
