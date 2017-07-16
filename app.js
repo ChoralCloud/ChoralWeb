@@ -6,6 +6,7 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var User = require('./models/user');
 var Choral = require('./models/choral');
+var flash = require('express-flash-2');
 
 // auth stuff
 const session = require('express-session')
@@ -33,6 +34,9 @@ app.use(session({
   resave: false,
   saveUninitialized: false
 }))
+
+// flash is stored in the session, so this declaration must come after session setup
+app.use(flash());
 
 app.use(passport.initialize())
 app.use(passport.session())
