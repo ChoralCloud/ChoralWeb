@@ -14,6 +14,7 @@
     "debug": "~2.6.3",
     "epoch-charting": "^0.8.4",
     "express": "~4.15.2",
+    "express-flash-2": "^1.0.1",
     "express-session": "^1.15.3",
     "mongoose": "^4.11.1",
     "mongoose-unique-validator": "^1.0.5",
