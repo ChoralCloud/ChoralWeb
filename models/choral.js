@@ -49,12 +49,13 @@ var choralSchema = new mongoose.Schema({
 // Create a new choral belonging to attrs.user. attrs.user should be a user model
 choralSchema.statics.createNew = function (attrs, cb) {
   var newChoral = new Choral();
-  newChoral.userId = attrs.user.id;
-  newChoral.func = attrs.func;
-  newChoral.sampleRate = attrs.sampleRate;
   newChoral.choralId = srs({ length: 128 }); // if not unique, fails (should never happen)
-  newChoral.choralType = attrs.type;
-  newChoral.name = attrs.name;
+  if (attrs.user.id)    newChoral.userId = attrs.user.id;
+  if (attrs.func)       newChoral.func = attrs.func;
+  if (attrs.sampleRate) newChoral.sampleRate = attrs.sampleRate;
+  if (attrs.name)       newChoral.name = attrs.name;
+  if (attrs.type)       newChoral.choralType = attrs.type;
+
   newChoral.save((err) => {
     if (err) {
       cb(err, null);
@@ -79,8 +80,6 @@ choralSchema.statics.getAllChoralsWithChildren = function (cb) {
       cb(null, chorals);
     })
 };
-
-
 
 choralSchema.methods.addChild = function (child, cb) {
   this.children.push({ childId: child._id });
