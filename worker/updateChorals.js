@@ -10,40 +10,27 @@ setInterval(() => {
 
     chorals.forEach((choral) => {
       var param = {}
+
       choral.children.forEach((child) => {
         client.hgetall(child.choralId, (err, data) => {
-          // this should all be abstracted into a amazon lambda function
-          // Amazon lambda functions would make this a viable solution to
-          // our problem because they do not have access to our environment
           if(err) return console.log(err.message)
 
           param[child.name] = data;
-          // this is just so I dont have to import a promise library
+          console.log(data)
 
+          // this is just so I dont have to import a promise library
           if(Object.keys(param).length == choral.children.length){
-            var computed_data = "";
+            // In a real project this would kick off in a sandbox. If we find
+            // the server is crashing a bunch then we can look into doing that
+            // Amazon lambda functions would make this a viable solution to
+            // our problem because they do not have access to our environment
             try{
               // horiffic use of eval
-              // this also means that the function cannot be asynchronous for now
-              // This can be added if we call the function with a callback as
-              // the second parameter
               eval("var func = " + choral.func)
-              console.log(func.length)
-              // func.length returns the number of parameters
-              // if there is only one parameter then assume that the person is just going to
-              // return a value
-              if(func.length == 1){
-                computed_data = func(param)
-                sendChoralData(choral, computed_data)
-              // if there are two parameters then you should assume that the function
-              // is asynchronous and that a callback will be called
-              } else if (func.length == 2) {
-                computed_data = func(param, get_callBack(choral))
-              }
+
+              func(param, get_callBack(choral))
             } catch (e) {
-              //console.log(e.message)
-              computed_data = { error: e.message }
-              sendChoralData(choral, computed_data)
+              sendChoralData(choral, { error: e.message })
             }
           }
         })
@@ -52,16 +39,15 @@ setInterval(() => {
   })
 }, 0 | process.env.UPDATE_NEW_CHORALS)
 
-// copied from device mock If this design is approved this should be moved
-// into a new utility function and shared between device mock and choral web
-function cb(choral){
+// uses a closure to run sendChoralData with the choral in question
+function get_callBack(choral){
   return (computed_data) => sendChoralData(choral, computed_data)
 }
 
-// copied from device mock If this design is approved this should be moved
-// into a new utility function and shared between device mock and choral web
+// Sends updated choral data to the device endpoint
 function sendChoralData(choral, computed_data){
-  if(!computed_data) computed_data = {};
+  console.log(computed_data)
+  if(!computed_data) computed_data = {}
 
   var data = {
     "device_id": choral.choralId,
