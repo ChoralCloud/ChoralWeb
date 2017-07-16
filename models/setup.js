@@ -3,6 +3,9 @@ const config = require('../config')
 
 // set up the MongoDB connection
 console.log("Starting Mongo: at " + config.mongo.url)
+
+mongoose.Promise = global.Promise;
+
 mongoose.connect(config.mongo.url, {
   useMongoClient:true
 });
