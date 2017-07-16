@@ -67,3 +67,18 @@
   position: absolute;
   z-index: -1;
 }
+
+.new-choral-form {
+  max-width: 500px;
+}
+
+.flash {
+  font-size: 25px;
+  padding: 4px;
+  margin-top: 8px;
+  border-radius: 4px;
+}
+
+.add-choral-btn-container {
+  margin-bottom: 10px;
+}

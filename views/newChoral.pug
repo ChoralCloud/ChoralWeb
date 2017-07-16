@@ -1,0 +1,31 @@
+extends layout
+
+block content
+  // !PAGE CONTENT!
+  header.w3-container(style='padding-top:22px')
+    h5
+      b
+        i.fa.fa-dashboard
+        |  Create A New Choral
+  form.w3-container(method='POST' action="/chorals").new-choral-form
+    .form-group
+      label(for='choralNameInput') Name
+      input#choralNameInput.form-control(name='name' type='text')
+    .form-group
+      label(for='choralSampleRateInput') Sample Rate (seconds)
+      .input-group
+        input#choralSampleRateInput.form-control(name='sampleRate' type='text', placeholder='5')
+        .input-group-addon seconds (>= 1)
+    .form-group
+      label(for='choralFuncInput') Function
+      textarea#choralFuncInput.form-control(name='func' type='text' placeholder='function(data) { return data[0] || 1; }')
+    button.btn.btn-default(type='submit') Create Choral
+
+  // Footer
+  footer.w3-container.w3-padding-16.w3-light-grey
+    h4 Powered by Choral Cloud
+    p
+      a.w3-btn.w3-black(href='https://github.com/ChoralCloud', target='_blank')
+        i.fa.fa-code-fork.w3-large
+        |  Check out the code
+  // End page content
