@@ -67,37 +67,6 @@ app.use(function(req, res, next){
   });
 });
 
-app.use(function(req, res, next) {
-  Choral.createNew({
-    user: res.locals.userModel,
-    type: 'device',
-    name: 'asdf' }, (err, c) => {
-      if (err) {
-        console.log(err);
-        return next(err);
-      }
-      console.log(c);
-    });
-  // Choral.findOne({_id:'59687f6a1bf55503ff2b7847'}, (err, choral1) => {
-  //   if (err) return next(err);
-  //   console.log("found ");
-  //   console.log(choral1);
-  //   Choral.findOne({_id: '5968803348eb0b047cb8eb36'}, (err, choral2) => {
-  //     if (err) return next(err);
-  //     console.log("found ");
-  //     console.log(choral2);
-  //     choral1.addChild(choral2, (err) => {
-  //       if (err) { return next(err); }
-  //       console.log("updated ");
-  //       console.log(choral1);
-
-  //     });
-  //   });
-  // });
-
-  return next();
-});
-
 app.use(bodyParser.urlencoded({
   extended: false
 }))
