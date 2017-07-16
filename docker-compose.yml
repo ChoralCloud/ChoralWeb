@@ -31,7 +31,7 @@ services:
       # this needs to be more clever for now you have to set it to be your
       # local ip. We need to make it so that allegro is run on the same docker
       # network as the rest of the app so that we can call it by name!
-      ALLEGRO_URL: "http://192.168.0.33:8081"
+      ALLEGRO_URL: "set to your ip"
     external_links:
       - redis
   mongodb:

@@ -2,6 +2,12 @@ var client = require('redis').createClient(process.env.REDIS_STORE_URI)
 var Choral = require('../models/choral')
 var request = require('request')
 
+if(process.env.ALLEGRO_URL == "set to your ip") {
+  console.log("you have to set the location of choral allegro until we make a docker container for it")
+  console.log("Workers are currently not running")
+  return
+}
+
 setInterval(() => {
   // this doesnt run the chorals according to their timeouts it just runs 
   // all of the chorals every UPDATE_NEW_CHORALS seconds
