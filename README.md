@@ -10,6 +10,10 @@ You will need to create a new config file based on the template:
 
 Now overwrite the config file with the correct clientID and clientSecret (you will need to get them from google).
 
+run the command 
+
+`npm install`
+
 Finally run the command
 
 `docker-compose up`
