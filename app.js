@@ -82,7 +82,8 @@ var wsClients = sockets.clients;
 
 io.on('connection', function (socket) {
   wsHandler(socket);
-  redisPubSub.redisSubscribe('0', socket);
+  // subscribe to devices here
+  redisPubSub.redisPSManager(socket);
   console.log('connected to socket');
 });
 
@@ -93,10 +94,10 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 app.use('/', index);
+app.use('/choral_debug', choralDebug);
 app.use('/chart_test', chartTest);
 app.use('/chorals', choralsRoutes);
 app.use('/devices', devicesRoutes);
-app.use('/choral_debug', choralDebug);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
