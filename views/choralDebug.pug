@@ -18,6 +18,7 @@ block content
 
         $('#dataIn').append("<div>data: " + data.value + "</div>")
       });
+      socket.emit('subscribeToID', { deviceId: #{deviceId} });
       socket.on('ackConnect', function (data) {
         console.log(data);
       });

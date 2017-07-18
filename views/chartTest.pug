@@ -24,14 +24,12 @@ block content
 
       var socket = io.connect('//'+document.location.hostname+':'+document.location.port);
       socket.on('chartData', function (data) {
-        console.log(data);
-
         window.chart.push([{
           time: data.time,
           y: data.value
         }]);
-        socket.emit('dataReceived', { data: 'received the data' });
       });
+      socket.emit('subscribeToID', { deviceId: #{deviceId} });
       socket.on('ackConnect', function (data) {
         console.log(data);
       });
