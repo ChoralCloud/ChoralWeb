@@ -18,7 +18,6 @@ var index = require('./routes/index');
 var chartTest = require('./routes/chartTest');
 var choralsRoutes = require('./routes/chorals');
 var devicesRoutes = require('./routes/devices');
-var choralDebug = require('./routes/choralDebug');
 const config = require('./config')
 
 var app = express();
@@ -94,7 +93,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 app.use('/', index);
-app.use('/choral_debug', choralDebug);
 app.use('/chart_test', chartTest);
 app.use('/chorals', choralsRoutes);
 app.use('/devices', devicesRoutes);
