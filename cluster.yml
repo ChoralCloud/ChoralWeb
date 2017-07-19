@@ -1,0 +1,49 @@
+version: "2.0"
+services:
+  choralweb:
+    build: .
+    command: npm run-script dev
+    ports:
+      - "80:3000"
+    volumes:
+      - .:/app
+    depends_on:
+      - mongodb
+    environment:
+      REDIS_STORE_URI: "redis://redis:6379"
+      REDIS_STORE_SECRET: "DEVELOPMENT_SECRET"
+      MONGO_URL: "mongodb://mongodb:27017"
+    external_links:
+      - redis
+  choralworker:
+    build: .
+    command: npm run-script dev-worker
+    ports:
+      - "3001:3000"
+    volumes:
+      - .:/app
+    depends_on:
+      - mongodb
+    environment:
+      REDIS_STORE_URI: "redis://redis:6379"
+      MONGO_URL: "mongodb://mongodb:27017"
+      UPDATE_NEW_CHORALS: "3000"
+    external_links:
+      - redis
+  mongodb:
+    image: mongo:latest
+    container_name: "mongo_db"
+    environment:
+      - MONGO_DATA_DIR=/data/db
+      # do not keep track of the logs
+      - MONGO_LOG_DIR=/dev/null
+    volumes:
+      - ./data/db:/data/db
+    ports:
+        - 27017:27017
+    command: mongod --smallfiles --logpath=/dev/null # --quiet
+
+networks:
+  default:
+    external:
+      name: choralstorm
