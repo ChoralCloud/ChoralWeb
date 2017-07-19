@@ -29,7 +29,7 @@ var choralSchema = new mongoose.Schema({
       function() { return this.type == 'choral' },
       '{PATH} is required for non-device chorals!'
     ],
-    default: "function(data) { return data[0] || 1; }"
+    default: "function(children, done){ done({ val: 1 }); }"
   },
   sampleRate: {
     type: Number,
@@ -41,7 +41,11 @@ var choralSchema = new mongoose.Schema({
     enum: ['choral', 'device'],
     required: '{PATH} is required!'
   },
-  name: String
+  name: {
+    type: String,
+    required: '{PATH} is required!',
+    default: 'My new choral'
+  }
 });
 
 // Create a new choral belonging to attrs.user. attrs.user should be a user model
