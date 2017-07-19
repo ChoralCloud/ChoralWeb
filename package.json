@@ -5,8 +5,8 @@
   "scripts": {
     "start": "node ./bin/www",
     "start-worker": "node ./bin/worker",
-    "dev": "npm install && nodemon -L ./bin/www",
-    "dev-worker": "npm install && nodemon -L ./bin/worker"
+    "dev": "nodemon -L ./bin/www",
+    "dev-worker": "nodemon -L ./bin/worker"
   },
   "dependencies": {
     "body-parser": "~1.17.1",
@@ -24,6 +24,7 @@
     "passport-google-oauth20": "^1.0.0",
     "pug": "~2.0.0-beta11",
     "redis": "^2.7.1",
+    "request": "^2.81.0",
     "secure-random-string": "^1.0.0",
     "serve-favicon": "~2.4.2",
     "socket.io": "^2.0.3"
