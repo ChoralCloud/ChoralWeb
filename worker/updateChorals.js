@@ -5,10 +5,12 @@ var request = require('request')
 setInterval(() => {
   // this doesnt run the chorals according to their timeouts it just runs 
   // all of the chorals every UPDATE_NEW_CHORALS seconds
-  Choral.getAllChoralsWithChildren((err, chorals) => {
+  Choral.getAllChorals((err, chorals) => {
     if(err) return console.log(err.message)
 
     chorals.forEach((choral) => {
+      if(choral.children.length == 0)
+
       var param = {}
 
       choral.children.forEach((child) => {

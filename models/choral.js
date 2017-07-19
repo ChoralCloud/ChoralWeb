@@ -72,8 +72,8 @@ choralSchema.statics.findAllForUser = function (user, cb) {
 };
 
 // get all chorals that require processing and return the result as a list
-choralSchema.statics.getAllChoralsWithChildren = function (cb) {
-  Choral.find({ choralType: "choral", children: { $gt: [] } })
+choralSchema.statics.getAllChorals = function (cb) {
+  Choral.find({ choralType: "choral" })
     // this follows the object ids in the children array and
     // populates them with the choral info
     .populate("children", "choralId name")
