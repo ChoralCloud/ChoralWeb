@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "node ./bin/www",
+    "start": "npm install && node ./bin/www",
+    "start-worker": "npm install && node ./bin/worker",
     "dev": "npm install && nodemon -L ./bin/www",
     "dev-worker": "npm install && nodemon -L ./bin/worker"
   },

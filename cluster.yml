@@ -2,7 +2,8 @@ version: "2.0"
 services:
   choralweb:
     build: .
-    command: npm run-script dev
+    command: npm run-script start
+    restart: always
     ports:
       - "80:3000"
     volumes:
@@ -17,7 +18,8 @@ services:
       - redis
   choralworker:
     build: .
-    command: npm run-script dev-worker
+    command: npm run-script start-worker
+    restart: always
     ports:
       - "3001:3000"
     volumes:
@@ -42,6 +44,7 @@ services:
     ports:
         - 27017:27017
     command: mongod --smallfiles --logpath=/dev/null # --quiet
+    restart: always
 
 networks:
   default:
