@@ -64,18 +64,32 @@ router.get('/new', function(req, res, next) {
 
 // this doesn't check to make sure the choral belong to the user but eff it for now
 router.delete('/:choralId', function(req, res, next) {
-  var googleUser = req.user;
+  var choralId = req.params.choralId;
   var userModel = res.locals.userModel;
 
-  Choral.remove({ choralId: req.params.choralId }, (err) => {
+  Choral.findOne({ choralId: choralId }, (err, choral) => {
     if (err) {
       console.log(err);
-      res.flash('error', 'Unable to remove choral: ' + err);
-      return next(err);
+      res.flash('error', 'Choral does not exist');
+      return res.send('404'); // notify client of failure
     }
 
-    res.flash('success', 'Choral successfully deleted.');
-    res.send('204'); // successful deletion
+    // ensure choral belongs to the current user
+    if (choral.userId.toString() != userModel._id.toString()) {
+      res.flash('error', 'Cannot remove a choral that does not belong to you.');
+      return res.send('403'); // notify client of failure
+    }
+
+    Choral.remove({ choralId: choral.choralId }, (err) => {
+      if (err) {
+        console.log(err);
+        res.flash('error', 'Error removing choral');
+        return res.send('500'); // notify client of failure
+      }
+
+      res.flash('success', 'Choral successfully deleted.');
+      return res.send('204'); // successful deletion
+    });
   });
 });
 
