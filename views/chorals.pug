@@ -11,7 +11,7 @@ block content
   .w3-container
     h5 Chorals
     div.add-choral-btn-container 
-      a(role='button' href='chorals/new').btn.btn-primary.add-choral-btn New Choral
+      a(role='button' href='/chorals/new').btn.btn-primary.add-choral-btn New Choral
     table.w3-table.w3-striped.w3-bordered.w3-border.w3-hoverable.w3-white
       tr
         td Name
@@ -26,3 +26,6 @@ block content
           td= viewHelpers.truncateWithDots(choral.choralId, 30)
           td= choral.sampleRate
           td= choral.func
+          td
+            button.btn.btn-danger.delete-choral-btn(data-choral-id=choral.choralId)
+              span.glyphicon.glyphicon-trash

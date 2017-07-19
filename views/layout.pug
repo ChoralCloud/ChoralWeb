@@ -11,7 +11,7 @@ head
   link(rel='stylesheet', href='https://fonts.googleapis.com/css?family=Raleway')
   link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css')
   link(rel='icon', type='image/png', href='favicon.png')
-  link(rel='stylesheet', type="text/css", href='stylesheets/epoch.min.css')
+  link(rel='stylesheet', type="text/css", href='/stylesheets/epoch.min.css')
 
   script(src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js')
   // boostrap
@@ -22,10 +22,12 @@ head
 
   script(src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js")
 
-  script(src="javascripts/d3.min.js")
-  script(src="javascripts/epoch.min.js")
+  script(src="/javascripts/d3.min.js")
+  script(src="/javascripts/epoch.min.js")
 
   script(src="/socket.io/socket.io.js")
+
+  script(src="/javascripts/index.js")
 
   style.
     html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
@@ -53,3 +55,4 @@ body.w3-light-grey
           a.w3-btn.w3-black(href='https://github.com/ChoralCloud', target='_blank')
             i.fa.fa-code-fork.w3-large
             |  Check out the code
+
