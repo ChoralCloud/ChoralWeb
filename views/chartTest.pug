@@ -24,7 +24,7 @@ block content
 
       var socket = io.connect('//'+document.location.hostname+':'+document.location.port);
       socket.on('chartData', function (jsonString) {
-        data = JSON.parse(jsonString);
+        var data = JSON.parse(jsonString);
         window.chart.push([{
           time: data.device_timestamp,
           y: data.device_data.sensor_data/500,
