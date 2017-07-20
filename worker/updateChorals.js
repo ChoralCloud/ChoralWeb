@@ -32,7 +32,7 @@ setInterval(() => {
       })
     })
   })
-}, 5 | process.env.UPDATE_NEW_CHORALS)
+}, (0 | process.env.UPDATE_NEW_CHORALS) || 5 )
 
 function runComputation(children, choral){
   const {VM} = require('vm2');
@@ -49,7 +49,7 @@ function runComputation(children, choral){
     },
     sandbox: config,
     // this gives us the option to use a timeout if we see fit
-    timeout: process.env.CHORAL_FUNCTION_TIMEOUT || 50
+    timeout: (0 | process.env.CHORAL_FUNCTION_TIMEOUT) || 50
   });
 
   // this callback must be inside of the vm
