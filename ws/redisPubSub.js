@@ -2,7 +2,7 @@ const config = require('../config')
 var redis = require('redis')
 
 var redisPSManager = function(socket) {
-    deviceIds = []
+    var deviceIds = []
     socket.on("disconnect", function() {
         console.log('disconnected from socket!');
         console.log('unsubscribing from deviceIds: ' + deviceIds);
