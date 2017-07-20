@@ -1,0 +1,38 @@
+doctype html
+head
+  link(rel='stylesheet', href='/stylesheets/style.css')
+  meta(charset='UTF-8')
+  meta(name='viewport', content='width=device-width, initial-scale=1')
+  link(rel='stylesheet', href='https://www.w3schools.com/w3css/4/w3.css')
+  link(rel='stylesheet', href='https://fonts.googleapis.com/css?family=Raleway')
+  link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css')
+  link(rel='icon', type='image/png', href='favicon.png')
+
+  script(src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js')
+  // boostrap
+  link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css', integrity='sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u', crossorigin='anonymous')
+  link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css', integrity='sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp', crossorigin='anonymous')
+  // Latest compiled and minified JavaScript
+  script(src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js', integrity='sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa', crossorigin='anonymous')
+  script(src='javascripts/logger.js')
+
+  script(src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js")
+
+  style.
+    html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
+
+.w3-container
+h1 Logs
+input.light-table-filter(type='search', data-table='order-table', placeholder='Filter')
+table#log-table.w3-table.w3-striped.w3-bordered.w3-border.w3-hoverable.w3-white.order-table.table
+  tr
+    td timestamp
+    td type
+    td message
+    td tags
+  for log in logs
+    tr
+      td= log['timestamp']
+      td= log['type']
+      td= log['message']
+      td= log['tags']

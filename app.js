@@ -18,6 +18,7 @@ var index = require('./routes/index');
 var chartTest = require('./routes/chartTest');
 var choralsRoutes = require('./routes/chorals');
 var devicesRoutes = require('./routes/devices');
+var logsRoutes = require('./routes/logs');
 const config = require('./config')
 
 var app = express();
@@ -87,6 +88,7 @@ app.use('/', index);
 app.use('/chart_test', chartTest);
 app.use('/chorals', choralsRoutes);
 app.use('/devices', devicesRoutes);
+app.use('/logs', logsRoutes);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
