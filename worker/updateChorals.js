@@ -1,7 +1,6 @@
 var client = require('redis').createClient(process.env.REDIS_STORE_URI)
 var Choral = require('../models/choral')
 var request = require('request')
-var sandbox = new require('sandbox')
 
 setInterval(() => {
   // this doesnt run the chorals according to their timeouts it just runs 
