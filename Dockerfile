@@ -1,5 +1,5 @@
 # create a file named Dockerfile
-FROM node:argon
+FROM node:alpine
 RUN npm install --global nodemon
 
 RUN mkdir /app
