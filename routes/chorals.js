@@ -62,7 +62,6 @@ router.get('/new', function(req, res, next) {
   );
 });
 
-// this doesn't check to make sure the choral belong to the user but eff it for now
 router.delete('/:choralId', function(req, res, next) {
   var choralId = req.params.choralId;
   var userModel = res.locals.userModel;
