@@ -18,7 +18,7 @@ block content
         .input-group-addon seconds (>= 1)
     .form-group
       label(for='choralFuncInput') Function
-      textarea#choralFuncInput.form-control(name='func' type='text' placeholder='function(data) { return data[0] || 1; }')
+      textarea#choralFuncInput.form-control(name='func' type='text' placeholder='function(children, done){ done({ val: 1 }); }')
     button.btn.btn-default(type='submit') Create Choral
 
   // Footer

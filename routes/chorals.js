@@ -62,4 +62,34 @@ router.get('/new', function(req, res, next) {
   );
 });
 
+router.delete('/:choralId', function(req, res, next) {
+  var choralId = req.params.choralId;
+  var userModel = res.locals.userModel;
+
+  Choral.findOne({ choralId: choralId }, (err, choral) => {
+    if (err) {
+      console.log(err);
+      res.flash('error', 'Choral does not exist');
+      return res.send('404'); // notify client of failure
+    }
+
+    // ensure choral belongs to the current user
+    if (choral.userId.toString() != userModel._id.toString()) {
+      res.flash('error', 'Cannot remove a choral that does not belong to you.');
+      return res.send('403'); // notify client of failure
+    }
+
+    Choral.remove({ choralId: choral.choralId }, (err) => {
+      if (err) {
+        console.log(err);
+        res.flash('error', 'Error removing choral');
+        return res.send('500'); // notify client of failure
+      }
+
+      res.flash('success', 'Choral successfully deleted.');
+      return res.send('204'); // successful deletion
+    });
+  });
+});
+
 module.exports = router;
