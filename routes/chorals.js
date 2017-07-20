@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router();
 var Choral = require('../models/choral');
 var viewHelpers = require('../helpers/viewHelpers');
+var logHelper = require('../helpers/logHelper');
 
 router.get('/', function(req, res, next) {
   var googleUser = req.user;
@@ -11,6 +12,7 @@ router.get('/', function(req, res, next) {
   Choral.findAllForUser(userModel, (err, chorals) => {
     if (err) {
       console.log(err);
+      logHelper.createLog("error", err, ["chorals", "findAllForUser"]);
       return next(err);
     }
 
@@ -41,9 +43,11 @@ router.post('/', function(req, res, next) {
   Choral.createNew(attrs, (err, choral) => {
     if(err){
       console.log(err);
+      logHelper.createLog("error", 'Choral validation failed: ' + err, ["chorals", "createNew"]);
       res.flash('error', 'Choral validation failed: ' + err);
       return next(err);
     }
+    logHelper.createLog("success", 'New choral created: ' + JSON.stringify(attrs), ["chorals", "createNew"]);
     res.flash('success', 'New choral created.');
     res.redirect(req.baseUrl + '/new');
   });
