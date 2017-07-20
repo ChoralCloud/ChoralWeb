@@ -7,6 +7,7 @@ var bodyParser = require('body-parser');
 var User = require('./models/user');
 var Choral = require('./models/choral');
 var flash = require('express-flash-2');
+var redisPubSub = require('./ws/redisPubSub');
 
 // auth stuff
 const session = require('express-session')
@@ -73,16 +74,8 @@ app.use(bodyParser.urlencoded({
 
 // Setup websocket connection
 var server = require('http').Server(app);
-var io = require('socket.io')(server);
 var sockets = require('./ws/sockets');
-var wsHandler = sockets.handler;
-var wsClients = sockets.clients;
-
-io.on('connection', function (socket) {
-  wsHandler(socket);
-});
-
-sockets.sendTestWSData(wsClients);
+sockets.sockConnection(server)
 
 // uncomment after placing your favicon in /public
 app.use(logger('dev'));
