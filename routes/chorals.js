@@ -72,6 +72,7 @@ router.delete('/:choralId', function(req, res, next) {
 
   Choral.findOne({ choralId: choralId }, (err, choral) => {
     if (err) {
+      logHelper.createLog("error", 'Choral does not exist: ' + err, ["chorals", "delete"]);
       console.log(err);
       res.flash('error', 'Choral does not exist');
       return res.send('404'); // notify client of failure
@@ -85,6 +86,7 @@ router.delete('/:choralId', function(req, res, next) {
 
     Choral.remove({ choralId: choral.choralId }, (err) => {
       if (err) {
+        logHelper.createLog("error", 'Error removing choral: ' + err, ["chorals", "delete"]);
         console.log(err);
         res.flash('error', 'Error removing choral');
         return res.send('500'); // notify client of failure
