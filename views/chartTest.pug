@@ -23,13 +23,14 @@ block content
       });
 
       var socket = io.connect('//'+document.location.hostname+':'+document.location.port);
-      socket.on('chartData', function (data) {
+      socket.on('chartData', function (jsonString) {
+        data = JSON.parse(jsonString);
         window.chart.push([{
-          time: data.time,
-          y: data.value
+          time: data.device_timestamp,
+          y: data.device_data.sensor_data/500,
         }]);
       });
-      socket.emit('subscribeToID', { deviceId: #{deviceId} });
+      socket.emit('subscribeToID', { deviceId: '#{deviceId}' });
       socket.on('ackConnect', function (data) {
         console.log(data);
       });

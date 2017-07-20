@@ -74,17 +74,8 @@ app.use(bodyParser.urlencoded({
 
 // Setup websocket connection
 var server = require('http').Server(app);
-var io = require('socket.io')(server);
 var sockets = require('./ws/sockets');
-var wsHandler = sockets.handler;
-var wsClients = sockets.clients;
-
-io.on('connection', function (socket) {
-  wsHandler(socket);
-  // subscribe to devices here
-  redisPubSub.redisPSManager(socket);
-  console.log('connected to socket');
-});
+sockets.sockConnection(server)
 
 // uncomment after placing your favicon in /public
 app.use(logger('dev'));

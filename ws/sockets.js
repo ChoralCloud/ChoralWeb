@@ -1,3 +1,6 @@
+var io = require("socket.io");
+var redisPS = require("./redisPubSub");
+
 var clients = []; // keeps track of websocket clients
 
 // websocket handler. called when a client connects for the first time
@@ -29,8 +32,19 @@ function sendTestWSData(wsClients) {
   }, 1000);
 }
 
+function sockConnection(server) {
+    io = io(server);
+    io.on("connection", function(socket) {
+        handler(socket);
+        // subscribe to devices here
+        redisPS(socket);
+        console.log('connected to socket');
+    });
+}
+
 module.exports = {
   handler: handler,
   clients: clients,
-  sendTestWSData: sendTestWSData
+  sendTestWSData: sendTestWSData,
+  sockConnection: sockConnection
 };

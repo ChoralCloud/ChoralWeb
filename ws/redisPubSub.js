@@ -1,12 +1,7 @@
 const config = require('../config')
-var ws = require('./sockets');
 var redis = require('redis')
-    , subscriber = redis.createClient(config.redisStore.url)
-    , r = redis.createClient(config.redisStore.url)
 
-clients = ws.clients;
-
-redisPSManager = function(socket) {
+var redisPSManager = function(socket) {
     deviceIds = []
     socket.on("disconnect", function() {
         console.log('disconnected from socket!');
@@ -22,13 +17,8 @@ redisPSManager = function(socket) {
     });
 
     sub.on('message', function(channel, jsonString) {
-        data = JSON.parse(jsonString);
-        console.log(data);
-        socket.emit('chartData', {
-            deviceId: data.device_id,
-            time: data.device_timestamp,
-            value: data.device_data.sensor_data/500
-        });
+        console.log(jsonString);
+        socket.emit('chartData', jsonString);
     });
 
     socket.on("subscribeToID", function(data) {
@@ -38,6 +28,4 @@ redisPSManager = function(socket) {
     });
 }
 
-module.exports = {
-    redisPSManager: redisPSManager
-}
+module.exports = redisPSManager;
