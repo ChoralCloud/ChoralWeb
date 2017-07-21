@@ -11,7 +11,7 @@ block content
       tr
         td Name
         td Type
-        td ID
+        td Device ID
         td Sample Rate
         td
       each device in devices
@@ -19,7 +19,9 @@ block content
           td= device.name
           td= device.choralType
           td= viewHelpers.truncateWithDots(device.choralId, 30)
+            a.w3-right.w3-btn.w3-blue.copy-choral-btn(data-choral-id=device.choralId)
+              span.glyphicon.glyphicon-copy
           td= device.sampleRate
           td
-            button.w3-btn.w3-red.delete-device-btn(data-choral-id=device.choralId)
+            a.w3-right.w3-btn.w3-red.delete-choral-btn(data-choral-id=device.choralId)
               span.glyphicon.glyphicon-trash
