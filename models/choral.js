@@ -68,6 +68,36 @@ choralSchema.statics.createNew = function (attrs, cb) {
   });
 };
 
+choralSchema.methods.edit = function (attrs, cb) {
+  var choral = this;
+  if (attrs.user.id)    this.userId = attrs.user.id;
+  if (attrs.func)       this.func = attrs.func;
+  if (attrs.sampleRate) this.sampleRate = attrs.sampleRate;
+  if (attrs.name)       this.name = attrs.name;
+  if (attrs.type)       this.choralType = attrs.type;
+  if (attrs.children){
+    for(var i = 0; i < attrs.children.length; i++){
+      Choral.findOne({'choralId': attrs.children[i]}, function (err, childChoral){
+        choral.addChild(childChoral, function(err){
+          if(err){
+            console.log(err);
+            return next(err);
+          } 
+        });
+      });
+    }
+  }
+
+  this.save((err) => {
+    if (err) {
+      cb(err, null);
+    }
+    else {
+      cb(null, choral);
+    }
+  });
+};
+
 choralSchema.statics.findAllForUser = function (user, cb) {
   this.find({ userId: user._id }, (err, chorals) => {
     if (err) return cb(err, null);
@@ -111,7 +141,7 @@ choralSchema.statics.getAllChorals = function (cb) {
 };
 
 choralSchema.methods.addChild = function (child, cb) {
-  this.children.push({ childId: child._id });
+  this.children.push(child._id);
   this.save((err) => {
     if (err) {
       cb(err);

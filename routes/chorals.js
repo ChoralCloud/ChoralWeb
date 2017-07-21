@@ -32,13 +32,23 @@ router.get('/', function(req, res, next) {
 router.post('/', function(req, res, next) {
   var googleUser = req.user;
   var userModel = res.locals.userModel;
+  var cookies = req.get("Cookie");
+  var children = [];
+  var child; 
+
+  for(var i = 0; cookieHelper.readCookie('child' + i, cookies) != null; i++){
+    child = cookieHelper.readCookie('child' + i, cookies);
+    child = JSON.parse(child);
+    children.push(child.choralId);
+  } 
 
   var attrs = {
     user: userModel,
     sampleRate: req.body.sampleRate,
     type: 'choral',
     name: req.body.name,
-    func: req.body.func
+    func: req.body.func,
+    children: children
   };
 
   Choral.createNew(attrs, (err, choral) => {
@@ -58,13 +68,27 @@ router.get('/new', function(req, res, next) {
   var googleUser = req.user;
   var userModel = res.locals.userModel;
 
-  res.render('newChoral',
+  Choral.findAllForUser(userModel, (err, chorals) => {
+    if (err) {
+      console.log(err);
+      return next(err);
+    }
+    
+    //Delete child cookies if page is reloaded
+    var cookies = req.get("Cookie");
+    for(var i = 0; cookieHelper.readCookie('child' + i, cookies) != null; i++){
+      res.clearCookie('child' + i);
+    }
+
+    res.render('newChoral',
       {
         googleUser: googleUser,
         userModel: userModel,
-        viewHelpers: viewHelpers
+        viewHelpers: viewHelpers,
+        chorals: chorals
       }
-      );
+    );
+  });
 });
 
 
@@ -124,6 +148,101 @@ router.delete('/:choralId', function(req, res, next) {
 
       res.flash('success', 'Choral successfully deleted.');
       return res.send('204'); // successful deletion
+    });
+  });
+});
+
+router.get('/:choralId/edit', function(req, res, next) {
+  var googleUser = req.user;
+  var userModel = res.locals.userModel;
+  var choralId = req.params.choralId;
+  var children = [];
+
+  // grab all chorals belonging to the user.
+  Choral.findAllForUser(userModel, (err, chorals) => {
+    if (err) {
+      console.log(err);
+      return next(err);
+    }
+
+    Choral.findOne({ choralId: choralId }, (err, choral) => {
+      if (err) {
+        console.log(err);
+        res.flash('error', 'Choral does not exist');
+        return res.send('404'); // notify client of failure
+      }
+      //Iterate and store all children chorals to be displayed
+      for(var i = 0; i < choral.children.length; i++){
+        Choral.findOne({ _id: choral.children[i] }, (err, child) => {
+          if (err) {
+            console.log(err);
+            res.flash('error', 'Choral does not exist');
+            return res.send('404'); // notify client of failure
+          }
+          console.log(child.name);
+          children.push(child.name);
+          console.log(children);
+        });
+      }
+      //Delete child cookies if page is reloaded
+      var cookies = req.get("Cookie");
+      for(var i = 0; cookieHelper.readCookie('child' + i, cookies) != null; i++){
+        res.clearCookie('child' + i);
+      }
+      //Pass choral to be edited and list of chorals
+      console.log("CHILDREN PASSED ARE");
+      console.log(children);
+      res.render('editChoral',
+        {
+          googleUser: googleUser,
+          userModel: userModel,
+          chorals: chorals,
+          choralEdit: choral,
+          children: children
+        }
+      );
+    });
+  });
+});
+
+router.post('/:choralId/edit', function(req, res, next) {
+  var googleUser = req.user;
+  var userModel = res.locals.userModel;
+  var choralId = req.params.choralId;
+  
+  var cookies = req.get("Cookie");
+  var children = [];
+  var child; 
+
+  for(var i = 0; cookieHelper.readCookie('child' + i, cookies) != null; i++){
+    child = cookieHelper.readCookie('child' + i, cookies);
+    child = JSON.parse(child);
+    children.push(child.choralId);
+  } 
+  
+  var attrs = {
+    user: userModel,
+    sampleRate: req.body.sampleRate,
+    type: 'choral',
+    name: req.body.name,
+    func: req.body.func,
+    children: children
+  };
+
+  Choral.findOne({ choralId: choralId }, (err, choral) => {
+    if (err) {
+      console.log(err);
+      res.flash('error', 'Choral does not exist');
+      return res.send('404'); // notify client of failure
+    }
+    choral.edit(attrs, (err, choral) => {
+      if(err){
+        console.log(err);
+        res.flash('error', 'Choral validation failed: ' + err);
+        return next(err);
+      }
+      res.flash('success', 'Choral Edited');
+      res.redirect(req.baseUrl + '/');
     });
   });
 });
