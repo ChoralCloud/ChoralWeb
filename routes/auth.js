@@ -69,7 +69,7 @@ app.get('/auth/google/callback',
   passport.authenticate('google'), // Finish OAuth 2 flow using Passport.js
   (req, res) => {
     // Redirect back to the original page, if any
-    const redirect = req.session.oauth2return || '/dashboard';
+    const redirect = req.session.oauth2return || '/home';
     delete req.session.oauth2return;
 
     res.redirect(redirect);

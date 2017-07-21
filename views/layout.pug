@@ -10,7 +10,7 @@ head
   link(rel='stylesheet', href='https://www.w3schools.com/w3css/4/w3.css')
   link(rel='stylesheet', href='https://fonts.googleapis.com/css?family=Raleway')
   link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css')
-  link(rel='icon', type='image/png', href='favicon.png')
+  link(rel='icon', type='image/x-icon', href='favicon.ico')
   link(rel='stylesheet', type="text/css", href='/stylesheets/epoch.min.css')
 
   script(src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js')
@@ -33,12 +33,21 @@ head
     html,body,h1,h2,h3,h4,h5 {font-family: "Raleway", sans-serif}
 
 body.w3-light-grey
+  // Top container
+  .w3-bar.w3-top.w3-blue.w3-large(style='z-index:4')
+    button.w3-bar-item.w3-button.w3-hide-large.w3-hover-none.w3-hover-text-light-grey(onclick='w3_open();')
+      i.fa.fa-bars
+      |   Menu
+    a.w3-bar-item.w3-right.w3-blue.w3-padding(href='/home') 
+      img(src="/favicon.ico")
+      |   Choral Cloud
+      
   // epoch js makes all the charts have a z-index of 999 or 1000 we want the
   // menu to be above that
   div(style="z-index=1001")
     if googleUser
       +menu(googleUser)
-  .w3-main(style='margin-left:300px;margin-top:43px;')
+  .w3-main(style='margin-left:300px;margin-top:55px;')
     .w3-container
       if flash.info
         div.flash.bg-info= flash.info
@@ -48,11 +57,11 @@ body.w3-light-grey
         div.flash.bg-danger= flash.error
       block content
 
-      // Footer
-      footer.w3-container.w3-padding-16.w3-light-grey
-        h4 Powered by Choral Cloud
-        p
-          a.w3-btn.w3-black(href='https://github.com/ChoralCloud', target='_blank')
-            i.fa.fa-code-fork.w3-large
-            |  Check out the code
+    // Footer
+    footer.w3-container.w3-padding-16.w3-light-grey
+      h5 Powered by Choral Cloud
+      p
+        a.w3-btn.w3-blue(href='https://github.com/ChoralCloud', target='_blank')
+          i.fa.fa-code-fork.w3-large
+          |  Check out the code
 

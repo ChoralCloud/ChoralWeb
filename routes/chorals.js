@@ -12,7 +12,7 @@ router.get('/', function(req, res, next) {
   Choral.findAllForUser(userModel, (err, chorals) => {
     if (err) {
       console.log(err);
-      logHelper.createLog("error", err, ["chorals", "findAllForUser"]);
+      logHelper.createLog("error", err, ["chorals", "findChoralsForUser"]);
       return next(err);
     }
 

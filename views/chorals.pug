@@ -2,16 +2,11 @@ extends layout
 
 block content
   header.w3-container(style='padding-top:22px')
-    h5
-      b
-        i.fa.fa-dashboard
-        |  My Chorals
+    h5 My Chorals
   hr
   .w3-container
-  .w3-container
-    h5 Chorals
     div.add-choral-btn-container 
-      a(role='button' href='/chorals/new').btn.btn-primary.add-choral-btn New Choral
+      a(role='button' href='/chorals/new').w3-btn.w3-blue.add-choral-btn New Choral
     table.w3-table.w3-striped.w3-bordered.w3-border.w3-hoverable.w3-white
       tr
         td Name
@@ -26,9 +21,9 @@ block content
           td= choral.choralType
           td= viewHelpers.truncateWithDots(choral.choralId, 30)
           td= choral.sampleRate
-          td= choral.func
+          td= viewHelpers.truncateWithDots(choral.func, 30)
           td
-            button.btn.btn-danger.delete-choral-btn(data-choral-id=choral.choralId)
+            button.w3-btn.w3-red.delete-choral-btn(data-choral-id=choral.choralId)
               span.glyphicon.glyphicon-trash
 
     script.

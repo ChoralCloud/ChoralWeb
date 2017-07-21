@@ -1,0 +1,25 @@
+extends layout
+
+block content
+  header.w3-container(style='padding-top:22px')
+    h5 My Devices
+  hr
+  .w3-container
+    div.add-device-btn-container 
+      a(role='button' href='/devices/new').w3-btn.w3-blue.add-device-btn New Device
+    table.w3-table.w3-striped.w3-bordered.w3-border.w3-hoverable.w3-white
+      tr
+        td Name
+        td Type
+        td ID
+        td Sample Rate
+        td
+      each device in devices
+        tr
+          td= device.name
+          td= device.choralType
+          td= viewHelpers.truncateWithDots(device.choralId, 30)
+          td= device.sampleRate
+          td
+            button.w3-btn.w3-red.delete-device-btn(data-choral-id=device.choralId)
+              span.glyphicon.glyphicon-trash

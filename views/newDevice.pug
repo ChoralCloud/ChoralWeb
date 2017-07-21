@@ -6,17 +6,14 @@ block content
       b
         i.fa.fa-plus-square-o
         |  Device Registration
-    form(method='POST' action='/devices')
-      div.row
-        div.form-group.col-md-4
+    form(method='POST' action='/devices').new-device-form
+      .form-group
           label(for="deviceName") Device Name: 
           input#deviceName.form-control(type='text' name='deviceName')
-      div.row
-        div.form-group.col-md-4
+      .form-group
           label(for='sampleRate') Sample Rate (seconds): 
           input#sampleRate.form-control(type='number' name='sampleRate' value='5' min='1')
-      div.row
-        button.btn.btn-primary(type='submit') Create Device
+      button.w3-btn.w3-blue(type='submit') Create Device
 
     if devID
       p Your new device ID is

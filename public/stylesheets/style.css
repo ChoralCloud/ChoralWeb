@@ -72,6 +72,10 @@
   max-width: 500px;
 }
 
+.new-device-form {
+  max-width: 500px;
+}
+
 .flash {
   font-size: 25px;
   padding: 4px;
@@ -81,4 +85,15 @@
 
 .add-choral-btn-container {
   margin-bottom: 10px;
+}
+
+.add-device-btn-container {
+  margin-bottom: 10px;
+}
+
+footer {
+    position: absolute;
+    left: 300;
+    bottom: 0;
+    overflow:hidden;
 }

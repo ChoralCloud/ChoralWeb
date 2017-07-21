@@ -75,6 +75,13 @@ choralSchema.statics.findAllForUser = function (user, cb) {
   });
 };
 
+choralSchema.statics.findDevicesForUser = function (user, cb) {
+  this.find({ $and: [ { userId: user._id }, { choralType: "device" } ] }, (err, devices) => {
+    if (err) return cb(err, null);
+    cb(null, devices);
+  });
+};
+
 // get all chorals that require processing and return the result as a list
 choralSchema.statics.getAllChorals = function (cb) {
   Choral.find({ choralType: "choral" })
