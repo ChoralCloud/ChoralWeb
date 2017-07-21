@@ -68,10 +68,17 @@ choralSchema.statics.createNew = function (attrs, cb) {
   });
 };
 
-choralSchema.statics.findAllForUser = function (user, cb) {
+choralSchema.statics.findChoralsForUser = function (user, cb) {
   this.find({ userId: user._id }, (err, chorals) => {
     if (err) return cb(err, null);
     cb(null, chorals);
+  });
+};
+
+choralSchema.statics.findDevicesForUser = function (user, cb) {
+  this.find({ $and: [ { userId: user._id }, { choralType: "device" } ] }, (err, devices) => {
+    if (err) return cb(err, null);
+    cb(null, devices);
   });
 };
 

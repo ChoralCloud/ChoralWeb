@@ -16,6 +16,7 @@ const RedisStore = require('connect-redis')(session)
 
 var index = require('./routes/index');
 var chartTest = require('./routes/chartTest');
+var eventsRoutes = require('./routes/events');
 var choralsRoutes = require('./routes/chorals');
 var devicesRoutes = require('./routes/devices');
 var logsRoutes = require('./routes/logs');
@@ -86,6 +87,7 @@ app.use(cookieParser());
 
 app.use('/', index);
 app.use('/chart_test', chartTest);
+app.use('/events', eventsRoutes);
 app.use('/chorals', choralsRoutes);
 app.use('/devices', devicesRoutes);
 app.use('/logs', logsRoutes);

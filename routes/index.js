@@ -8,12 +8,12 @@ var router = express.Router();
 // Otherwise, continue to the login page
 router.get('/', function(req, res, next){
   if(req.isAuthenticated()){
-    res.redirect('/dashboard');
+    res.redirect('/home');
   }
 });
 
-router.get('/dashboard', function(req, res, next) {
-  res.render('dashboard', { googleUser: req.user });
+router.get('/home', function(req, res, next) {
+  res.render('home', { googleUser: req.user });
 });
 
 module.exports = router;
