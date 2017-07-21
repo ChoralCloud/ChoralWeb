@@ -2,12 +2,12 @@ const config = require('../config')
 var redis = require('redis')
 
 var redisPSManager = function(socket) {
-    var deviceIds = []
+    var choralIds = []
     socket.on("disconnect", function() {
         console.log('disconnected from socket!');
-        console.log('unsubscribing from deviceIds: ' + deviceIds);
-        for( var i = 0; i < deviceIds.length; i+=1) {
-            sub.unsubscribe(deviceIds[i]);
+        console.log('unsubscribing from choralIds: ' + choralIds);
+        for( var i = 0; i < choralIds.length; i+=1) {
+            sub.unsubscribe(choralIds[i]);
         }
     });
 
@@ -22,9 +22,9 @@ var redisPSManager = function(socket) {
     });
 
     socket.on("subscribeToID", function(data) {
-        console.log("Subscribing to: " + data.deviceId);
-        deviceIds.push(data.deviceId);
-        sub.subscribe(data.deviceId);
+        console.log("Subscribing to: " + data.choralId);
+        choralIds.push(data.choralId);
+        sub.subscribe(data.choralId);
     });
 }
 

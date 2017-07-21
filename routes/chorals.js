@@ -66,6 +66,15 @@ router.get('/new', function(req, res, next) {
   );
 });
 
+
+// get the choral page
+router.get('/:choralId', function(req, res, next) {
+    res.render('choral', {
+        googleUser: req.user,
+        choralId: req.params.choralId
+    });
+});
+
 router.delete('/:choralId', function(req, res, next) {
   var choralId = req.params.choralId;
   var userModel = res.locals.userModel;

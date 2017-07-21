@@ -27,7 +27,7 @@ block content
           y: data.device_data.sensor_data/500,
         }]);
       });
-      socket.emit('subscribeToID', { deviceId: '#{deviceId}' });
+      socket.emit('subscribeToID', { choralId: '#{choralId}' });
       socket.on('ackConnect', function (data) {
         console.log(data);
       });
