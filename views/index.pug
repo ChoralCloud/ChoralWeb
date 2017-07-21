@@ -1,15 +1,38 @@
-extends layout
+doctype html
 
-block content
-  .container
-    .row
-      .col-sm-6.col-md-4.col-md-offset-4
-        h1.text-center.login-title Sign in to continue to Choral
-        .account-wall
-          .signin
-            img.profile-img(src='https://lh5.googleusercontent.com/-b0-k99FZlyE/AAAAAAAAAAI/AAAAAAAAAAA/eu7opA4byxI/photo.jpg?sz=120', alt='')
-            a(href="/auth/google")
-                button.btn.btn-lg.btn-primary.btn-block
-                  | Sign in with Google
-            span.clearfix
+head
+  title=Choral
+  
+  meta(charset='UTF-8')
+  meta(name='viewport', content='width=device-width, initial-scale=1')
 
+  link(rel='stylesheet', href='https://fonts.googleapis.com/css?family=Raleway')
+  link(rel='stylesheet', href='https://www.w3schools.com/w3css/4/w3.css')
+  link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css')
+  link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css', integrity='sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u', crossorigin='anonymous')
+  link(rel='stylesheet', href='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css', integrity='sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp', crossorigin='anonymous')
+  link(rel='stylesheet', href='/stylesheets/login.css')
+  
+  link(rel='icon', type='image/x-icon', href='favicon.ico')
+
+  script(src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js')
+  script(src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js', integrity='sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa', crossorigin='anonymous')
+  script(src="/javascripts/index.js")
+
+body
+  h1.text-center Sign in to continue to Choral
+  .modal-dialog
+    .modal-content
+      .modal-body
+        h2.text-center
+          img.img-circle(src='https://lh5.googleusercontent.com/-b0-k99FZlyE/AAAAAAAAAAI/AAAAAAAAAAA/eu7opA4byxI/photo.jpg?sz=100')
+          br
+          | Login
+        br
+        a.center.w3-btn.w3-blue(href="/auth/google") Sign in with Google
+
+  .center
+    h4.text-center Powered by Choral Cloud
+    a.w3-btn.w3-blue(href='https://github.com/ChoralCloud', target='_blank')
+      i.fa.fa-code-fork.w3-large
+      |  Check out the code
