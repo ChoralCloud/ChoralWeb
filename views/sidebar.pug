@@ -1,7 +1,5 @@
 mixin menu(googleUser)
   // Sidebar/menu
-  nav.w3-sidebar.w3-collapse.w3-white(style='z-index:3;width:300px;')
-  // Sidebar/menu
   nav#mySidebar.w3-sidebar.w3-collapse.w3-white.w3-animate-left(style='z-index:3;width:300px;')
     br
     .w3-container.w3-row
@@ -13,7 +11,10 @@ mixin menu(googleUser)
           strong #{googleUser.displayName}
     hr
     .w3-bar-block
-      a#hb.w3-bar-item.w3-button.w3-padding(href='/home')
+      a.w3-bar-item.w3-button.w3-padding-16.w3-hide-large.w3-dark-grey.w3-hover-black(href='#', onclick='w3_close()', title='close menu')
+        i.fa.fa-remove.fa-fw
+        |   Close Menu
+      a.w3-bar-item.w3-button.w3-padding(href='/home')
         i.fa.fa-home.fa-fw
         |   Home
       a.w3-bar-item.w3-button.w3-padding(href='/events')

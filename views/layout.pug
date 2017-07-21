@@ -35,7 +35,10 @@ head
 body.w3-light-grey
   // Top container
   .w3-bar.w3-top.w3-blue.w3-large(style='z-index:4')
-    a.w3-bar-item.w3-left.w3-blue.w3-padding(href='/home') 
+    button.w3-bar-item.w3-button.w3-hide-large.w3-hover-none.w3-hover-text-light-grey(onclick='w3_open();')
+      i.fa.fa-bars
+      |   Menu
+    a.w3-bar-item.w3-right.w3-blue.w3-padding(href='/home') 
       img(src="/favicon.ico")
       |   Choral Cloud
       
