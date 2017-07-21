@@ -1,6 +1,6 @@
 mixin menu(googleUser)
   // Sidebar/menu
-  nav#mySidebar.w3-sidebar.w3-collapse.w3-white(style='z-index:3;width:300px;')
+  nav.w3-sidebar.w3-collapse.w3-white(style='z-index:3;width:300px;')
     br
     .w3-container.w3-row
       .w3-col.s4
@@ -11,7 +11,7 @@ mixin menu(googleUser)
           strong #{googleUser.displayName}
     hr
     .w3-bar-block
-      a.w3-bar-item.w3-button.w3-padding(href='/home')
+      a#hb.w3-bar-item.w3-button.w3-padding(href='/home')
         i.fa.fa-home.fa-fw
         |   Home
       a.w3-bar-item.w3-button.w3-padding(href='/events')
@@ -23,28 +23,7 @@ mixin menu(googleUser)
       a.w3-bar-item.w3-button.w3-padding(href='/chorals')
         i.fa.fa-share-alt.fa-fw
         |   Chorals
-      a.w3-bar-item.w3-button.w3-padding(href='/logout')
+      a.w3-button.w3-padding(href='/logout')
         i.fa.fa-sign-out.fa-fw
         |   Log Out
       br
-      br
-  script.
-    // Get the Sidebar
-    var mySidebar = document.getElementById("mySidebar");
-    // Get the DIV with overlay effect
-    var overlayBg = document.getElementById("myOverlay");
-    // Toggle between showing and hiding the sidebar, and add overlay effect
-    function w3_open() {
-      if (mySidebar.style.display === 'block') {
-        mySidebar.style.display = 'none';
-        overlayBg.style.display = "none";
-      } else {
-        mySidebar.style.display = 'block';
-        overlayBg.style.display = "block";
-      }
-    }
-    // Close the sidebar with the close button
-    function w3_close() {
-      mySidebar.style.display = "none";
-      overlayBg.style.display = "none";
-    }
