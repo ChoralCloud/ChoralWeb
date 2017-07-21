@@ -3,6 +3,7 @@ var router = express.Router();
 var Choral = require('../models/choral');
 var viewHelpers = require('../helpers/viewHelpers');
 var logHelper = require('../helpers/logHelper');
+var client = require('redis').createClient(process.env.REDIS_STORE_URI)
 
 router.get('/', function(req, res, next) {
   var googleUser = req.user;
@@ -58,21 +59,41 @@ router.get('/new', function(req, res, next) {
   var userModel = res.locals.userModel;
 
   res.render('newChoral',
-    {
-      googleUser: googleUser,
-      userModel: userModel,
-      viewHelpers: viewHelpers
-    }
-  );
+      {
+        googleUser: googleUser,
+        userModel: userModel,
+        viewHelpers: viewHelpers
+      }
+      );
 });
 
 
 // get the choral page
 router.get('/:choralId', function(req, res, next) {
-    res.render('choral', {
-        googleUser: req.user,
-        choralId: req.params.choralId
+  var choralId = req.params.choralId;
+  var userModel = res.locals.userModel;
+  var tabs = [];
+
+  let getTabs = new Promise((resolve, reject) => {
+    client.hgetall(choralId, (err, data) => {
+      var parsedData = JSON.parse(data.device_data);
+      for( key in parsedData ) {
+        var val = parsedData[key];
+        if( !isNaN(parseFloat(val)) && isFinite(val) ) {
+          tabs.push(key);
+        }
+      }
+      resolve(tabs)
     });
+  });
+
+  getTabs.then((tabs) => {
+    res.render('choral', {
+      googleUser: req.user,
+      parentChoralId: req.params.choralId,
+      tabs: tabs
+    });
+  });
 });
 
 router.delete('/:choralId', function(req, res, next) {

@@ -4,30 +4,47 @@ block content
   header.w3-container(style='padding-top:22px')
     h5 My Dashboard
   .w3-row-padding.w3-margin-bottom
-    #areaChart.choral-chart(style="width: 800px; height: 200px")
+    ul.nav.nav-tabs.graph-tabs
+      each tab in tabs
+        li
+            a(data-toggle="tab" href="#"+tab)= tab
+
+    div.tab-content
+      each tab in tabs
+        div.tab-pane.fade(id= tab)
+          div.choral-chart.epoch.category10(id= "areaChart"+tab style="width: 900px; height: 200px")
 
   script.
     document.addEventListener("DOMContentLoaded", function(event) {
-      var areaChartData = [
-        {
-          label: "Chart layer 1",
-          values: []
-        }];
-
-      window.chart = $('#areaChart').epoch({
-        type: 'time.area',
-        data: areaChartData
-      });
+      var tab_titles = !{JSON.stringify(tabs)};
+      var chartsData = {};
+      window.charts = {};
+      for( var i = 0; i < tab_titles.length; i++ ) {
+        chartsData[tab_titles[i]] = [
+          {
+            label: tab_titles[i],
+            values: []
+          }
+        ];
+        window.charts[tab_titles[i]] = $('#areaChart'+tab_titles[i]).epoch({
+          type: 'time.area',
+          data: chartsData[tab_titles[i]]
+        });
+      }
 
       var socket = io.connect('//'+document.location.hostname+':'+document.location.port);
       socket.on('chartData', function (jsonString) {
         var data = JSON.parse(jsonString);
-        window.chart.push([{
-          time: data.device_timestamp,
-          y: data.device_data.sensor_data/500,
-        }]);
+        for( var key in data.device_data ) {
+          if( window.charts.hasOwnProperty(key) ) {
+            window.charts[key].push([{
+              time: data.device_timestamp/1000,
+              y: data.device_data[key]
+            }]);
+          }
+        }
       });
-      socket.emit('subscribeToID', { choralId: '#{choralId}' });
+      socket.emit('subscribeToID', { choralId: '#{parentChoralId}' });
       socket.on('ackConnect', function (data) {
         console.log(data);
       });
