@@ -21,7 +21,7 @@ block content
           td= choral.choralType
           td= viewHelpers.truncateWithDots(choral.choralId, 30)
           td= choral.sampleRate
-          td= choral.func
+          td= viewHelpers.truncateWithDots(choral.func, 30)
           td
             button.w3-btn.w3-red.delete-choral-btn(data-choral-id=choral.choralId)
               span.glyphicon.glyphicon-trash

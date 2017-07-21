@@ -9,7 +9,7 @@ router.get('/', function(req, res, next) {
   var userModel = res.locals.userModel;
 
   // grab all chorals belonging to the user.
-  Choral.findChoralsForUser(userModel, (err, chorals) => {
+  Choral.findAllForUser(userModel, (err, chorals) => {
     if (err) {
       console.log(err);
       logHelper.createLog("error", err, ["chorals", "findChoralsForUser"]);
