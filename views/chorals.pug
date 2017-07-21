@@ -21,7 +21,7 @@ block content
         td Function
         td
       each choral in chorals
-        tr
+        tr.choral-row(data-href="/chorals/" + choral.choralId)
           td= choral.name
           td= choral.choralType
           td= viewHelpers.truncateWithDots(choral.choralId, 30)
@@ -30,3 +30,9 @@ block content
           td
             button.btn.btn-danger.delete-choral-btn(data-choral-id=choral.choralId)
               span.glyphicon.glyphicon-trash
+
+    script.
+      $('.choral-row').on("click", function() {
+        document.location = $(this).data('href');
+      });
+
