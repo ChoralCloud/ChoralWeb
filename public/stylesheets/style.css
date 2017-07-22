@@ -60,6 +60,8 @@
 }
 
 .choral-chart {
+    position: absolute;
+    z-index: -1;
     border: 1px solid black;
     background-color: white;
     -webkit-box-shadow: 3px 3px 5px -2px rgba(0,0,0,0.75);
@@ -74,11 +76,6 @@
 /* Epoch js stupidly sets the z-index of their charts which makes them
  * overlay ontop of our sidebar this sets the svg on the page to be beneath the sidebar
  */
-.choral-charts
-{
-  position: absolute;
-  z-index: -1;
-}
 
 .new-choral-form {
   max-width: 500px;
