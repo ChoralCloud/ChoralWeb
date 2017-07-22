@@ -91,9 +91,7 @@
   margin-bottom: 10px;
 }
 
-footer {
-    position: absolute;
-    left: 300;
-    bottom: 0;
-    overflow:hidden;
+.center {
+  width: 100%;
+  text-align: center;
 }
