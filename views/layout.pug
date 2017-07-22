@@ -47,7 +47,7 @@ body.w3-light-grey
   div(style="z-index=1001")
     if googleUser
       +menu(googleUser)
-  .w3-main(style='margin-left:300px;margin-top:55px;')
+  .w3-main(style='margin-left:300px;margin-top:55px;margin-bottom:75px;')
     .w3-container
       if flash.info
         div.flash.bg-info= flash.info
@@ -57,11 +57,11 @@ body.w3-light-grey
         div.flash.bg-danger= flash.error
       block content
 
-      // Footer
-      footer.w3-container.w3-padding-16.w3-light-grey
-        h5 Powered by Choral Cloud
-        p
-          a.w3-btn.w3-blue(href='https://github.com/ChoralCloud', target='_blank')
-            i.fa.fa-code-fork.w3-large
-            |  Check out the code
+  // Footer
+  footer.footer.navbar-fixed-bottom.center.w3-light-gray(style='z-index:2')
+    br
+    p
+      |  Powered by Choral Cloud  
+      a(href='https://github.com/ChoralCloud', target='_blank')
+        i.fa.fa-github.fa-2
 

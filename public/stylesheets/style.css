@@ -90,3 +90,8 @@
 .add-device-btn-container {
   margin-bottom: 10px;
 }
+
+.center {
+  width: 100%;
+  text-align: center;
+}
