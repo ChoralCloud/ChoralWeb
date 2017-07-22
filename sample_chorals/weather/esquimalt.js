@@ -6,7 +6,7 @@ function (_, done){
   var request = require('request')
   var options = {
     method: 'GET',
-    uri: "http://api.openweathermap.org/data/2.5/weather?q=Esquimalt,CA&appid=35570de8864c1d214a64c5112293b740",
+    uri: "http://api.openweathermap.org/data/2.5/weather?q=Esquimalt,CA&appid=02c3ca6284dbda7b3a03ad60653162c2",
     json: true
   }
 
