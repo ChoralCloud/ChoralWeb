@@ -5,14 +5,16 @@ block content
     h5 My Dashboard
   .w3-row-padding.w3-margin-bottom
     ul.nav.nav-tabs.graph-tabs
-      each tab in tabs
-        li
-            a(data-toggle="tab" href="#"+tab)= tab
+      - for( var i = 0; i < tabs.length; i++ )
+        - active = (i === 0 ? 'active' : '')
+        li(class=active)
+          a(data-toggle="tab" href="#"+tabs[i] )= tabs[i]
 
     div.tab-content
-      each tab in tabs
-        div.tab-pane.fade(id= tab)
-          div.choral-chart.epoch.category10(id= "areaChart"+tab style="width: 900px; height: 200px")
+      - for( var i = 0; i < tabs.length; i++ )
+        - active = (i === 0 ? 'active in' : '')
+        div.tab-pane.fade(class=active id= tabs[i])
+          div.choral-chart.epoch.category10(id= "areaChart"+tabs[i] style="width: 900px; height: 200px")
 
   script.
     document.addEventListener("DOMContentLoaded", function(event) {
