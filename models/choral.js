@@ -94,7 +94,6 @@ choralSchema.statics.findRootChoralsForUser = function (user, cb) {
     // do another find query
     this.find({ $and: [ { userId: user._id }, 
                         { choralType: "choral" }, 
-                        { $where: "this.children.length > 0" }, 
                         { _id: { $nin: children } } ] }, (err, rootChorals) => {
       if (err) return cb(err, null);
       cb(null, rootChorals);
