@@ -1,5 +1,7 @@
 var express = require('express');
 var router = express.Router();
+var Choral = require('../models/choral');
+var logHelper = require('../helpers/logHelper');
 
 /* GET home page. */
 
@@ -13,7 +15,32 @@ router.get('/', function(req, res, next){
 });
 
 router.get('/home', function(req, res, next) {
-  res.render('home', { googleUser: req.user });
+  var googleUser = req.user;
+  var userModel = res.locals.userModel;
+
+  // grab all root chorals belonging to the user.
+  Choral.findRootChoralsForUser(userModel, (err, chorals) => {
+    if (err) {
+      console.log(err);
+      logHelper.createLog("error", err, ["home", "chorals", "findRootChoralsForUser"]);
+      return next(err);
+    }
+
+    var stats = {
+      rps: 0
+    };
+
+    for (i in chorals) {
+      stats.rps += (1/chorals[i].sampleRate)
+    }
+
+    res.render('home', { 
+      googleUser: googleUser,
+      userModel: userModel,
+      chorals: chorals,
+      stats: stats
+    });
+  });
 });
 
 module.exports = router;

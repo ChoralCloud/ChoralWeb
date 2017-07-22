@@ -82,6 +82,25 @@ choralSchema.statics.findDevicesForUser = function (user, cb) {
   });
 };
 
+choralSchema.statics.findRootChoralsForUser = function (user, cb) {
+  this.find({ $and: [ { userId: user._id }, { choralType: "choral" }, { $where: "this.children.length > 0" } ] }, (err, chorals) => {
+    if (err) return cb(err, null);
+
+    // found all chorals with children
+    var children = []
+    for (i in chorals) {
+      children = children.concat(chorals[i].children)
+    }
+    // do another find query
+    this.find({ $and: [ { userId: user._id }, 
+                        { choralType: "choral" }, 
+                        { _id: { $nin: children } } ] }, (err, rootChorals) => {
+      if (err) return cb(err, null);
+      cb(null, rootChorals);
+    });
+  });
+}
+
 // get all chorals that require processing and return the result as a list
 choralSchema.statics.getAllChorals = function (cb) {
   Choral.find({ choralType: "choral" })
