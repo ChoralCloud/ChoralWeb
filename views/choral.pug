@@ -30,7 +30,8 @@ block content
         ];
         window.charts[tab_titles[i]] = $('#areaChart'+tab_titles[i]).epoch({
           type: 'time.area',
-          data: chartsData[tab_titles[i]]
+          data: chartsData[tab_titles[i]],
+          axes: ['left','bottom']
         });
       }
 
