@@ -2,14 +2,12 @@ extends layout
 
 block content
   header.w3-container(style='padding-top:22px')
-  if chorals.length == 1
-    h4 You have <b>#{chorals.length} active choral</b> running at <b>#{stats.rps} requests per second</b>.
-  else  
-    h4 You have <b>#{chorals.length} active chorals</b> running at <b>#{stats.rps} requests per second</b>.
+    - var c = (chorals.length == 1 ? 'choral' : 'chorals')
+    h4 You have <b>#{chorals.length} active #{c}</b> running at <b>#{stats.rps} requests per second</b>.
   br
-  each choral in chorals        
+  each choral in chorals
     .col-sm-8.col-md-8.col-lg-4.mt-3
-      .card.w3-light-blue
+      .card(onclick="location.href='/chorals/"+choral.choralId+"';")
         .card-block
           h4.card-title.mt-3= choral.name
           .meta.card-text
