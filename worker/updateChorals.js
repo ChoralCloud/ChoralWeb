@@ -23,7 +23,6 @@ function update(){
   })
 }
 
-
 // gets all the children in the choral and runs to completion
 function getChildrenAndRunChoral(choral){
     if(choral.children.length == 0){
@@ -37,9 +36,18 @@ function getChildrenAndRunChoral(choral){
         if(err) return console.log(err.message)
 
         // json comes in as a string, parse it first
-        param[child.name] = {}
-        param[child.name].data = JSON.parse(data.device_data)
-        param[child.name].device_timestamp = data.device_timestamp | 0
+        var payload = {}
+        if (data) {
+          payload.data = JSON.parse(data.device_data)
+          payload.device_timestamp = data.device_timestamp | 0
+        } else {
+          payload.data = {}
+          payload.device_timestamp = (new Date()).getTime() | 0
+        }
+
+        param[child.name] = payload;
+
+        // if this is the last child to be added, run the compuation with the children
         // this is just so I dont have to import a promise library
         if(Object.keys(param).length == choral.children.length){
           // Amazon lambda functions would make this a viable solution to
@@ -123,12 +131,13 @@ function runComputation(children, choral){
     if(!current_choral){
       return clearChoral(choral)
     }
+
     const {NodeVM} = require('vm2')
 
     var config = {
       func: current_choral.func,
       children: children,
-      callback: get_callBack(current_choral),
+      callback: getCallBack(current_choral),
     }
 
     const vm = new NodeVM({
@@ -154,13 +163,14 @@ function runComputation(children, choral){
 }
 
 // uses a closure to run sendChoralData with the choral in question
-function get_callBack(choral){
+function getCallBack(choral){
   return (computed_data) => sendChoralData(choral, computed_data)
 }
 
 // Sends updated choral data to the device endpoint
 function sendChoralData(choral, computed_data){
   console.log(choral.name, computed_data)
+
   if(!computed_data) computed_data = {}
 
   var data = {
