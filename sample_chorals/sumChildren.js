@@ -1,4 +1,6 @@
 function(children, done) {
+  // Sum every value of every child and return that
+  // value as the new value of this choral
   var children = Object.values(children)
   var sum = 0;
   for(var i = 0; i < children.length; i++) {
