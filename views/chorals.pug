@@ -25,7 +25,11 @@ block content
           td= choral.sampleRate
           td= viewHelpers.truncateWithDots(choral.func, 30)
           td
+<<<<<<< HEAD
             a.confirm.w3-right.w3-btn.w3-red.delete-choral-btn(data-choral-id=choral.choralId)
+=======
+            a.btn.btn-info(role='button' href='/chorals/' +choral.choralId+ '/edit')
+>>>>>>> ee488af... Children addition is now in the new Choral edit page, children can be added on choral creation aswell
               span.glyphicon.glyphicon-trash
 <<<<<<< HEAD
             a.w3-right.w3-btn.w3-blue.view-choral-btn(data-choral-id=choral.choralId)

@@ -113,7 +113,12 @@
   float: right;
   width: 30%;
 }
+<<<<<<< HEAD
 .inline-selece{
   display: inline;
 >>>>>>> 134ab83... New choral page includes children addition using cookies
+=======
+.children-list{
+  padding-left: 20px;
+>>>>>>> ee488af... Children addition is now in the new Choral edit page, children can be added on choral creation aswell
 }

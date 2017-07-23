@@ -3,7 +3,8 @@ var router = express.Router();
 var Choral = require('../models/choral');
 var viewHelpers = require('../helpers/viewHelpers');
 var logHelper = require('../helpers/logHelper');
-var client = require('redis').createClient(process.env.REDIS_STORE_URI)
+var client = require('redis').createClient(process.env.REDIS_STORE_URI);
+var cookieHelper = require('../helpers/cookieHelper');
 
 router.get('/', function(req, res, next) {
   var googleUser = req.user;
@@ -79,6 +80,12 @@ router.get('/new', function(req, res, next) {
     for(var i = 0; cookieHelper.readCookie('child' + i, cookies) != null; i++){
       res.clearCookie('child' + i);
     }
+
+   var cookies = req.get("Cookie");
+
+   for(var i = 0; cookieHelper.readCookie('child' + i, cookies) != null; i++){
+      res.clearCookie('child' + i);
+   }
 
     res.render('newChoral',
       {
@@ -171,6 +178,7 @@ router.get('/:choralId/edit', function(req, res, next) {
         res.flash('error', 'Choral does not exist');
         return res.send('404'); // notify client of failure
       }
+
       //Iterate and store all children chorals to be displayed
       for(var i = 0; i < choral.children.length; i++){
         Choral.findOne({ _id: choral.children[i] }, (err, child) => {
@@ -192,6 +200,7 @@ router.get('/:choralId/edit', function(req, res, next) {
       //Pass choral to be edited and list of chorals
       console.log("CHILDREN PASSED ARE");
       console.log(children);
+   //Pass choral to be edited and list of chorals
       res.render('editChoral',
         {
           googleUser: googleUser,
@@ -246,5 +255,5 @@ router.post('/:choralId/edit', function(req, res, next) {
     });
   });
 });
-
+          
 module.exports = router;

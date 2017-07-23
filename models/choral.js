@@ -57,6 +57,18 @@ choralSchema.statics.createNew = function (attrs, cb) {
   if (attrs.sampleRate) newChoral.sampleRate = attrs.sampleRate;
   if (attrs.name)       newChoral.name = attrs.name;
   if (attrs.type)       newChoral.choralType = attrs.type;
+  if (attrs.children){
+    for(var i = 0; i < attrs.children.length; i++){
+      Choral.findOne({'choralId': attrs.children[i]}, function (err, choral){
+        newChoral.addChild(choral, function(err){
+          if(err){
+            console.log(err);
+            return next(err);
+          } 
+        });
+      });
+    }
+  }
 
   newChoral.save((err) => {
     if (err) {
