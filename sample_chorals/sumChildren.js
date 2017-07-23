@@ -10,5 +10,5 @@ function(children, done) {
       sum += dataValues[j];
     }
   }
-  done({ 'Sum of child values': sum })
+  done({ 'sum_of_children': sum })
 }
