@@ -2,7 +2,8 @@ extends layout
 
 block content
   header.w3-container(style='padding-top:22px')
-    h5 My Dashboard
+    h5.w3-left My Dashboard
+
   .w3-row-padding.w3-margin-bottom
     ul.nav.nav-tabs.graph-tabs
       - for( var i = 0; i < tabs.length; i++ )
@@ -18,20 +19,27 @@ block content
 
   script.
     document.addEventListener("DOMContentLoaded", function(event) {
-      var tab_titles = !{JSON.stringify(tabs)};
+      var tabTitles = !{JSON.stringify(tabs)};
+      var past = !{JSON.stringify(past_data)};
+      var sampleRate = !{JSON.stringify(sample_rate)}
       var chartsData = {};
       window.charts = {};
-      for( var i = 0; i < tab_titles.length; i++ ) {
-        chartsData[tab_titles[i]] = [
+      for( var i = 0; i < tabTitles.length; i++ ) {
+        chartsData[tabTitles[i]] = [
           {
-            label: tab_titles[i],
-            values: []
+            label: tabTitles[i],
+            values: past[tabTitles[i]]
           }
         ];
-        window.charts[tab_titles[i]] = $('#areaChart'+tab_titles[i]).epoch({
+        var windowSize = 3600/sampleRate;
+        window.charts[tabTitles[i]] = $('#areaChart'+tabTitles[i]).epoch({
           type: 'time.area',
-          data: chartsData[tab_titles[i]],
-          axes: ['left','bottom']
+          data: chartsData[tabTitles[i]],
+          axes: ['left','bottom','right'],
+          windowSize: windowSize,
+          //1 tick every X data points
+          // should be windowsize/(#ticks we want)
+          ticks: { time: windowSize/10 }
         });
       }
 
