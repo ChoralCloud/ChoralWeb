@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "body-parser": "~1.17.1",
+    "cassandra-driver": "^3.2.2",
     "connect-redis": "^3.3.0",
     "cookie-parser": "~1.4.3",
     "debug": "~2.6.3",
