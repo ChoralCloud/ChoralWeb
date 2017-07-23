@@ -112,7 +112,10 @@ router.get('/:choralId', function(req, res, next) {
         res.flash('error', 'Choral does not exist');
         return res.send('404'); // notify client of failure
       }
-      ret.sampleRate = choral.sampleRate;
+      ret.choralInfo = {
+        sampleRate: choral.sampleRate,
+        name: choral.name
+      }
       resolve(ret);
     });
   });
@@ -134,7 +137,7 @@ router.get('/:choralId', function(req, res, next) {
     });
   }).then((ret) => {
     return new Promise((resolve, reject) => {
-      cass_client.execute("SELECT * FROM choraldatastream.raw_data WHERE device_id = '" + choralId + "' order by device_timestamp DESC limit " + 3600/ret.sampleRate, function( err, result ) {
+      cass_client.execute("SELECT * FROM choraldatastream.raw_data WHERE device_id = '" + choralId + "' order by device_timestamp DESC limit " + 3600/ret.choralInfo.sampleRate, function( err, result ) {
         var sorted_results = {};
         var rows = result.rows.reverse();
         for( var i = 0; i < ret.tabs.length; i++ ) {
@@ -152,7 +155,7 @@ router.get('/:choralId', function(req, res, next) {
             });
           }
         }
-        ret.past_data = sorted_results;
+        ret.pastData = sorted_results;
         resolve(ret);
       });
     });
@@ -161,8 +164,8 @@ router.get('/:choralId', function(req, res, next) {
       googleUser: req.user,
       parentChoralId: req.params.choralId,
       tabs: ret.tabs,
-      past_data: ret.past_data,
-      sample_rate: ret.sampleRate
+      pastData: ret.pastData,
+      choralInfo: ret.choralInfo
     });
   });
 });
