@@ -2,7 +2,7 @@ mixin editScript
   // this needs to be a pug mixin because it transfers the children in a really stupid way
   script(type='text/javascript').
     // this is the stupidity im talking about
-    var children = [];
+    var children = !{JSON.stringify(children)} || [];
     var chorals = !{JSON.stringify(chorals)};
 
     function abortChild(index){
@@ -30,7 +30,8 @@ mixin editScript
       children.push(child)
       displayChildren()
     }
-    $(document).ready(()=> {
+
+    $(document).ready(() => {
       displayChildren()
     })
 

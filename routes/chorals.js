@@ -46,7 +46,7 @@ function getChildrenFromRequest(req){
       reqChildren = [ reqChildren ];
   }
   var children = [];
-  if(reqChildren.length){
+  if(reqChildren && reqChildren.length){
       children = reqChildren.map((val) => {return { _id: val } } );
   }
   return children;
@@ -142,22 +142,18 @@ router.get('/:choralId', function(req, res, next) {
   // 2. default currently is 1 hour of data, so get (3600/sampleRate) data points
   // 3. put them into object where {tabName: [data_points]} so FE doesn't need to do any work
   let p = new Promise((resolve, reject) => {
-    var ret = {};
+    ret = {};
     Choral.findOne({ choralId: choralId }, (err, choral) => {
       if (err || !choral) {
-        logHelper.createLog("error", 'Choral does not exist: ' + err, ["chorals", "get"]);
+        logHelper.createLog("error", 'Choral does not exist: ' + err, ["chorals", "delete"]);
         console.log(err);
         res.flash('error', 'Choral does not exist');
         return res.send('404'); // notify client of failure
       }
-      ret.choralInfo = {
-        sampleRate: choral.sampleRate,
-        name: choral.name
-      }
+      ret.sampleRate = choral.sampleRate;
       resolve(ret);
     });
-  });
-
+  }); 
   p.then((ret) => {
     return new Promise((resolve,reject) => {
       client.hgetall(choralId, (err, data) => {
@@ -185,13 +181,7 @@ router.get('/:choralId', function(req, res, next) {
     });
   }).then((ret) => {
     return new Promise((resolve, reject) => {
-      const query = 'SELECT * FROM choraldatastream.raw_data WHERE device_id = ? order by device_timestamp DESC limit ?';
-      cass_client.execute( query , [ choralId,  3600/ret.choralInfo.sampleRate], { prepare: true }, function( err, result ) {
-        if(err || !result) {
-          logHelper.createLog("error", 'Choral data was not found in cassandra: ' + err, ["chorals", "get"]);
-          console.log(err);
-          res.send("Choral not found in database");
-        }
+      cass_client.execute("SELECT * FROM choraldatastream.raw_data WHERE device_id = '" + choralId + "' order by device_timestamp DESC limit " + 3600/ret.sampleRate, function( err, result ) {
         var sorted_results = {};
         var rows = result.rows.reverse();
         for( var i = 0; i < ret.tabs.length; i++ ) {
@@ -209,7 +199,7 @@ router.get('/:choralId', function(req, res, next) {
             });
           }
         }
-        ret.pastData = sorted_results;
+        ret.past_data = sorted_results;
         resolve(ret);
       });
     });
@@ -218,8 +208,8 @@ router.get('/:choralId', function(req, res, next) {
       googleUser: req.user,
       parentChoralId: req.params.choralId,
       tabs: ret.tabs,
-      pastData: ret.pastData,
-      choralInfo: ret.choralInfo
+      past_data: ret.past_data,
+      sample_rate: ret.sampleRate
     });
   });
 });

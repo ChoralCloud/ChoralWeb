@@ -2,8 +2,7 @@ extends layout
 
 block content
   header.w3-container(style='padding-top:22px')
-    h5.w3-left #{choralInfo.name}
-    h5.w3-right Dropdown Placeholder
+    h5.w3-left My Dashboard
 
   .w3-row-padding.w3-margin-bottom
     ul.nav.nav-tabs.graph-tabs
@@ -21,9 +20,8 @@ block content
   script.
     document.addEventListener("DOMContentLoaded", function(event) {
       var tabTitles = !{JSON.stringify(tabs)};
-      var past = !{JSON.stringify(pastData)};
-      var choralInfo = !{JSON.stringify(choralInfo)};
-      var sampleRate = choralInfo.sampleRate;
+      var past = !{JSON.stringify(past_data)};
+      var sampleRate = !{JSON.stringify(sample_rate)}
       var chartsData = {};
       window.charts = {};
       for( var i = 0; i < tabTitles.length; i++ ) {
@@ -38,25 +36,10 @@ block content
           type: 'time.area',
           data: chartsData[tabTitles[i]],
           axes: ['left','bottom','right'],
-          historySize: windowSize,
           windowSize: windowSize,
           //1 tick every X data points
           // should be windowsize/(#ticks we want)
-          tickFormats: { bottom: function(d) {
-              var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
-              var date = new Date(d*1000);
-              var date_month = date.getMonth() + 1;
-              var date_day = date.getDate();
-              var date_hour = date.getHours();
-              var ampm = date_hour < 12 ? "am" : "pm";
-              date_hour = date.getHours() < 12 ? date_hour : date_hour % 12;
-              if (date_hour == 0) date_hour = 12;
-              var date_minute = date.getMinutes();
-              if (date_minute < 10) date_minute = "0" + date_minute;
-              return months[date_month] + ' ' + date_day + ' ' + date_hour + ':' + date_minute + ampm;
-            }
-          },
-          ticks: { time: windowSize/5 },
+          ticks: { time: windowSize/10 }
         });
       }
 
