@@ -22,6 +22,8 @@ block content
     .form-group
       .inline-select
         label(for='childChoral') Children Chorals
+          each child in children
+            p child
         div(id='childrenList')
         select#childChoral.form-control.add-child-input(name='childChoral')
             each choral in chorals
