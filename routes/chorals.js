@@ -101,7 +101,7 @@ router.delete('/:choralId', function(req, res, next) {
   var userModel = res.locals.userModel;
 
   Choral.findOne({ choralId: choralId }, (err, choral) => {
-    if (err) {
+    if (err || !choral) {
       logHelper.createLog("error", 'Choral does not exist: ' + err, ["chorals", "delete"]);
       console.log(err);
       res.flash('error', 'Choral does not exist');
