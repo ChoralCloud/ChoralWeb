@@ -26,7 +26,6 @@ block content
       var chartsData = {};
       window.charts = {};
       for( var i = 0; i < tabTitles.length; i++ ) {
-        console.log(past[tabTitles[i]].length)
         chartsData[tabTitles[i]] = [
           {
             label: tabTitles[i],
@@ -42,7 +41,21 @@ block content
           windowSize: windowSize,
           //1 tick every X data points
           // should be windowsize/(#ticks we want)
-          ticks: { time: windowSize/5 }
+          tickFormats: { bottom: function(d) {
+              var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+              var date = new Date(d*1000);
+              var date_month = date.getMonth() + 1;
+              var date_day = date.getDate();
+              var date_hour = date.getHours();
+              var ampm = date_hour < 12 ? "am" : "pm";
+              date_hour = date.getHours() < 12 ? date_hour : date_hour % 12;
+              if (date_hour == 0) date_hour = 12;
+              var date_minute = date.getMinutes();
+              if (date_minute < 10) date_minute = "0" + date_minute;
+              return months[date_month] + ' ' + date_day + ' ' + date_hour + ':' + date_minute + ampm;
+            }
+          },
+          ticks: { time: windowSize/5 },
         });
       }
 
