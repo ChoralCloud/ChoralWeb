@@ -57,6 +57,18 @@ choralSchema.statics.createNew = function (attrs, cb) {
   if (attrs.sampleRate) newChoral.sampleRate = attrs.sampleRate;
   if (attrs.name)       newChoral.name = attrs.name;
   if (attrs.type)       newChoral.choralType = attrs.type;
+  if (attrs.children){
+    for(var i = 0; i < attrs.children.length; i++){
+      Choral.findOne({'choralId': attrs.children[i]}, function (err, choral){
+        newChoral.addChild(choral, function(err){
+          if(err){
+            console.log(err);
+            return next(err);
+          } 
+        });
+      });
+    }
+  }
 
   newChoral.save((err) => {
     if (err) {
@@ -64,6 +76,36 @@ choralSchema.statics.createNew = function (attrs, cb) {
     }
     else {
       cb(null, newChoral);
+    }
+  });
+};
+
+choralSchema.methods.edit = function (attrs, cb) {
+  var choral = this;
+  if (attrs.user.id)    this.userId = attrs.user.id;
+  if (attrs.func)       this.func = attrs.func;
+  if (attrs.sampleRate) this.sampleRate = attrs.sampleRate;
+  if (attrs.name)       this.name = attrs.name;
+  if (attrs.type)       this.choralType = attrs.type;
+  if (attrs.children){
+    for(var i = 0; i < attrs.children.length; i++){
+      Choral.findOne({'choralId': attrs.children[i]}, function (err, childChoral){
+        choral.addChild(childChoral, function(err){
+          if(err){
+            console.log(err);
+            return next(err);
+          } 
+        });
+      });
+    }
+  }
+
+  this.save((err) => {
+    if (err) {
+      cb(err, null);
+    }
+    else {
+      cb(null, choral);
     }
   });
 };
@@ -111,7 +153,7 @@ choralSchema.statics.getAllChorals = function (cb) {
 };
 
 choralSchema.methods.addChild = function (child, cb) {
-  this.children.push({ childId: child._id });
+  this.children.push(child._id);
   this.save((err) => {
     if (err) {
       cb(err);

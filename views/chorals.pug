@@ -26,7 +26,8 @@ block content
           td= viewHelpers.truncateWithDots(choral.func, 30)
           td
             a.confirm.w3-right.w3-btn.w3-red.delete-choral-btn(data-choral-id=choral.choralId)
-              span.glyphicon.glyphicon-trash
+            a.btn.btn-info(role='button' href='/chorals/edit/' +choral.choralId)
+              span.glyphicon.glyphicon-wrench
             a.w3-right.w3-btn.w3-blue.view-choral-btn(data-choral-id=choral.choralId)
               span.fa.fa-line-chart
 
