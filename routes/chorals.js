@@ -280,7 +280,7 @@ router.get('/edit/:choralId', function(req, res, next) {
           userModel: userModel,
           chorals: chorals || [],
           choralEdit: choral,
-          children: children
+          children: choral.children
         });
       })
     });
