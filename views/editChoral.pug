@@ -7,7 +7,7 @@ block content
       b
         i.fa.fa-dashboard
         |  Edit Choral
-  form.w3-container(method='POST' action='/chorals/'+choralEdit.choralId+'/edit' id='mainForm').new-choral-form
+  form.w3-container(method='POST' action='/chorals/edit/'+choralEdit.choralId id='mainForm').new-choral-form
     .form-group
       label(for='choralNameInput') Name
       input#choralNameInput.form-control(name='name' type='text' placeholder=choralEdit.name)

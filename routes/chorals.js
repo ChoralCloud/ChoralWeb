@@ -153,7 +153,7 @@ router.delete('/:choralId', function(req, res, next) {
   });
 });
 
-router.get('/:choralId/edit', function(req, res, next) {
+router.get('/edit/:choralId', function(req, res, next) {
   var googleUser = req.user;
   var userModel = res.locals.userModel;
   var choralId = req.params.choralId;
@@ -208,7 +208,7 @@ router.get('/:choralId/edit', function(req, res, next) {
   });
 });
 
-router.post('/:choralId/edit', function(req, res, next) {
+router.post('/edit/:choralId', function(req, res, next) {
   var googleUser = req.user;
   var userModel = res.locals.userModel;
   var choralId = req.params.choralId;
