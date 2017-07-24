@@ -181,8 +181,8 @@ router.get('/:choralId/edit', function(req, res, next) {
             return res.send('404'); // notify client of failure
           }
           console.log(child.name);
-          console.log(children);
           children.push(child.name);
+          console.log(children);
         });
       }
       //Delete child cookies if page is reloaded
