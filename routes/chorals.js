@@ -107,7 +107,7 @@ router.get('/:choralId', function(req, res, next) {
     ret = {};
     Choral.findOne({ choralId: choralId }, (err, choral) => {
       if (err) {
-        logHelper.createLog("error", 'Choral does not exist: ' + err, ["chorals", "delete"]);
+        logHelper.createLog("error", 'Choral does not exist: ' + err, ["chorals", "get"]);
         console.log(err);
         res.flash('error', 'Choral does not exist');
         return res.send('404'); // notify client of failure
@@ -123,6 +123,15 @@ router.get('/:choralId', function(req, res, next) {
   p.then((ret) => {
     return new Promise((resolve,reject) => {
       client.hgetall(choralId, (err, data) => {
+        if(err) {
+          logHelper.createLog("error", 'Choral data has not yet been published to redis: ' + err, ["chorals", "get"]);
+          console.log(err);
+          res.flash('error', 'Choral does not exist');
+          return res.send('404'); // notify client of failure
+        }
+        if(data == null) {
+          resolve(ret);
+        }
         var tabs = [];
         var parsedData = JSON.parse(data.device_data);
         for( key in parsedData ) {
