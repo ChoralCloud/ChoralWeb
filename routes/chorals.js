@@ -129,15 +129,16 @@ router.get('/:choralId', function(req, res, next) {
           res.flash('error', 'Choral does not exist');
           return res.send('404'); // notify client of failure
         }
-        if(data == null) {
-          resolve(ret);
-        }
         var tabs = [];
-        var parsedData = JSON.parse(data.device_data);
-        for( key in parsedData ) {
-          var val = parsedData[key];
-          if( !isNaN(parseFloat(val)) && isFinite(val) ) {
-            tabs.push(key);
+        if(data == null) {
+          console.log("data is null");
+        } else {
+          var parsedData = JSON.parse(data.device_data);
+          for( key in parsedData ) {
+            var val = parsedData[key];
+            if( !isNaN(parseFloat(val)) && isFinite(val) ) {
+              tabs.push(key);
+            }
           }
         }
         ret.tabs = tabs;
