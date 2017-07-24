@@ -19,7 +19,15 @@ block content
     .form-group
       label(for='choralFuncInput') Function
       textarea#choralFuncInput.form-control(name='func' type='text' placeholder='function(children, done){ done({ val: 1 }); }')
-    button.w3-btn.w3-blue(type='submit') Create Choral
+
+    if defaultFuncs.length > 0
+      .form-group
+        label(for='choralDefaultFuncInput') Quick Function
+          select(name='defaultFunc' type='text').form-control#choralDefaultFuncInput
+            each func in defaultFuncs
+              option(value=func.func)= func.fileName
+
+
     //Add child to cookies
     .form-group
       .inline-select
@@ -28,12 +36,11 @@ block content
         select#childChoral.form-control.add-child-input(name='childChoral')
             each choral in chorals
               option(value=choral)= choral.name
-    button.btn.btn-default.add-child-btn(type='button' onclick='createChildCookie(childChoral.value)') Add Child
+    button.btn.btn-default.add-child-btn(
+      type='button' onclick='createChildCookie(childChoral.value)') Add Child
+    br
+    br
+    button.w3-btn.w3-blue(type='submit') Create Choral
 
-    //Submit main form
-    br
-    br
-    br
-    button.btn.btn-default(type='submit' form='mainForm') Create Choral
 
   // End page content
