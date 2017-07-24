@@ -46,7 +46,7 @@ router.post('/', function(req, res, next) {
       console.log(err);
       logHelper.createLog("error", 'Choral validation failed: ' + err, ["chorals", "createNew"]);
       res.flash('error', 'Choral validation failed: ' + err);
-      return next(err);
+      return res.redirect(req.baseUrl + '/new');
     }
     logHelper.createLog("success", 'New choral created: ' + JSON.stringify(attrs), ["chorals", "createNew"]);
     res.flash('success', 'New choral created.');

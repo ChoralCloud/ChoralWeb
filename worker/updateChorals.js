@@ -84,6 +84,7 @@ function startNewChorals(chorals){
       }
       run_in = Math.max(run_in, 0)
 
+
       // this is admitidly a bit confusing, here is my thought
       // this setTimeout is used to run the next iteration of the choral
       // once that iteration is run, then the interval kicks in
@@ -118,6 +119,7 @@ function startNewChorals(chorals){
 function clearChoral(choral){
   // clear all unseen timeouts's
   console.log("deleting choral with choral id " + choral.choralId)
+  if(!TIMEOUTS[choral.choralId]) return
   clearTimeout(TIMEOUTS[choral.choralId].timeout_id)
   clearInterval(TIMEOUTS[choral.choralId].timeout_id)
   delete TIMEOUTS[choral.choralId]
