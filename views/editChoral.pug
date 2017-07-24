@@ -10,15 +10,15 @@ block content
   form.w3-container(method='POST' action='/chorals/edit/'+choralEdit.choralId id='mainForm').new-choral-form
     .form-group
       label(for='choralNameInput') Name
-      input#choralNameInput.form-control(name='name' type='text' placeholder=choralEdit.name)
+      input#choralNameInput.form-control(name='name' type='text' value=choralEdit.name)
     .form-group
       label(for='choralSampleRateInput') Sample Rate (seconds)
       .input-group
-        input#choralSampleRateInput.form-control(name='sampleRate' type='text', placeholder=choralEdit.sampleRate)
+        input#choralSampleRateInput.form-control(name='sampleRate' type='text', value=choralEdit.sampleRate)
         .input-group-addon seconds (>= 1)
     .form-group
       label(for='choralFuncInput') Function
-      textarea#choralFuncInput.form-control(name='func' type='text' placeholder=choralEdit.func)
+      textarea#choralFuncInput.form-control(name='func', type='text')= choralEdit.func
     .form-group
       .inline-select
         label(for='childChoral') Children Chorals
