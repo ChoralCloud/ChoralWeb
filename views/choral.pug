@@ -3,6 +3,7 @@ extends layout
 block content
   header.w3-container(style='padding-top:22px')
     h5.w3-left #{choralInfo.name}
+    h5.w3-right Dropdown Placeholder
 
   .w3-row-padding.w3-margin-bottom
     ul.nav.nav-tabs.graph-tabs
@@ -34,7 +35,7 @@ block content
         ];
         var windowSize = 3600/sampleRate;
         window.charts[tabTitles[i]] = $('#areaChart'+tabTitles[i]).epoch({
-          type: 'time.line',
+          type: 'time.area',
           data: chartsData[tabTitles[i]],
           axes: ['left','bottom','right'],
           historySize: windowSize,
