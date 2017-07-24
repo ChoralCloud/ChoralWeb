@@ -19,26 +19,8 @@ block content
     .form-group
       label(for='choralFuncInput') Function
       textarea#choralFuncInput.form-control(name='func' type='text' placeholder='function(children, done){ done({ val: 1 }); }')
-<<<<<<< HEAD
-<<<<<<< HEAD
     button.w3-btn.w3-blue(type='submit') Create Choral
-=======
-        
-
-    //List all children in cookies
-    
-      
     //Add child to cookies
-    form.w3-container(method='POST' action='/chorals/addChild' id='childForm').new-choral-form
-      .form-group
-        .inline-select
-          label(for='childChoral') Children Chorals
-          select#childChoral.form-control.add-child-input(name='childChoral')
-              each choral in chorals
-                option(value=choral.choralId)= choral.name
-      button.btn.btn-default.add-child-btn(type='button' onclick='createCookie(childChoral.value)') Add Child
-
-=======
     .form-group
       .inline-select
         label(for='childChoral') Children Chorals
@@ -47,13 +29,11 @@ block content
             each choral in chorals
               option(value=choral)= choral.name
     button.btn.btn-default.add-child-btn(type='button' onclick='createChildCookie(childChoral.value)') Add Child
->>>>>>> ee488af... Children addition is now in the new Choral edit page, children can be added on choral creation aswell
 
     //Submit main form
     br
     br
     br
     button.btn.btn-default(type='submit' form='mainForm') Create Choral
->>>>>>> 134ab83... New choral page includes children addition using cookies
 
   // End page content
