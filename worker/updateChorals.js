@@ -107,9 +107,6 @@ function startNewChorals(chorals){
       // first timeout is fired
       TIMEOUTS[choral.choralId].timeout_id = setTimeout(() => {
         getChildrenAndRunChoral(choral)
-        TIMEOUTS[choral.choralId].timeout_id = setInterval(() => {
-          getChildrenAndRunChoral(choral)
-        }, choral.sampleRate * 1000)
       }, run_in)
     })
   })
@@ -161,6 +158,9 @@ function runComputation(children, choral){
     } catch (e) {
       sendChoralData(current_choral, { error: e.message })
     }
+    TIMEOUTS[choral.choralId].timeout_id = setTimeout(() => {
+      getChildrenAndRunChoral(choral)
+    }, current_choral.sampleRate * 1000)
   })
 }
 
