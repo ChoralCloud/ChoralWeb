@@ -35,6 +35,7 @@ var choralSchema = new mongoose.Schema({
     type: Number,
     default: 5,
     min: 1,
+    max: Math.floor((Math.pow(2, 31) -1)/1000),
   },
   choralType: {
     type: String,
