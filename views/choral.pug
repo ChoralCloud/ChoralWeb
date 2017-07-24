@@ -26,6 +26,7 @@ block content
       var chartsData = {};
       window.charts = {};
       for( var i = 0; i < tabTitles.length; i++ ) {
+        console.log(past[tabTitles[i]].length)
         chartsData[tabTitles[i]] = [
           {
             label: tabTitles[i],
@@ -34,13 +35,14 @@ block content
         ];
         var windowSize = 3600/sampleRate;
         window.charts[tabTitles[i]] = $('#areaChart'+tabTitles[i]).epoch({
-          type: 'time.area',
+          type: 'time.line',
           data: chartsData[tabTitles[i]],
           axes: ['left','bottom','right'],
+          historySize: windowSize,
           windowSize: windowSize,
           //1 tick every X data points
           // should be windowsize/(#ticks we want)
-          ticks: { time: windowSize/10 }
+          ticks: { time: windowSize/5 }
         });
       }
 
