@@ -95,7 +95,7 @@ choralSchema.methods.edit = function (attrs, cb) {
           if(err){
             console.log(err);
             return next(err);
-          } 
+          }
         });
       });
     }

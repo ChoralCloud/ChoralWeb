@@ -253,53 +253,37 @@ router.get('/edit/:choralId', function(req, res, next) {
   var choralId = req.params.choralId;
   var children = [];
 
-  // grab all chorals belonging to the user.
-  Choral.findAllForUser(userModel, (err, chorals) => {
-    if (err) {
-      console.log(err);
-      return next(err);
-    }
-
-    Choral.findOne({ choralId: choralId }, (err, choral) => {
-      if (err) {
+  Choral.findOne({
+    userId: userModel,
+    choralType: "choral",
+    choralId: choralId
+    })
+    // this follows the object ids in the children array and
+    // populates them with the choral info
+    .populate("children")
+    .exec((err, choral) => {
+      if (err || !choral) {
         console.log(err);
         res.flash('error', 'Choral does not exist');
-        return res.send('404'); // notify client of failure
-      }
-      //Iterate and store all children chorals to be displayed
-      for(var i = 0; i < choral.children.length; i++){
-        Choral.findOne({ _id: choral.children[i] }, (err, child) => {
-          if (err) {
-            console.log(err);
-            res.flash('error', 'Choral does not exist');
-            return res.send('404'); // notify client of failure
-          }
-          console.log(child.name);
-          children.push(child.name);
-          console.log(children);
-        });
-      }
-      //Delete child cookies if page is reloaded
-      var cookies = req.get("Cookie");
-      for(var i = 0; cookieHelper.readCookie('child' + i, cookies) != null; i++){
-        res.clearCookie('child' + i);
+        return res.redirect('/chorals')
       }
       //Pass choral to be edited and list of chorals
-      console.log("CHILDREN PASSED ARE");
-      console.log(children);
+      Choral.findAllForUser(userModel, (err, chorals) => {
+        if (err) {
+          console.log(err);
+          res.flash('error', err.message);
+          return res.redirect('/chorals')
+        }
 
-      //Pass choral to be edited and list of chorals
-      res.render('editChoral',
-        {
+        res.render('editChoral', {
           googleUser: googleUser,
           userModel: userModel,
-          chorals: chorals,
+          chorals: chorals || [],
           choralEdit: choral,
           children: children
-        }
-      );
+        });
+      })
     });
-  });
 });
 
 router.post('/edit/:choralId', function(req, res, next) {
