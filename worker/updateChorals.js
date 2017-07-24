@@ -159,7 +159,7 @@ function runComputation(children, choral){
       sendChoralData(current_choral, { error: e.message })
     }
     TIMEOUTS[choral.choralId].timeout_id = setTimeout(() => {
-      getChildrenAndRunChoral(choral)
+      getChildrenAndRunChoral(current_choral)
     }, current_choral.sampleRate * 1000)
   })
 }
