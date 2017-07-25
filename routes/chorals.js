@@ -104,7 +104,7 @@ router.get('/:choralId', function(req, res, next) {
   // 2. default currently is 1 hour of data, so get (3600/sampleRate) data points
   // 3. put them into object where {tabName: [data_points]} so FE doesn't need to do any work
   let p = new Promise((resolve, reject) => {
-    ret = {};
+    var ret = {};
     Choral.findOne({ choralId: choralId }, (err, choral) => {
       if (err) {
         logHelper.createLog("error", 'Choral does not exist: ' + err, ["chorals", "get"]);
