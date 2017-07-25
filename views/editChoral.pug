@@ -23,7 +23,7 @@ block content
     .form-group
       label(for='choralFuncInput') Function
       textarea#choralFuncInput.form-control(name='func', type='text')= choralEdit.func
-    +children_add()
+    +children_add(choralEdit)
 
     //Submit main form
     br

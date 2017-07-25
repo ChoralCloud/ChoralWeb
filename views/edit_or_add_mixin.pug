@@ -1,4 +1,4 @@
-mixin editScript(children, chorals)
+mixin editScript(children, chorals, thisChoral)
   // this needs to be a pug mixin because it transfers the children in a really stupid way
   script(type='text/javascript').
     // this is the stupidity im talking about
@@ -34,13 +34,14 @@ mixin editScript(children, chorals)
       displayChildren()
     })
 
-mixin children_add
+mixin children_add(thisChoral)
   .form-group
     .inline-select
       label Children Chorals
         div#children-list
-      div(id='children-list')
+      div
         select#childChoral.form-control.add-child-input(name='childChoral')
           each choral in chorals
-            option(value=choral)= choral.name
+            -if(!thisChoral || (choral.choralId != thisChoral.choralId))
+              option(value=choral)= choral.name
         button.w3-btn.w3-blue.w3-right(type='button' onclick='adoptChild(childChoral.value)') Add Child
