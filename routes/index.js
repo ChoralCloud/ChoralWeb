@@ -30,8 +30,8 @@ router.get('/home', function(req, res, next) {
       rps: 0
     };
 
-    for (i in chorals) {
-      stats.rps += (1/chorals[i].sampleRate)
+    for (i in rootChorals) {
+      stats.rps += (1/rootChorals[i].sampleRate)
     }
 
     res.render('home', { 
