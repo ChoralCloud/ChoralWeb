@@ -52,7 +52,7 @@ function getChildrenFromRequest(req){
   return children;
 }
 
-router.post('/new', function(req, res, next) {
+router.post('/', function(req, res, next) {
   var googleUser = req.user;
   var userModel = res.locals.userModel;
 
@@ -137,7 +137,7 @@ router.get('/:choralId', function(req, res, next) {
     var ret = {};
     Choral.findOne({ choralId: choralId }, (err, choral) => {
       if (err || !choral) {
-        logHelper.createLog("error", 'Choral does not exist: ' + err, ["chorals", "delete"]);
+        logHelper.createLog("error", 'Choral does not exist: ' + err, ["chorals", "get"]);
         console.log(err);
         res.flash('error', 'Choral does not exist');
         return res.send('404'); // notify client of failure
@@ -153,7 +153,7 @@ router.get('/:choralId', function(req, res, next) {
     return new Promise((resolve,reject) => {
       client.hgetall(choralId, (err, data) => {
         if(err) {
-          logHelper.createLog("error", 'Choral data has not yet been published to redis: ' + err, ["chorals", "delete"]);
+          logHelper.createLog("error", 'Choral data has not yet been published to redis: ' + err, ["chorals", "get"]);
           console.log(err);
           res.flash('error', 'Choral does not exist');
           return res.send('404'); // notify client of failure
@@ -242,7 +242,7 @@ router.delete('/:choralId', function(req, res, next) {
       }
 
       res.flash('success', 'Choral successfully deleted.');
-      return res.send('204'); // notify client of failure
+      return res.send('204');  // successful deletion
     });
   });
 });
@@ -312,7 +312,6 @@ router.post('/edit/:choralId', function(req, res, next) {
       if(err){
         console.log(err);
         res.flash('error', 'Choral validation failed: ' + err);
-        console.log(req.originalUrl )
         return res.redirect(req.originalUrl + '/');
       }
       res.flash('success', 'Choral Edited');

@@ -1,8 +1,8 @@
-mixin editScript
+mixin editScript(children, chorals)
   // this needs to be a pug mixin because it transfers the children in a really stupid way
   script(type='text/javascript').
     // this is the stupidity im talking about
-    var children = !{JSON.stringify(children)} || [];
+    var children = !{JSON.stringify(children)};
     var chorals = !{JSON.stringify(chorals)};
 
     function abortChild(index){
@@ -41,7 +41,7 @@ mixin children_add
       label Children Chorals
         div#children-list
       div(id='children-list')
-      select#childChoral.form-control.add-child-input(name='childChoral')
+        select#childChoral.form-control.add-child-input(name='childChoral')
           each choral in chorals
             option(value=choral)= choral.name
-  button.btn.btn-default.add-child-btn(type='button' onclick='adoptChild(childChoral.value)') Add Child
+        button.w3-btn.w3-blue.w3-right(type='button' onclick='adoptChild(childChoral.value)') Add Child

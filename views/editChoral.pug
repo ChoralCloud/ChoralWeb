@@ -10,6 +10,9 @@ block content
         |  Edit Choral
   form.w3-container(method='POST' action='/chorals/edit/'+ choralEdit.choralId id='mainForm').new-choral-form
     .form-group
+      label(for='choralIdInput') ID
+      input#choralIdInput.form-control(name='id' type='text' readonly value=choralEdit.choralId)
+    .form-group
       label(for='choralNameInput') Name
       input#choralNameInput.form-control(name='name' type='text' value=choralEdit.name)
     .form-group
@@ -26,6 +29,6 @@ block content
     br
     br
     br
-    button.btn.btn-default(type='submit' form='mainForm') Submit Changes
+    button.w3-btn.w3-blue(type='submit' form='mainForm') Submit Changes
 
-  +editScript()
+  +editScript(children, chorals)
