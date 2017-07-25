@@ -7,16 +7,6 @@ function addViewChoralHandlers() {
   }
 }
 
-function viewChoralHandler(e) {
-  $.ajax({ // send a GET request
-    url: '/chorals/' + this.dataset.choralId,
-    type: 'GET'
-  })
-    .always(() => {
-      window.location.href = 'chorals/' + this.dataset.choralId;
-    });
-}
-
 function addCopyChoralHandlers() {
   var $buttonNodes = document.getElementsByClassName('copy-choral-btn');
 
