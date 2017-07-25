@@ -121,14 +121,6 @@ router.get('/new', function(req, res, next) {
         console.log(err)
         next(err);
       });
-    res.render('newChoral',
-      {
-        googleUser: googleUser,
-        userModel: userModel,
-        viewHelpers: viewHelpers,
-        chorals: chorals
-      }
-    );
   });
 });
 
