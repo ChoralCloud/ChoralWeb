@@ -290,15 +290,18 @@ router.post('/edit/:choralId', function(req, res, next) {
   var googleUser = req.user;
   var userModel = res.locals.userModel;
   var choralId = req.params.choralId;
-
-  var cookies = req.get("Cookie");
-  var children = [];
-  var child;
-
-  for(var i = 0; cookieHelper.readCookie('child' + i, cookies) != null; i++){
-    child = cookieHelper.readCookie('child' + i, cookies);
-    child = JSON.parse(child);
-    children.push(child.choralId);
+  
+  console.log(req.body)
+  var children = []
+  var reqChildren = req.body['children[]'];
+  // if the value is a string then convert it to an array
+  // for some reason when only one thing comes in it comes in as a
+  // string instead of an array
+  if (typeof reqChildren === 'string' || reqChildren instanceof String){
+      reqChildren = [ reqChildren ]
+  }
+  if(reqChildren.length){
+      children = reqChildren.map((val) => {return { _id: val } } )
   }
 
   var attrs = {
@@ -311,16 +314,17 @@ router.post('/edit/:choralId', function(req, res, next) {
   };
 
   Choral.findOne({ choralId: choralId }, (err, choral) => {
-    if (err) {
+    if (err || !choral) {
       console.log(err);
       res.flash('error', 'Choral does not exist');
       return res.send('404'); // notify client of failure
     }
-    choral.edit(attrs, (err, choral) => {
+    choral.edit(attrs, (err) => {
       if(err){
         console.log(err);
         res.flash('error', 'Choral validation failed: ' + err);
-        return next(err);
+        console.log(req.originalUrl )
+        return res.redirect(req.originalUrl + '/');
       }
       res.flash('success', 'Choral Edited');
       res.redirect(req.baseUrl + '/');
