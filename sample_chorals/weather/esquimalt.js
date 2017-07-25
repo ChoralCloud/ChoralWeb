@@ -1,12 +1,12 @@
-(
-
-// grab from here to the other comment not including the comment
-
 function (_, done){
+  /*
+   * This function polls open weather api to get the latest
+   * weather information from Esquimalt
+   */
   var request = require('request')
   var options = {
     method: 'GET',
-    uri: "http://api.openweathermap.org/data/2.5/weather?q=Esquimalt,CA&appid=02c3ca6284dbda7b3a03ad60653162c2",
+    uri: "http://api.openweathermap.org/data/2.5/weather?q=Esquimalt,CA&appid=02c3ca6284dbda7b3a03ad60653162c2&units=metric",
     json: true
   }
 
@@ -17,8 +17,6 @@ function (_, done){
     }
     // reset the output on every request
     output = {
-      lat: null,
-      lon: null,
       temp: null,
       pressure: null,
       humidity: null,
@@ -31,8 +29,6 @@ function (_, done){
       return done(output)
     }
 
-    output.lat = body.coord.lat
-    output.lon = body.coord.lon
     output.city = body.name;
     if(body.weather[-1]){
       output.forecast = body.weather[-1].description
@@ -45,7 +41,4 @@ function (_, done){
     done(output)
   });
 }
-
-)(null, (result) => console.log("done", result)) 
-
 

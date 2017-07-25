@@ -1,10 +1,10 @@
-(
-
-// grab from here to the other comment not including the comment
-
-
 function (children, done){
-  // reset the output on every request
+  /*
+   * This function aggregates any number of temperature sensors
+   * to get a average of the temperature for the temperature,
+   * the pressure and the humidity
+   */
+
   var output = {
     temp: null,
     pressure: null,
@@ -34,40 +34,3 @@ function (children, done){
   }) && done(output)
 
 }
-
-
-)(
-{ Nanaimo:
- { data:
-    { lat: 49.17,
-      lon: -123.94,
-      temp: 295.69,
-      pressure: 1018,
-      humidity: 36,
-      error: null,
-      city: 'Nanaimo' },
-   device_timestamp: 1646430170 },
-'North Saanich':
- { data:
-    { lat: 48.67,
-      lon: -123.42,
-      temp: 293.51,
-      pressure: 1021,
-      humidity: 56,
-      error: null,
-      city: 'North Saanich' },
-   device_timestamp: 1646430180 },
-Victoria:
- { data:
-    { lat: 48.43,
-      lon: -123.37,
-      temp: 292.32,
-      pressure: 1021,
-      humidity: 56,
-      error: null,
-      city: 'Victoria' },
-   device_timestamp: 1646430177 } }
-  , (result) => console.log("done", result)) 
-
-
-
