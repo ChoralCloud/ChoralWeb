@@ -34,7 +34,6 @@ block content
   script.
     document.addEventListener("DOMContentLoaded", function(event) {
       var childData = !{JSON.stringify(childData)}
-      console.log(childData);
       var tabTitles = !{JSON.stringify(tabs)};
       var past = !{JSON.stringify(pastData)};
       var choralInfo = !{JSON.stringify(choralInfo)};
@@ -103,8 +102,4 @@ block content
           socket.emit('subscribeToID', { choralId: id });
         }
       }
-      console.log(childData);
-      socket.on('ackConnect', function (data) {
-        console.log(data);
-      });
     });

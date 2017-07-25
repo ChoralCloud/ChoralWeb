@@ -139,12 +139,6 @@ router.get('/:choralId', function(req, res, next) {
         return res.send('404'); // notify client of failure
       }
       resolve(choral);
-      /*returnObj.choralInfo = {
-        sampleRate: choral.sampleRate,
-        name: choral.name,
-        children: choral.children
-      }
-      resolve(returnObj);*/
     });
   });
 
@@ -166,7 +160,7 @@ router.get('/:choralId', function(req, res, next) {
       });
     })).then((values) => {
       // we only arrive here if there were children
-      // aggregate the values
+      // aggregate the values and return only 1 object
       childData = {}
       for(var i = 0; i < values.length; i++) {
         childData[values[i].choralId] = {
@@ -198,6 +192,7 @@ router.get('/:choralId', function(req, res, next) {
         });
       });
     })).then((values) => {
+      // again aggregate the values into childData object
       for(var i = 0; i < values.length; i++) {
         childData[values[i].choralId].device_data = values[i].device_data;
       }
@@ -218,6 +213,7 @@ router.get('/:choralId', function(req, res, next) {
       }
     };
     return new Promise((resolve,reject) => {
+      // get parent data from redis, so we can use that to form tabs
       client.hgetall(choral.choralId, (err, data) => {
         if(err) {
           logHelper.createLog("error", 'Choral data has not yet been published to redis: ' + err, ["chorals", "get"]);
@@ -240,6 +236,7 @@ router.get('/:choralId', function(req, res, next) {
       });
     });
   }).then((parentObj) => {
+    // get parent past data in cassandra, and add to parent object
     return new Promise((resolve, reject) => {
       const query = 'SELECT * FROM choraldatastream.raw_data WHERE device_id = ? order by device_timestamp DESC limit ?';
       cass_client.execute( query , [ choralId,  3600/parentObj.choralInfo.sampleRate], { prepare: true }, function( err, result ) {
@@ -272,9 +269,12 @@ router.get('/:choralId', function(req, res, next) {
   }).catch((reason) => {
     res.send(String(reason));
   });
+  // this promise has now return an object containing the parent data
+  // this is the content we are going to display on the graph
+
 
   Promise.all([p2,p3]).then((values) => {
-    // finally render the page
+    // once both chains have finished, we can render the page
     var childData = values[0];
     var parentData = values[1];
     res.render('choral', {
