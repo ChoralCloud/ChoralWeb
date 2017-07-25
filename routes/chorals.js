@@ -3,7 +3,6 @@ var router = express.Router();
 var Choral = require('../models/choral');
 var viewHelpers = require('../helpers/viewHelpers');
 var logHelper = require('../helpers/logHelper');
-var cookieHelper = require('../helpers/cookieHelper');
 var client = require('redis').createClient(process.env.REDIS_STORE_URI)
 const cassandra = require('cassandra-driver');
 const cass_client = new cassandra.Client({
@@ -38,18 +37,26 @@ router.get('/', function(req, res, next) {
   });
 });
 
-router.post('/', function(req, res, next) {
+function getChildrenFromRequest(req){
+  var reqChildren = req.body['children[]'];
+  // if the value is a string then convert it to an array
+  // for some reason when only one thing comes in it comes in as a
+  // string instead of an array
+  if (typeof reqChildren === 'string' || reqChildren instanceof String){
+      reqChildren = [ reqChildren ];
+  }
+  var children = [];
+  if(reqChildren.length){
+      children = reqChildren.map((val) => {return { _id: val } } );
+  }
+  return children;
+}
+
+router.post('/new', function(req, res, next) {
   var googleUser = req.user;
   var userModel = res.locals.userModel;
-  var cookies = req.get("Cookie");
-  var children = [];
-  var child;
 
-  for(var i = 0; cookieHelper.readCookie('child' + i, cookies) != null; i++){
-    child = cookieHelper.readCookie('child' + i, cookies);
-    child = JSON.parse(child);
-    children.push(child.choralId);
-  }
+  var children = getChildrenFromRequest(req)
 
   var attrs = {
     user: userModel,
@@ -96,12 +103,6 @@ router.get('/new', function(req, res, next) {
       return next(err);
     }
 
-    //Delete child cookies if page is reloaded
-    var cookies = req.get("Cookie");
-    for(var i = 0; cookieHelper.readCookie('child' + i, cookies) != null; i++){
-      res.clearCookie('child' + i);
-    }
-
     getDefaultFuncs() // fetch quick funcs
       .then(funcs => {
 
@@ -120,6 +121,14 @@ router.get('/new', function(req, res, next) {
         console.log(err)
         next(err);
       });
+    res.render('newChoral',
+      {
+        googleUser: googleUser,
+        userModel: userModel,
+        viewHelpers: viewHelpers,
+        chorals: chorals
+      }
+    );
   });
 });
 
@@ -224,13 +233,13 @@ router.delete('/:choralId', function(req, res, next) {
       logHelper.createLog("error", 'Choral does not exist: ' + err, ["chorals", "delete"]);
       console.log(err);
       res.flash('error', 'Choral does not exist');
-      return res.send('404'); // notify client of failure
+      return res.redirect('/chorals')
     }
 
     // ensure choral belongs to the current user
     if (choral.userId.toString() != userModel._id.toString()) {
       res.flash('error', 'Cannot remove a choral that does not belong to you.');
-      return res.send('403'); // notify client of failure
+      return res.redirect('/chorals')
     }
 
     Choral.remove({ choralId: choral.choralId }, (err) => {
@@ -238,11 +247,11 @@ router.delete('/:choralId', function(req, res, next) {
         logHelper.createLog("error", 'Error removing choral: ' + err, ["chorals", "delete"]);
         console.log(err);
         res.flash('error', 'Error removing choral');
-        return res.send('500'); // notify client of failure
+        return res.redirect('/chorals')
       }
 
       res.flash('success', 'Choral successfully deleted.');
-      return res.send('204'); // successful deletion
+      return res.redirect('/chorals')
     });
   });
 });
@@ -251,7 +260,6 @@ router.get('/edit/:choralId', function(req, res, next) {
   var googleUser = req.user;
   var userModel = res.locals.userModel;
   var choralId = req.params.choralId;
-  var children = [];
 
   Choral.findOne({
     userId: userModel,
@@ -290,19 +298,9 @@ router.post('/edit/:choralId', function(req, res, next) {
   var googleUser = req.user;
   var userModel = res.locals.userModel;
   var choralId = req.params.choralId;
-  
+
   console.log(req.body)
-  var children = []
-  var reqChildren = req.body['children[]'];
-  // if the value is a string then convert it to an array
-  // for some reason when only one thing comes in it comes in as a
-  // string instead of an array
-  if (typeof reqChildren === 'string' || reqChildren instanceof String){
-      reqChildren = [ reqChildren ]
-  }
-  if(reqChildren.length){
-      children = reqChildren.map((val) => {return { _id: val } } )
-  }
+  var children = getChildrenFromRequest(req)
 
   var attrs = {
     user: userModel,

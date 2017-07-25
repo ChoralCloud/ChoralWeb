@@ -78,16 +78,16 @@ choralSchema.statics.createNew = function (attrs, cb) {
   if (attrs.name)       newChoral.name = attrs.name;
   if (attrs.type)       newChoral.choralType = attrs.type;
   if (attrs.children){
-    this.children = attrs.children
+    newChoral.children = attrs.children
   }
-  this.save(cb);
+  newChoral.save(cb);
 };
 
 
 choralSchema.methods.edit = function (attrs, cb) {
   var choral = this;
   if (attrs.user.id)    this.userId = attrs.user.id;
-  if (attrs.func)       this.func = attrs.func;
+  if (attrs.func)       this.func = attrs.func.trim();
   if (attrs.sampleRate) this.sampleRate = attrs.sampleRate;
   if (attrs.name)       this.name = attrs.name;
   if (attrs.type)       this.choralType = attrs.type;

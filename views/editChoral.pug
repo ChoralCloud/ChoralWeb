@@ -1,4 +1,5 @@
 extends layout
+include edit_or_add_mixin
 
 block content
   // !PAGE CONTENT!
@@ -19,15 +20,7 @@ block content
     .form-group
       label(for='choralFuncInput') Function
       textarea#choralFuncInput.form-control(name='func', type='text')= choralEdit.func
-    .form-group
-      .inline-select
-        label Children Chorals
-          div#children-list
-        div(id='children-list')
-        select#childChoral.form-control.add-child-input(name='childChoral')
-            each choral in chorals
-              option(value=choral)= choral.name
-    button.btn.btn-default.add-child-btn(type='button' onclick='adoptChild(childChoral.value)') Add Child
+    +children_add()
 
     //Submit main form
     br
@@ -35,47 +28,4 @@ block content
     br
     button.btn.btn-default(type='submit' form='mainForm') Submit Changes
 
-  script(type='text/javascript').
-    var children = !{JSON.stringify(children)};
-    var chorals = !{JSON.stringify(chorals)};
-
-    function abortChild(index){
-      console.log(index)
-      children.splice(index, 1)
-      displayChildren()
-    }
-
-    function displayChildren(){
-      $("#children-list").empty()
-      children.forEach((child, ind) => {
-      // append something you can view and a hidden input for each of the children
-        $("#children-list").append(`
-        <h4><a onclick="abortChild(${ind})" class="confirm w2-right w3-btn w3-red delete-choral-btn"><span class="glyphicon glyphicon-trash" ></span></a>  &nbsp ${child.name}</h3>
-        <input type="hidden" name="children[]" value='${child._id}' >`)
-      })
-    }
-
-    function adoptChild(child){
-      var child = JSON.parse(child)
-      console.log(child)
-      // dont add in things that are already in the list
-      if(children.find((val) => val.choralId == child.choralId )) {
-        return;
-      }
-      children.push(child)
-      displayChildren()
-    }
-    $(document).ready(()=> {
-      displayChildren()
-    })
-
-    $('#mainForm').submit(function() {
-      children.forEach((child) => { 
-        //var val = JSON.stringify({ choralId: child.choralId });
-        //console.log(val)
-        //$('#children-list').append(`<input type="hidden" name="children[]" value="${val}"/>`)
-      })
-      return true;
-    });
-
-  // End page content
+  +editScript()
