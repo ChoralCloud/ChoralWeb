@@ -14,8 +14,10 @@ services:
       REDIS_STORE_URI: "redis://redis:6379"
       REDIS_STORE_SECRET: "DEVELOPMENT_SECRET"
       MONGO_URL: "mongodb://mongodb:27017"
+      CASSANDRA_URL: "cassandra"
     external_links:
       - redis
+      - cassandra
   choralworker:
     build: .
     command: npm run-script start-worker
