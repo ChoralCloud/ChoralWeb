@@ -2,7 +2,8 @@ extends layout
 
 block content
   header.w3-container(style='padding-top:22px')
-    h5.w3-left My Dashboard
+    h5.w3-left #{choralInfo.name}
+    h5.w3-right Dropdown Placeholder
 
   .w3-row-padding.w3-margin-bottom
     ul.nav.nav-tabs.graph-tabs
@@ -20,8 +21,9 @@ block content
   script.
     document.addEventListener("DOMContentLoaded", function(event) {
       var tabTitles = !{JSON.stringify(tabs)};
-      var past = !{JSON.stringify(past_data)};
-      var sampleRate = !{JSON.stringify(sample_rate)}
+      var past = !{JSON.stringify(pastData)};
+      var choralInfo = !{JSON.stringify(choralInfo)};
+      var sampleRate = choralInfo.sampleRate;
       var chartsData = {};
       window.charts = {};
       for( var i = 0; i < tabTitles.length; i++ ) {

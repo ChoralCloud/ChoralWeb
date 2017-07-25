@@ -134,7 +134,7 @@ router.get('/:choralId', function(req, res, next) {
   // 2. default currently is 1 hour of data, so get (3600/sampleRate) data points
   // 3. put them into object where {tabName: [data_points]} so FE doesn't need to do any work
   let p = new Promise((resolve, reject) => {
-    ret = {};
+    var ret = {};
     Choral.findOne({ choralId: choralId }, (err, choral) => {
       if (err || !choral) {
         logHelper.createLog("error", 'Choral does not exist: ' + err, ["chorals", "delete"]);
@@ -142,7 +142,10 @@ router.get('/:choralId', function(req, res, next) {
         res.flash('error', 'Choral does not exist');
         return res.send('404'); // notify client of failure
       }
-      ret.sampleRate = choral.sampleRate;
+      ret.choralInfo = {
+        sampleRate: choral.sampleRate,
+        name: choral.name
+      }
       resolve(ret);
     });
   }); 
@@ -150,7 +153,7 @@ router.get('/:choralId', function(req, res, next) {
     return new Promise((resolve,reject) => {
       client.hgetall(choralId, (err, data) => {
         if(err) {
-          logHelper.createLog("error", 'Choral data has not yet been published to redis: ' + err, ["chorals", "get"]);
+          logHelper.createLog("error", 'Choral data has not yet been published to redis: ' + err, ["chorals", "delete"]);
           console.log(err);
           res.flash('error', 'Choral does not exist');
           return res.send('404'); // notify client of failure
@@ -173,7 +176,13 @@ router.get('/:choralId', function(req, res, next) {
     });
   }).then((ret) => {
     return new Promise((resolve, reject) => {
-      cass_client.execute("SELECT * FROM choraldatastream.raw_data WHERE device_id = '" + choralId + "' order by device_timestamp DESC limit " + 3600/ret.sampleRate, function( err, result ) {
+      const query = 'SELECT * FROM choraldatastream.raw_data WHERE device_id = ? order by device_timestamp DESC limit ?';
+      cass_client.execute( query , [ choralId,  3600/ret.choralInfo.sampleRate], { prepare: true }, function( err, result ) {
+        if(err || !result) {
+          logHelper.createLog("error", 'Choral data was not found in cassandra: ' + err, ["chorals", "get"]);
+          console.log(err);
+          res.send("Choral not found in database");
+        }
         var sorted_results = {};
         var rows = result.rows.reverse();
         for( var i = 0; i < ret.tabs.length; i++ ) {
@@ -191,7 +200,7 @@ router.get('/:choralId', function(req, res, next) {
             });
           }
         }
-        ret.past_data = sorted_results;
+        ret.pastData = sorted_results;
         resolve(ret);
       });
     });
@@ -200,8 +209,8 @@ router.get('/:choralId', function(req, res, next) {
       googleUser: req.user,
       parentChoralId: req.params.choralId,
       tabs: ret.tabs,
-      past_data: ret.past_data,
-      sample_rate: ret.sampleRate
+      pastData: ret.pastData,
+      choralInfo: ret.choralInfo
     });
   });
 });
@@ -215,13 +224,13 @@ router.delete('/:choralId', function(req, res, next) {
       logHelper.createLog("error", 'Choral does not exist: ' + err, ["chorals", "delete"]);
       console.log(err);
       res.flash('error', 'Choral does not exist');
-      return res.redirect('/chorals')
+      return res.send('404'); // notify client of failure
     }
 
     // ensure choral belongs to the current user
     if (choral.userId.toString() != userModel._id.toString()) {
       res.flash('error', 'Cannot remove a choral that does not belong to you.');
-      return res.redirect('/chorals')
+      return res.send('403'); // notify client of failure
     }
 
     Choral.remove({ choralId: choral.choralId }, (err) => {
@@ -229,11 +238,11 @@ router.delete('/:choralId', function(req, res, next) {
         logHelper.createLog("error", 'Error removing choral: ' + err, ["chorals", "delete"]);
         console.log(err);
         res.flash('error', 'Error removing choral');
-        return res.redirect('/chorals')
+        return res.send('500'); // notify client of failure
       }
 
       res.flash('success', 'Choral successfully deleted.');
-      return res.redirect('/chorals')
+      return res.send('204'); // notify client of failure
     });
   });
 });
