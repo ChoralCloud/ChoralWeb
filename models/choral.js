@@ -11,6 +11,14 @@ var choralSchema = new mongoose.Schema({
     type: [{ type: ObjectId, required: '{PATH} is required!', ref: 'Choral'  }],
     validate: [
         {
+          validator: function(children) { // ensure that chorals are not their direct children 
+            // if there is the same id in the children array then one of the children
+            // is this choral
+            return ! children.find((val) => this._id.equals(val));
+          },
+          message: 'You cannot have a choral that is a child of itself'
+        },
+        {
           validator: function(children) { // ensure devices have no children
             return this.choralType == 'device' ? (children.length == 0) : true;
           },
@@ -18,7 +26,7 @@ var choralSchema = new mongoose.Schema({
         },
         {
           isAsync: true,
-          validator: function(v, cb) { // ensure devices have no children
+          validator: function(v, cb) { // ensure there are no duplicate ids or non existant chorals
             if(!v) return true;
 
             Choral.find({_id: {$in: v }}, (err, found) => {
