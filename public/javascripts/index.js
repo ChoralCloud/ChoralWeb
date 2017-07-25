@@ -46,7 +46,6 @@ function deleteChoralHandler(e) {
     });
 }
 
-
 $(document).ready(function() {
   addDeleteChoralHandlers();
   addCopyChoralHandlers();

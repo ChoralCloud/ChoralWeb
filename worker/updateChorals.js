@@ -69,7 +69,7 @@ function startNewChorals(chorals){
     // make a new object for the chorals
     TIMEOUTS[choral.choralId] = { }
 
-    //console.log("new choral added " + choral.choralId)
+    console.log("new choral added " + choral.choralId)
 
     // get the current value of the choral
     client.hgetall(choral.choralId, (err, current_val) => {
@@ -173,7 +173,7 @@ function getCallBack(choral){
 
 // Sends updated choral data to the device endpoint
 function sendChoralData(choral, computed_data){
-  //console.log(choral.name, computed_data)
+  console.log(choral.name, computed_data)
 
   if(!computed_data) computed_data = {}
 

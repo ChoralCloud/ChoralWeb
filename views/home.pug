@@ -60,12 +60,7 @@ block content
       network.on("click", function (params) {
         var choralId = this.getNodeAt(params.pointer.DOM);
         var choral = chorals.find(function(choral) { return choral.choralId == choralId; })
-
-        if (choral.choralType == 'choral') {
-          location.href = "/chorals/" + choralId;
-        } else {
-          location.href = "/devices/" + choralId;
-        }
+        location.href = "/chorals/" + choralId;
       });
 
       network.on("hoverNode", function (params) {
