@@ -22,7 +22,6 @@ var choralSchema = new mongoose.Schema({
             if(!v) return true;
 
             Choral.find({_id: {$in: v }}, (err, found) => {
-              console.log(found, v)
               if(err){
                 return cb(false, 'error from db while testing chorals: ' + err.message)
               }
