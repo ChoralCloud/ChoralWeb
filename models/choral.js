@@ -137,7 +137,6 @@ choralSchema.statics.findTreeForUser = function (user, cb) {
     }
     // Find all roots
     this.find({ $and: [ { userId: user._id }, 
-                        { choralType: "choral" }, 
                         { _id: { $nin: children } } ] }, (err, rootChorals) => {
       if (err) return cb(err, null);
 
@@ -174,9 +173,6 @@ choralSchema.statics.findTreeForUser = function (user, cb) {
         edges[chorals[i].choralId] = e;
       }
 
-      // console.log("pre-nodes: " + JSON.stringify(nodes));
-      // console.log("pre-edges: " + JSON.stringify(edges));
-
       // Construct root nodes and edges
       for (i in rootChorals) {
         var node = {
@@ -206,9 +202,6 @@ choralSchema.statics.findTreeForUser = function (user, cb) {
         choralIdNode[rootChorals[i].choralId] = n;
         choralIdEdge[rootChorals[i].choralId] = e;
       }
-
-      console.log("node dict " + JSON.stringify(choralIdNode));
-      console.log("edge dict " + JSON.stringify(choralIdEdge));
 
       cb(null, chorals, rootChorals, choralIdNode, choralIdEdge);
     });
