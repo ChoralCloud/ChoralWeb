@@ -126,77 +126,94 @@ choralSchema.statics.findDevicesForUser = function (user, cb) {
 };
 
 choralSchema.statics.findTreeForUser = function (user, cb) {
-  this.find({ $and: [ { userId: user._id }, { choralType: "choral" }, { $where: "this.children.length > 0" } ] }, (err, chorals) => {
+  this.find({ userId: user._id }, (err, chorals) => {
     if (err) return cb(err, null);
 
-    // found all chorals with children
-    var children = []
+    var all = {};
+    var children = [];
     for (i in chorals) {
-      children = children.concat(chorals[i].children)
+      children = children.concat(chorals[i].children);
+      all[chorals[i]._id] = chorals[i];
     }
-    // do another find query
+    // Find all roots
     this.find({ $and: [ { userId: user._id }, 
                         { choralType: "choral" }, 
                         { _id: { $nin: children } } ] }, (err, rootChorals) => {
       if (err) return cb(err, null);
-      
-      this.find({ userId: user._id }, (err, chorals) => {
-        if (err) return cb(err, null);
-        var nodes = {};
-        var edges = {};
-        var choralIdNode = {};
-        var choralIdEdge = {};
 
-        // Construct nodes and edges for all chorals
-        for (i in chorals) {
-          var node = {
-            id: chorals[i].choralId,
-            label: chorals[i].name,
-            shape: chorals[i].type == 'choral' ? 'circle' : 'square'
-          }
+      var nodes = {};
+      var edges = {};
+      var choralIdNode = {};
+      var choralIdEdge = {};
 
-          nodes[chorals[i].choralId] = node;
+      // Construct nodes and edges for all chorals
+      for (i in chorals) {
+        var node = {
+          id: chorals[i].choralId,
+          label: chorals[i].name,
+          shape: chorals[i].choralType == 'choral' ? 'circle' : 'square'
+        }
 
-          var edge = {};
+        var e = [];
+
+        nodes[chorals[i].choralId] = node;
+
+        var edge = {};
+        if (chorals[i].children.length > 0) {
           for (j in chorals[i].children) {
             edge.from = chorals[i].choralId;
-            for (k in chorals) {
-              if (chorals[k]._id.toString() == chorals[i].children[j].toString()) {
-                edge.to = chorals[k].choralId;
-                edges[chorals[i].choralId] = edge;
-                edge = {};
-                break;
-              }
+            var choral = all[chorals[i].children[j].toString()];
+            if (choral) {
+              edge.to = choral.choralId;
+              e.push(edge);
+              edge = {};
             }
           }
         }
 
-        // Construct root nodes and edges
-        for (i in rootChorals) {
-          var node = {
-            id: rootChorals[i].choralId,
-            label: rootChorals[i].name
-          }
-          var n = [node];
-          var e = [];
-          for (j in edges) {
-            if (edges[j].from == rootChorals[i].choralId) {
-              e.push(edges[j])
-              n.push(nodes[edges[j].to])
+        edges[chorals[i].choralId] = e;
+      }
+
+      // console.log("pre-nodes: " + JSON.stringify(nodes));
+      // console.log("pre-edges: " + JSON.stringify(edges));
+
+      // Construct root nodes and edges
+      for (i in rootChorals) {
+        var node = {
+          id: rootChorals[i].choralId,
+          label: rootChorals[i].name,
+          shape: rootChorals[i].choralType == 'choral' ? 'circle' : 'square'
+        }
+        var n = [node];
+        var e = [];
+
+        var stack = [];
+        stack.push(rootChorals[i].choralId);
+
+        while(stack.length > 0) {
+          var v = stack.pop();
+          console.log("V: " + v);
+          var adjacent = edges[v];
+          for (j in adjacent) {
+            if (adjacent[j].from == v) {
+              stack.push(adjacent[j].to);
+              e.push(adjacent[j]);
+              n.push(nodes[adjacent[j].to]);
             }
           }
-
-          choralIdNode[rootChorals[i].choralId] = n;
-          choralIdEdge[rootChorals[i].choralId] = e;
         }
 
-        cb(null, chorals, rootChorals, choralIdNode, choralIdEdge);
-      });
+        choralIdNode[rootChorals[i].choralId] = n;
+        choralIdEdge[rootChorals[i].choralId] = e;
+      }
+
+      console.log("node dict " + JSON.stringify(choralIdNode));
+      console.log("edge dict " + JSON.stringify(choralIdEdge));
+
+      cb(null, chorals, rootChorals, choralIdNode, choralIdEdge);
     });
   });
-
 }
-
 
 choralSchema.statics.findRootChoralsForUser = function (user, cb) {
   this.find({ $and: [ { userId: user._id }, { choralType: "choral" }, { $where: "this.children.length > 0" } ] }, (err, chorals) => {

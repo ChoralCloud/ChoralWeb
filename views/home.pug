@@ -22,7 +22,7 @@ block content
             div(id=choral.choralId style='width: 100%; height: 400px')
           .card-footer
             a(href="/chorals/edit/"+choral.choralId) Edit
-            a.link-margin(href="/chorals/delete/"+choral.choralId) Delete
+            a.link-margin.delete-choral-btn(data-choral-id=choral.choralId) Delete
       br
     
   script.
@@ -31,8 +31,8 @@ block content
     var nodes = !{JSON.stringify(nodes)}
     var edges = !{JSON.stringify(edges)}
     // create an array with nodes
-    
     // create a network
+
     for(i in rootChorals) {
       var vNodes = new vis.DataSet(nodes[rootChorals[i].choralId]);
       var vEdges = new vis.DataSet(edges[rootChorals[i].choralId]);

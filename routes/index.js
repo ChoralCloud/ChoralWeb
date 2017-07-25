@@ -26,6 +26,9 @@ router.get('/home', function(req, res, next) {
       return next(err);
     }
 
+    console.log('nodes: ' + JSON.stringify(nodes));
+    console.log('edges: ' + JSON.stringify(edges));
+
     var stats = {
       rps: 0
     };
