@@ -42,7 +42,7 @@ function deleteChoralHandler(e) {
     type: 'delete'
   })
     .always(() => {
-      window.location.href = 'chorals'; // refresh the chorals page
+      location.reload();
     });
 }
 
