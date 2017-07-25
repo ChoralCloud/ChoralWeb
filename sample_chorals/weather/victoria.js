@@ -1,12 +1,13 @@
-(
-
-// grab from here to the other comment not including the comment
-
 function (_, done){
+  /*
+   * This function polls open weather api to get the latest
+   * weather information from Victoria
+   */
+
   var request = require('request')
   var options = {
     method: 'GET',
-    uri: "http://api.openweathermap.org/data/2.5/weather?q=Victoria,CA&appid=35570de8864c1d214a64c5112293b740",
+    uri: "http://api.openweathermap.org/data/2.5/weather?q=Victoria,CA&appid=35570de8864c1d214a64c5112293b740&units=metric",
     json: true
   }
 
@@ -17,8 +18,6 @@ function (_, done){
     }
     // reset the output on every request
     output = {
-      lat: null,
-      lon: null,
       temp: null,
       pressure: null,
       humidity: null,
@@ -31,8 +30,6 @@ function (_, done){
       return done(output)
     }
 
-    output.lat = body.coord.lat
-    output.lon = body.coord.lon
     output.city = body.name;
     if(body.weather[-1]){
       output.forecast = body.weather[-1].description
@@ -45,7 +42,5 @@ function (_, done){
     done(output)
   });
 }
-
-)(null, (result) => console.log("done", result)) 
 
 
