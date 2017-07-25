@@ -290,7 +290,6 @@ router.post('/edit/:choralId', function(req, res, next) {
   var userModel = res.locals.userModel;
   var choralId = req.params.choralId;
 
-  console.log(req.body)
   var children = getChildrenFromRequest(req)
 
   var attrs = {
