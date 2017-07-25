@@ -202,7 +202,14 @@ choralSchema.statics.findTreeForUser = function (user, cb) {
         choralIdEdge[rootChorals[i].choralId] = e;
       }
 
-      cb(null, chorals, rootChorals, choralIdNode, choralIdEdge);
+      var tree = {
+        chorals: chorals,
+        rootChorals: rootChorals,
+        nodes: choralIdNode,
+        edges: choralIdEdge
+      };
+
+      cb(null, tree);
     });
   });
 }

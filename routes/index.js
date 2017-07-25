@@ -18,32 +18,37 @@ router.get('/home', function(req, res, next) {
   var googleUser = req.user;
   var userModel = res.locals.userModel;
 
-  // grab all root chorals belonging to the user.
-  Choral.findTreeForUser(userModel, (err, chorals, rootChorals, nodes, edges) => {
+  // grab tree belonging to the user.
+  /* 
+    tree = {
+      chorals,
+      rootchorals,
+      nodes,
+      edges
+    }
+  */
+  Choral.findTreeForUser(userModel, (err, tree) => {
     if (err) {
       console.log(err);
       logHelper.createLog("error", err, ["home", "tree", "findTreeForUser"]);
       return next(err);
     }
 
-    console.log('nodes: ' + JSON.stringify(nodes));
-    console.log('edges: ' + JSON.stringify(edges));
-
     var stats = {
       rps: 0
     };
 
-    for (i in rootChorals) {
-      stats.rps += (1/rootChorals[i].sampleRate)
+    for (i in tree.rootChorals) {
+      stats.rps += (1/tree.rootChorals[i].sampleRate)
     }
 
     res.render('home', { 
       googleUser: googleUser,
       userModel: userModel,
-      chorals: chorals,
-      rootChorals: rootChorals,
-      nodes: nodes,
-      edges: edges,
+      chorals: tree.chorals,
+      rootChorals: tree.rootChorals,
+      nodes: tree.nodes,
+      edges: tree.edges,
       stats: stats
     });
   });
