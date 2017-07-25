@@ -148,6 +148,11 @@ router.get('/:choralId', function(req, res, next) {
   }).then((ret) => {
     return new Promise((resolve, reject) => {
       cass_client.execute("SELECT * FROM choraldatastream.raw_data WHERE device_id = '" + choralId + "' order by device_timestamp DESC limit " + 3600/ret.choralInfo.sampleRate, function( err, result ) {
+        if(err || !result) {
+          logHelper.createLog("error", 'Choral data was not found in cassandra: ' + err, ["chorals", "get"]);
+          console.log(err);
+          res.send("Choral not found in database");
+        }
         var sorted_results = {};
         var rows = result.rows.reverse();
         for( var i = 0; i < ret.tabs.length; i++ ) {
