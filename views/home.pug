@@ -26,7 +26,6 @@ block content
       br
     
   script.
-    var chorals = !{JSON.stringify(chorals)}
     var rootChorals = !{JSON.stringify(rootChorals)}
     var nodes = !{JSON.stringify(nodes)}
     var edges = !{JSON.stringify(edges)}
@@ -62,10 +61,5 @@ block content
         var choral = chorals.find(function(choral) { return choral.choralId == choralId; })
         location.href = "/chorals/" + choralId;
       });
-
-      network.on("hoverNode", function (params) {
-        console.log('hoverNode Event:', params);
-      });
-
     }
     

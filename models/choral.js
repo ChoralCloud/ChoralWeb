@@ -131,7 +131,7 @@ choralSchema.statics.findTreeForUser = function (user, cb) {
 
     var all = {};
     var children = [];
-    for (i in chorals) {
+    for (var i in chorals) {
       children = children.concat(chorals[i].children);
       all[chorals[i]._id] = chorals[i];
     }
@@ -146,7 +146,7 @@ choralSchema.statics.findTreeForUser = function (user, cb) {
       var choralIdEdge = {};
 
       // Construct nodes and edges for all chorals
-      for (i in chorals) {
+      for (var i in chorals) {
         var node = {
           id: chorals[i].choralId,
           label: chorals[i].name,
@@ -159,7 +159,7 @@ choralSchema.statics.findTreeForUser = function (user, cb) {
 
         var edge = {};
         if (chorals[i].children.length > 0) {
-          for (j in chorals[i].children) {
+          for (var j in chorals[i].children) {
             edge.from = chorals[i].choralId;
             var choral = all[chorals[i].children[j].toString()];
             if (choral) {
@@ -188,9 +188,8 @@ choralSchema.statics.findTreeForUser = function (user, cb) {
 
         while(stack.length > 0) {
           var v = stack.pop();
-          console.log("V: " + v);
           var adjacent = edges[v];
-          for (j in adjacent) {
+          for (var j in adjacent) {
             if (adjacent[j].from == v) {
               stack.push(adjacent[j].to);
               e.push(adjacent[j]);
