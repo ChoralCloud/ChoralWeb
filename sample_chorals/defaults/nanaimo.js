@@ -1,13 +1,8 @@
 function (_, done){
-  /*
-   * This function polls open weather api to get the latest
-   * weather information from North Saanich
-   */
-
   var request = require('request')
   var options = {
     method: 'GET',
-    uri: "http://api.openweathermap.org/data/2.5/weather?q=North%20Saanich,CA&appid=35570de8864c1d214a64c5112293b740&units=metric",
+    uri: "http://api.openweathermap.org/data/2.5/weather?q=Nanaimo,CA&appid=35570de8864c1d214a64c5112293b740",
     json: true
   }
 
@@ -18,6 +13,8 @@ function (_, done){
     }
     // reset the output on every request
     output = {
+      lat: null,
+      lon: null,
       temp: null,
       pressure: null,
       humidity: null,
@@ -30,6 +27,8 @@ function (_, done){
       return done(output)
     }
 
+    output.lat = body.coord.lat
+    output.lon = body.coord.lon
     output.city = body.name;
     if(body.weather[-1]){
       output.forecast = body.weather[-1].description
@@ -42,4 +41,3 @@ function (_, done){
     done(output)
   });
 }
-
