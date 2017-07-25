@@ -106,7 +106,7 @@ router.get('/:choralId', function(req, res, next) {
   let p = new Promise((resolve, reject) => {
     var ret = {};
     Choral.findOne({ choralId: choralId }, (err, choral) => {
-      if (err) {
+      if (err || !choral) {
         logHelper.createLog("error", 'Choral does not exist: ' + err, ["chorals", "get"]);
         console.log(err);
         res.flash('error', 'Choral does not exist');
