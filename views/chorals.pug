@@ -27,9 +27,9 @@ block content
           td
             a.link-margin.w3-right.w3-btn.w3-red.delete-choral-btn(data-choral-id=choral.choralId)
               span.glyphicon.glyphicon-trash
-            a.link-margin.w3-right.w3-btn.w3-blue(role='button' href='/chorals/edit/' +choral.choralId)
+            a.link-margin.w3-right.w3-btn.w3-blue(role='button' href='/chorals/edit/' + choral.choralId)
               span.glyphicon.glyphicon-pencil
-            a.link-margin.w3-right.w3-btn.w3-blue.view-choral-btn(data-choral-id=choral.choralId)
+            a.link-margin.w3-right.w3-btn.w3-blue.view-choral-btn(href='/chorals/' + choral.choralId)
               span.fa.fa-line-chart
 
     script.
