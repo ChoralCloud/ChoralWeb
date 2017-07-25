@@ -5,25 +5,25 @@ block content
   header.w3-container(style='padding-top:22px')
     h5
       b
-        i.fa.fa-plus-square-o
-        |  Create A New Choral
-  form.w3-container(method='POST' action='/chorals' id='mainForm').new-choral-form
+        i.fa.fa-dashboard
+        |  Edit Choral
+  form.w3-container(method='POST' action='/chorals/edit/'+choralEdit.choralId id='mainForm').new-choral-form
     .form-group
       label(for='choralNameInput') Name
-      input#choralNameInput.form-control(name='name' type='text')
+      input#choralNameInput.form-control(name='name' type='text' placeholder=choralEdit.name)
     .form-group
       label(for='choralSampleRateInput') Sample Rate (seconds)
       .input-group
-        input#choralSampleRateInput.form-control(name='sampleRate' type='text', placeholder='5')
+        input#choralSampleRateInput.form-control(name='sampleRate' type='text', placeholder=choralEdit.sampleRate)
         .input-group-addon seconds (>= 1)
     .form-group
       label(for='choralFuncInput') Function
-      textarea#choralFuncInput.form-control(name='func' type='text' placeholder='function(children, done){ done({ val: 1 }); }')
-    button.w3-btn.w3-blue(type='submit') Create Choral
-    //Add child to cookies
+      textarea#choralFuncInput.form-control(name='func' type='text' placeholder=choralEdit.func)
     .form-group
       .inline-select
         label(for='childChoral') Children Chorals
+          each child in children
+            p child
         div(id='childrenList')
         select#childChoral.form-control.add-child-input(name='childChoral')
             each choral in chorals
@@ -34,6 +34,6 @@ block content
     br
     br
     br
-    button.btn.btn-default(type='submit' form='mainForm') Create Choral
+    button.btn.btn-default(type='submit' form='mainForm') Submit Changes
 
   // End page content

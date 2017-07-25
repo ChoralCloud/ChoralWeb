@@ -8,52 +8,70 @@ block content
     div.add-choral-btn-container 
       a(role='button' href='/chorals/new').w3-btn.w3-blue.add-choral-btn New Choral
       a.link-margin(role='button' href='/devices/new').w3-btn.w3-blue.add-device-btn New Device
-  .w3-container
-    p Filter
   br
-  each choral in chorals
+  each choral in rootChorals
     .col-sm-8.col-md-8.col-lg-4.mt-3
-      if choral.choralType=='choral'
-        .card(onclick="location.href='/chorals/"+choral.choralId+"';")
-          .card-block
-            h4.card-title.mt-3= choral.name
-            .meta.card-text
-              |  #{1/choral.sampleRate} Requests per second
-            .card-text
-              |  Composed of #{choral.children.length} chorals
-            .card-footer
-              a(href="/chorals/edit/"+choral.choralId) Edit
-              a.link-margin(href="/chorals/delete/"+choral.choralId) Delete
-      else
-        .card.w3-white(onclick="location.href='/chorals/"+choral.choralId+"';")
-          .card-block
-            h4.card-title.mt-3= choral.name
-            .meta.card-text
-              |  #{1/choral.sampleRate} Requests per second
-            .card-footer.w3-white
-              a(href="/devices/edit/"+choral.choralId) Edit
-              a.link-margin(href="/devices/delete/"+choral.choralId) Delete
+      //(onclick="location.href='/chorals/"+choral.choralId+"';")
+      .card 
+        .card-block
+          h4.card-title.mt-3= choral.name
+          .meta.card-text
+            |  #{1/choral.sampleRate} Requests per second
+          .card-text
+            |  Composed of #{choral.children.length} chorals
+          .card-data
+            div(id=choral.choralId style='width: 100%; height: 400px')
+          .card-footer
+            a(href="/chorals/edit/"+choral.choralId) Edit
+            a.link-margin(href="/chorals/delete/"+choral.choralId) Delete
       br
-  div#mynetwork(style='width: 100%; height: 400px')
     
   script.
+    var chorals = !{JSON.stringify(chorals)}
+    var rootChorals = !{JSON.stringify(rootChorals)}
     var nodes = !{JSON.stringify(nodes)}
     var edges = !{JSON.stringify(edges)}
     // create an array with nodes
     
-    nodes = new vis.DataSet(nodes);
-    edges = new vis.DataSet(edges);
-    
     // create a network
-    var container = document.getElementById('mynetwork');
+    for(i in rootChorals) {
+      var vNodes = new vis.DataSet(nodes[rootChorals[i].choralId]);
+      var vEdges = new vis.DataSet(edges[rootChorals[i].choralId]);
+      var container = document.getElementById(rootChorals[i].choralId);
 
-    // provide the data in the vis format
-    var data = {
-        nodes: nodes,
-        edges: edges
-    };
-    var options = {};
+      // provide the data in the vis format
+      var data = {
+          nodes: vNodes,
+          edges: vEdges
+      };
+      var options = {
+        layout: {
+          hierarchical: {
+            sortMethod: "directed"
+          }
+        },
+        edges: {
+          smooth: true
+        }
+      };
 
-    // initialize your network!
-    var network = new vis.Network(container, data, options);
+      // initialize your network!
+      var network = new vis.Network(container, data, options);
+
+      network.on("click", function (params) {
+        var choralId = this.getNodeAt(params.pointer.DOM);
+        var choral = chorals.find(function(choral) { return choral.choralId == choralId; })
+
+        if (choral.choralType == 'choral') {
+          location.href = "/chorals/" + choralId;
+        } else {
+          location.href = "/devices/" + choralId;
+        }
+      });
+
+      network.on("hoverNode", function (params) {
+        console.log('hoverNode Event:', params);
+      });
+
+    }
     

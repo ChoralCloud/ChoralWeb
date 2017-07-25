@@ -84,6 +84,7 @@ function startNewChorals(chorals){
       }
       run_in = Math.max(run_in, 0)
 
+
       // this is admitidly a bit confusing, here is my thought
       // this setTimeout is used to run the next iteration of the choral
       // once that iteration is run, then the interval kicks in
@@ -106,9 +107,6 @@ function startNewChorals(chorals){
       // first timeout is fired
       TIMEOUTS[choral.choralId].timeout_id = setTimeout(() => {
         getChildrenAndRunChoral(choral)
-        TIMEOUTS[choral.choralId].timeout_id = setInterval(() => {
-          getChildrenAndRunChoral(choral)
-        }, choral.sampleRate * 1000)
       }, run_in)
     })
   })
@@ -118,6 +116,7 @@ function startNewChorals(chorals){
 function clearChoral(choral){
   // clear all unseen timeouts's
   console.log("deleting choral with choral id " + choral.choralId)
+  if(!TIMEOUTS[choral.choralId]) return
   clearTimeout(TIMEOUTS[choral.choralId].timeout_id)
   clearInterval(TIMEOUTS[choral.choralId].timeout_id)
   delete TIMEOUTS[choral.choralId]
@@ -125,7 +124,9 @@ function clearChoral(choral){
 
 // evals the choral function
 function runComputation(children, choral){
-  Choral.findOne({ _id: mongoose.Types.ObjectId(choral._id)}, (err, current_choral) => {
+  Choral.findOne({ _id: mongoose.Types.ObjectId(choral._id)})
+  .populate("children", "choralId name")
+  .exec((err, current_choral) => {
     if(err) return console.log(err)
 
     if(!current_choral){
@@ -159,6 +160,9 @@ function runComputation(children, choral){
     } catch (e) {
       sendChoralData(current_choral, { error: e.message })
     }
+    TIMEOUTS[choral.choralId].timeout_id = setTimeout(() => {
+      getChildrenAndRunChoral(current_choral)
+    }, current_choral.sampleRate * 1000)
   })
 }
 

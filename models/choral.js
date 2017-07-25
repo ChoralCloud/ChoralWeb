@@ -35,6 +35,7 @@ var choralSchema = new mongoose.Schema({
     type: Number,
     default: 5,
     min: 1,
+    max: Math.floor((Math.pow(2, 31) -1)/1000),
   },
   choralType: {
     type: String,
@@ -57,6 +58,18 @@ choralSchema.statics.createNew = function (attrs, cb) {
   if (attrs.sampleRate) newChoral.sampleRate = attrs.sampleRate;
   if (attrs.name)       newChoral.name = attrs.name;
   if (attrs.type)       newChoral.choralType = attrs.type;
+  if (attrs.children){
+    for(var i = 0; i < attrs.children.length; i++){
+      Choral.findOne({'choralId': attrs.children[i]}, function (err, choral){
+        newChoral.addChild(choral, function(err){
+          if(err){
+            console.log(err);
+            return next(err);
+          } 
+        });
+      });
+    }
+  }
 
   newChoral.save((err) => {
     if (err) {
@@ -68,36 +81,35 @@ choralSchema.statics.createNew = function (attrs, cb) {
   });
 };
 
-choralSchema.statics.findTreeForUser = function (user, cb) {
-  this.find({ userId: user._id }, (err, chorals) => {
-    if (err) return cb(err, null);
-    var nodes = [];
-    var edges = [];
-
-    for (i in chorals) {
-      var node = {
-        id: chorals[i].choralId,
-        label: chorals[i].name
-      }
-      nodes.push(node);
-
-      var edge = {};
-      for (j in chorals[i].children) {
-        edge.from = chorals[i].choralId;
-        for (k in chorals) {
-          if (chorals[k]._id == chorals[i].children[j]) {
-            edge.to = chorals[i].children[j];
-            edges.push(edge);
-            edge = {};
-            break;
-          }
-        }
-      }
+choralSchema.methods.edit = function (attrs, cb) {
+  var choral = this;
+  if (attrs.user.id)    this.userId = attrs.user.id;
+  if (attrs.func)       this.func = attrs.func;
+  if (attrs.sampleRate) this.sampleRate = attrs.sampleRate;
+  if (attrs.name)       this.name = attrs.name;
+  if (attrs.type)       this.choralType = attrs.type;
+  if (attrs.children){
+    for(var i = 0; i < attrs.children.length; i++){
+      Choral.findOne({'choralId': attrs.children[i]}, function (err, childChoral){
+        choral.addChild(childChoral, function(err){
+          if(err){
+            console.log(err);
+            return next(err);
+          } 
+        });
+      });
     }
+  }
 
-    cb(null, chorals, nodes, edges);
+  this.save((err) => {
+    if (err) {
+      cb(err, null);
+    }
+    else {
+      cb(null, choral);
+    }
   });
-}
+};
 
 choralSchema.statics.findAllForUser = function (user, cb) {
   this.find({ userId: user._id }, (err, chorals) => {
@@ -112,6 +124,79 @@ choralSchema.statics.findDevicesForUser = function (user, cb) {
     cb(null, devices);
   });
 };
+
+choralSchema.statics.findTreeForUser = function (user, cb) {
+  this.find({ $and: [ { userId: user._id }, { choralType: "choral" }, { $where: "this.children.length > 0" } ] }, (err, chorals) => {
+    if (err) return cb(err, null);
+
+    // found all chorals with children
+    var children = []
+    for (i in chorals) {
+      children = children.concat(chorals[i].children)
+    }
+    // do another find query
+    this.find({ $and: [ { userId: user._id }, 
+                        { choralType: "choral" }, 
+                        { _id: { $nin: children } } ] }, (err, rootChorals) => {
+      if (err) return cb(err, null);
+      
+      this.find({ userId: user._id }, (err, chorals) => {
+        if (err) return cb(err, null);
+        var nodes = {};
+        var edges = {};
+        var choralIdNode = {};
+        var choralIdEdge = {};
+
+        // Construct nodes and edges for all chorals
+        for (i in chorals) {
+          var node = {
+            id: chorals[i].choralId,
+            label: chorals[i].name,
+            shape: chorals[i].type == 'choral' ? 'circle' : 'square'
+          }
+
+          nodes[chorals[i].choralId] = node;
+
+          var edge = {};
+          for (j in chorals[i].children) {
+            edge.from = chorals[i].choralId;
+            for (k in chorals) {
+              if (chorals[k]._id.toString() == chorals[i].children[j].toString()) {
+                edge.to = chorals[k].choralId;
+                edges[chorals[i].choralId] = edge;
+                edge = {};
+                break;
+              }
+            }
+          }
+        }
+
+        // Construct root nodes and edges
+        for (i in rootChorals) {
+          var node = {
+            id: rootChorals[i].choralId,
+            label: rootChorals[i].name
+          }
+          var n = [node];
+          var e = [];
+          for (j in edges) {
+            if (edges[j].from == rootChorals[i].choralId) {
+              e.push(edges[j])
+              n.push(nodes[edges[j].to])
+            }
+          }
+
+          choralIdNode[rootChorals[i].choralId] = n;
+          choralIdEdge[rootChorals[i].choralId] = e;
+        }
+
+        cb(null, chorals, rootChorals, choralIdNode, choralIdEdge);
+      });
+    });
+  });
+
+}
+
 
 choralSchema.statics.findRootChoralsForUser = function (user, cb) {
   this.find({ $and: [ { userId: user._id }, { choralType: "choral" }, { $where: "this.children.length > 0" } ] }, (err, chorals) => {
@@ -142,7 +227,7 @@ choralSchema.statics.getAllChorals = function (cb) {
 };
 
 choralSchema.methods.addChild = function (child, cb) {
-  this.children.push({ childId: child._id });
+  this.children.push(child._id);
   this.save((err) => {
     if (err) {
       cb(err);
