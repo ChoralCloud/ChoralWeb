@@ -124,7 +124,9 @@ function clearChoral(choral){
 
 // evals the choral function
 function runComputation(children, choral){
-  Choral.findOne({ _id: mongoose.Types.ObjectId(choral._id)}, (err, current_choral) => {
+  Choral.findOne({ _id: mongoose.Types.ObjectId(choral._id)})
+  .populate("children", "choralId name")
+  .exec((err, current_choral) => {
     if(err) return console.log(err)
 
     if(!current_choral){
