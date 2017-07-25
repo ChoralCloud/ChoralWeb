@@ -6,7 +6,6 @@ mixin editScript(children, chorals)
     var chorals = !{JSON.stringify(chorals)};
 
     function abortChild(index){
-      console.log(index)
       children.splice(index, 1)
       displayChildren()
     }
