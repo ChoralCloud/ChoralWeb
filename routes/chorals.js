@@ -6,7 +6,13 @@ var logHelper = require('../helpers/logHelper');
 var cookieHelper = require('../helpers/cookieHelper');
 var client = require('redis').createClient(process.env.REDIS_STORE_URI)
 const cassandra = require('cassandra-driver');
-const cass_client = new cassandra.Client({contactPoints: [process.env.CASSANDRA_URL], keyspace: 'choraldatastream'});
+const cass_client = new cassandra.Client({
+  contactPoints: [process.env.CASSANDRA_URL],
+  keyspace: 'choraldatastream'
+});
+var fs = require('fs');
+
+const DEFAULT_FUNCS_DIR = 'sample_chorals/defaults';
 
 router.get('/', function(req, res, next) {
   var googleUser = req.user;
@@ -37,31 +43,44 @@ router.post('/', function(req, res, next) {
   var userModel = res.locals.userModel;
   var cookies = req.get("Cookie");
   var children = [];
-  var child; 
+  var child;
 
   for(var i = 0; cookieHelper.readCookie('child' + i, cookies) != null; i++){
     child = cookieHelper.readCookie('child' + i, cookies);
     child = JSON.parse(child);
     children.push(child.choralId);
-  } 
+  }
 
   var attrs = {
     user: userModel,
     sampleRate: req.body.sampleRate,
     type: 'choral',
     name: req.body.name,
-    func: req.body.func,
+    // if both default and custom func submitted, use custom
+    func: req.body.func || req.body.defaultFunc,
     children: children
   };
 
   Choral.createNew(attrs, (err, choral) => {
     if(err){
       console.log(err);
-      logHelper.createLog("error", 'Choral validation failed: ' + err, ["chorals", "createNew"]);
+
+      logHelper.createLog(
+        "error",
+        'Choral validation failed: ' + err,
+        ["chorals", "createNew"]
+      );
+
       res.flash('error', 'Choral validation failed: ' + err);
       return res.redirect(req.baseUrl + '/new');
     }
-    logHelper.createLog("success", 'New choral created: ' + JSON.stringify(attrs), ["chorals", "createNew"]);
+
+    logHelper.createLog(
+      "success",
+      'New choral created: ' + JSON.stringify(attrs),
+      ["chorals", "createNew"]
+    );
+
     res.flash('success', 'New choral created.');
     res.redirect(req.baseUrl + '/new');
   });
@@ -76,21 +95,31 @@ router.get('/new', function(req, res, next) {
       console.log(err);
       return next(err);
     }
-    
+
     //Delete child cookies if page is reloaded
     var cookies = req.get("Cookie");
     for(var i = 0; cookieHelper.readCookie('child' + i, cookies) != null; i++){
       res.clearCookie('child' + i);
     }
 
-    res.render('newChoral',
-      {
-        googleUser: googleUser,
-        userModel: userModel,
-        viewHelpers: viewHelpers,
-        chorals: chorals
-      }
-    );
+    getDefaultFuncs() // fetch quick funcs
+      .then(funcs => {
+
+        // prepend empty quick func func, so that default is no quick func
+        funcs.unshift({ fileName: 'None', func: '' });
+
+        res.render('newChoral', {
+          googleUser: googleUser,
+          userModel: userModel,
+          viewHelpers: viewHelpers,
+          chorals: chorals,
+          defaultFuncs: funcs
+        });
+      })
+      .catch(err => {
+        console.log(err)
+        next(err);
+      });
   });
 });
 
@@ -277,17 +306,17 @@ router.post('/edit/:choralId', function(req, res, next) {
   var googleUser = req.user;
   var userModel = res.locals.userModel;
   var choralId = req.params.choralId;
-  
+
   var cookies = req.get("Cookie");
   var children = [];
-  var child; 
+  var child;
 
   for(var i = 0; cookieHelper.readCookie('child' + i, cookies) != null; i++){
     child = cookieHelper.readCookie('child' + i, cookies);
     child = JSON.parse(child);
     children.push(child.choralId);
-  } 
-  
+  }
+
   var attrs = {
     user: userModel,
     sampleRate: req.body.sampleRate,
@@ -314,5 +343,39 @@ router.post('/edit/:choralId', function(req, res, next) {
     });
   });
 });
-          
+
+function getDefaultFuncs() {
+  // read all default choral funcs from their files
+  // return a promise that resolves to an array of strings,
+  // which are the stringified funcs
+
+  return new Promise((resolve, reject) => {
+    fs.readdir(DEFAULT_FUNCS_DIR, (err, fileNames) => {
+      if (err) {
+        reject(err);
+      }
+      else {
+        let fileContentPromises = fileNames
+          .map((fileName) => readFile(DEFAULT_FUNCS_DIR + '/', fileName));
+
+        // when all files are successfully read, return their contents
+        Promise.all(fileContentPromises)
+          .then(fileContents => {
+            resolve(fileContents);
+          })
+          .catch(err => reject(err));
+      }
+    });
+  });
+}
+
+function readFile(path, fileName) {
+  return new Promise((resolve, reject) => {
+    fs.readFile(path + fileName, 'utf-8', (err, data) => {
+      if (err) reject(err);
+      else resolve({ fileName: fileName, func: data });
+    });
+  });
+}
+
 module.exports = router;
