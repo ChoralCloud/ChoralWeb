@@ -68,6 +68,37 @@ choralSchema.statics.createNew = function (attrs, cb) {
   });
 };
 
+choralSchema.statics.findTreeForUser = function (user, cb) {
+  this.find({ userId: user._id }, (err, chorals) => {
+    if (err) return cb(err, null);
+    var nodes = [];
+    var edges = [];
+
+    for (i in chorals) {
+      var node = {
+        id: chorals[i].choralId,
+        label: chorals[i].name
+      }
+      nodes.push(node);
+
+      var edge = {};
+      for (j in chorals[i].children) {
+        edge.from = chorals[i].choralId;
+        for (k in chorals) {
+          if (chorals[k]._id == chorals[i].children[j]) {
+            edge.to = chorals[i].children[j];
+            edges.push(edge);
+            edge = {};
+            break;
+          }
+        }
+      }
+    }
+
+    cb(null, chorals, nodes, edges);
+  });
+}
+
 choralSchema.statics.findAllForUser = function (user, cb) {
   this.find({ userId: user._id }, (err, chorals) => {
     if (err) return cb(err, null);

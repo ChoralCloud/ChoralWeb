@@ -23,7 +23,6 @@ h5 {
 }
 
 .card:hover {
-    background-color: #3885a5;
     cursor: pointer;
 }
 
@@ -61,10 +60,9 @@ h5 {
     top: 0;
     left: 0;
     max-width: 100%;
-    padding: .75em 1em;
     color: rgba(0, 0, 0, .4);
     border-top: 1px solid rgba(0, 0, 0, .05) !important;
-    background: #fff;
+    background-color: #87CEEB;
 }
 
 .card-inverse .btn {
