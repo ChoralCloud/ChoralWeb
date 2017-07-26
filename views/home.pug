@@ -1,4 +1,5 @@
 extends layout
+include modal_mixins
 
 block content
   header.w3-container(style='padding-top:22px')
@@ -7,7 +8,7 @@ block content
   .w3-container
     div.choral-btn-container 
       a(role='button' href='/chorals/new').choral-btn-add New Choral
-      a.link-margin(role='button' href='/devices/new').choral-btn-add New Device
+      +device_modal
   br
   each choral in rootChorals
     .col-sm-8.col-md-8.col-lg-4.mt-3
