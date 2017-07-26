@@ -6,7 +6,11 @@ mixin editScript(children, chorals, thisChoral)
     var chorals = !{JSON.stringify(chorals)};
 
     function abortChild(index){
-      children.splice(index, 1)
+      var child = children.splice(index, 1)
+      $("#childChoral").append($('<option>', {
+        value: JSON.stringify(child[0]),
+        text: child[0].name
+      }))
       displayChildren()
     }
 
@@ -45,11 +49,11 @@ mixin children_add(thisChoral)
         select#childChoral.form-control.add-child-input(name='childChoral')
           option(value="") No Children Added
           each choral in chorals
-            -if((!thisChoral || (choral.choralId != thisChoral.choralId)) && (!children || !(children.find((c) => c.choralId == choral.choralId ))))
+            -if((!thisChoral || (choral.choralId != thisChoral.choralId)) && (!children || !(children.find((c) => c.choralId == choral.choralId))))
               option(value=choral)= choral.name
 
   script.
     $("#childChoral").change(function(e) {
       adoptChild($(this).val())
-      $("#childChoral option:selected").remove();
-    });
+      $("#childChoral option:selected").remove()
+    })
