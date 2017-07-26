@@ -162,12 +162,23 @@
 
 
 .child-card-body-label {
-  width: 70%;
+  width: 50%;
   padding-left: 15px;
 }
 
 .child-card-body-data {
-  width: 30%;
+  width: 50%;
+  font-size: 16px;
+  /* 100 = view port width, as 1vw = 1/100th of that
+     So if the container is 50% of view port (as here)
+     then factor that into how you want it to size.
+     Let's say you like 5vw if it were the whole width,
+     then for this container, size it at 2.5vw (5 * .5 [i.e. 50%])
+  */
+  font-size: calc(0.5vw + 0.5vh); 
+  word-wrap: break-word;
+  text-align: right;
+  padding-right: 15px;
 }
 
 /*

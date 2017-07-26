@@ -98,7 +98,7 @@ block content
         if(childData.hasOwnProperty(data.device_id)) {
           var device_data = data.device_data;
           for( var key in device_data ) {
-            var data_value = device_data[key].toFixed(5);
+            var data_value = (device_data[key]).toFixed(5);
             if( !isNaN(parseFloat(data_value)) && isFinite(data_value) ) {
               $("#"+data.device_id+"."+key).text(data_value);
             }
