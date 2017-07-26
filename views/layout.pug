@@ -38,14 +38,15 @@ head
 
 body.w3-light-grey
   // Top container
-  .w3-bar.w3-top.w3-blue.w3-large(style='z-index:4')
-    button.w3-bar-item.w3-button.w3-hide-large.w3-hover-none.w3-hover-text-light-grey(onclick='w3_open();')
+  .w3-blue.app-header(style='z-index:4')
+    button.w3-hover-none.w3-hover-text-light-grey.app-header-menubutton(onclick='w3_open();')
       i.fa.fa-bars
       |   Menu
-    a.w3-bar-item.w3-right.w3-blue.w3-padding(href='/home') 
-      img(src="/favicon.ico")
-      |   Choral Cloud
-      
+    .app-header-logo
+      a.w3-blue.w3-padding.app-header-logo-link(href='/home')
+        img(src="/favicon.ico")
+        |   Choral Cloud
+
   // epoch js makes all the charts have a z-index of 999 or 1000 we want the
   // menu to be above that
   div(style="z-index=1001")

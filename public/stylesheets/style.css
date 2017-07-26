@@ -55,6 +55,53 @@
     border-radius: 50%;
 }
 
+.app-header {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.app-header-menubutton {
+  width:20%;
+  border: none;
+  display: inline-block;
+  outline: 0;
+  padding: 8px 16px;
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  background-color: inherit;
+  cursor: pointer;
+  white-space: nowrap;
+  font-size: 1.3em;
+  text-align: left;
+}
+
+.app-header-logo {
+  width:80%;
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+  font-size: 1.3em;
+  text-decoration: none;
+}
+
+.app-header-logo-link {
+  display:flex;
+  align-items: center;
+  text-decoration: none !important;
+}
+
+@media(min-width: 990px) {
+  .app-header-menubutton {
+    display: none;
+  }
+  .app-header-logo {
+    width: 100%;
+  }
+}
+
 /*
  * Choral View Stuff
  */
