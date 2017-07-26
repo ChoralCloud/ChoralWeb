@@ -22,10 +22,12 @@ mixin editScript(children, chorals, thisChoral)
 
     function adoptChild(child){
       var child = JSON.parse(child)
+      
       // dont add in things that are already in the list
       if(children.find((val) => val.choralId == child.choralId )) {
         return;
       }
+
       children.push(child)
       displayChildren()
     }
@@ -43,10 +45,11 @@ mixin children_add(thisChoral)
         select#childChoral.form-control.add-child-input(name='childChoral')
           option(value="") No Children Added
           each choral in chorals
-            -if(!thisChoral || (choral.choralId != thisChoral.choralId))
+            -if((!thisChoral || (choral.choralId != thisChoral.choralId)) && (!children || !(children.find((c) => c.choralId == choral.choralId ))))
               option(value=choral)= choral.name
 
   script.
     $("#childChoral").change(function(e) {
       adoptChild($(this).val())
+      $("#childChoral option:selected").remove();
     });
