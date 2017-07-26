@@ -11,6 +11,14 @@ var choralSchema = new mongoose.Schema({
     type: [{ type: ObjectId, required: '{PATH} is required!', ref: 'Choral'  }],
     validate: [
         {
+          validator: function(children) { // ensure that chorals are not their direct children 
+            // if there is the same id in the children array then one of the children
+            // is this choral
+            return ! children.find((val) => this._id.equals(val));
+          },
+          message: 'You cannot have a choral that is a child of itself'
+        },
+        {
           validator: function(children) { // ensure devices have no children
             return this.choralType == 'device' ? (children.length == 0) : true;
           },
@@ -18,7 +26,7 @@ var choralSchema = new mongoose.Schema({
         },
         {
           isAsync: true,
-          validator: function(v, cb) { // ensure devices have no children
+          validator: function(v, cb) { // ensure there are no duplicate ids or non existant chorals
             if(!v) return true;
 
             Choral.find({_id: {$in: v }}, (err, found) => {
@@ -47,7 +55,7 @@ var choralSchema = new mongoose.Schema({
       function() { return this.type == 'choral' },
       '{PATH} is required for non-device chorals!'
     ],
-    default: "function(children, done){ done({ val: 1 }); }"
+    default: "function(children, done){ done({ val: Math.random() * 50 }); }"
   },
   sampleRate: {
     type: Number,
@@ -109,6 +117,95 @@ choralSchema.statics.findDevicesForUser = function (user, cb) {
     cb(null, devices);
   });
 };
+
+choralSchema.statics.findTreeForUser = function (user, cb) {
+  this.find({ userId: user._id }, (err, chorals) => {
+    if (err) return cb(err, null);
+
+    var all = {};
+    var children = [];
+    for (var i in chorals) {
+      children = children.concat(chorals[i].children);
+      all[chorals[i]._id] = chorals[i];
+    }
+    // Find all roots
+    this.find({ $and: [ { userId: user._id }, 
+                        { _id: { $nin: children } } ] }, (err, rootChorals) => {
+      if (err) return cb(err, null);
+
+      var nodes = {};
+      var edges = {};
+      var choralIdNode = {};
+      var choralIdEdge = {};
+
+      // Construct nodes and edges for all chorals
+      for (var i in chorals) {
+        var node = {
+          id: chorals[i].choralId,
+          label: chorals[i].name,
+          shape: chorals[i].choralType == 'choral' ? 'circle' : 'square'
+        }
+
+        var e = [];
+
+        nodes[chorals[i].choralId] = node;
+
+        var edge = {};
+        if (chorals[i].children.length > 0) {
+          for (var j in chorals[i].children) {
+            edge.from = chorals[i].choralId;
+            var choral = all[chorals[i].children[j].toString()];
+            if (choral) {
+              edge.to = choral.choralId;
+              e.push(edge);
+              edge = {};
+            }
+          }
+        }
+
+        edges[chorals[i].choralId] = e;
+      }
+
+      // Construct root nodes and edges
+      for (i in rootChorals) {
+        var node = {
+          id: rootChorals[i].choralId,
+          label: rootChorals[i].name,
+          shape: rootChorals[i].choralType == 'choral' ? 'circle' : 'square'
+        }
+        var n = [node];
+        var e = [];
+
+        var stack = [];
+        stack.push(rootChorals[i].choralId);
+
+        while(stack.length > 0) {
+          var v = stack.pop();
+          var adjacent = edges[v];
+          for (var j in adjacent) {
+            if (adjacent[j].from == v) {
+              stack.push(adjacent[j].to);
+              e.push(adjacent[j]);
+              n.push(nodes[adjacent[j].to]);
+            }
+          }
+        }
+
+        choralIdNode[rootChorals[i].choralId] = n;
+        choralIdEdge[rootChorals[i].choralId] = e;
+      }
+
+      var tree = {
+        chorals: chorals,
+        rootChorals: rootChorals,
+        nodes: choralIdNode,
+        edges: choralIdEdge
+      };
+
+      cb(null, tree);
+    });
+  });
+}
 
 choralSchema.statics.findRootChoralsForUser = function (user, cb) {
   this.find({ $and: [ { userId: user._id }, { choralType: "choral" }, { $where: "this.children.length > 0" } ] }, (err, chorals) => {

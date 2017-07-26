@@ -5,6 +5,7 @@ doctype html
 head
   title=Choral
   link(rel='stylesheet', href='/stylesheets/style.css')
+  link(rel='stylesheet', type="text/css", href='/stylesheets/card.css')    
   meta(charset='UTF-8')
   meta(name='viewport', content='width=device-width, initial-scale=1')
   link(rel='stylesheet', href='https://www.w3schools.com/w3css/4/w3.css')
@@ -12,7 +13,8 @@ head
   link(rel='stylesheet', href='https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css')
   link(rel='icon', type='image/x-icon', href='/favicon.ico')
   link(rel='stylesheet', type="text/css", href='/stylesheets/epoch.min.css')
-  link(rel='stylesheet', type="text/css", href='/stylesheets/card.css')    
+  link(rel='stylesheet', type="text/css", href='https://cdnjs.cloudflare.com/ajax/libs/vis/4.20.1/vis.min.css')
+  link(rel='stylesheet', type="text/css", href='/stylesheets/card.css')  
 
   script(src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js')
   // boostrap
@@ -22,10 +24,11 @@ head
   script(src='https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js', integrity='sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa', crossorigin='anonymous')
 
   script(src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js")
-
+  
   script(src="/javascripts/d3.min.js")
   script(src="/javascripts/epoch.min.js")
-
+  script(src="https://cdnjs.cloudflare.com/ajax/libs/vis/4.20.1/vis.min.js")
+  
   script(src="/socket.io/socket.io.js")
 
   script(src="/javascripts/index.js")
@@ -35,21 +38,22 @@ head
 
 body.w3-light-grey
   // Top container
-  .w3-bar.w3-top.w3-blue.w3-large(style='z-index:4')
-    button.w3-bar-item.w3-button.w3-hide-large.w3-hover-none.w3-hover-text-light-grey(onclick='w3_open();')
+  .w3-blue.app-header(style='z-index:4')
+    button.w3-hover-none.w3-hover-text-light-grey.app-header-menubutton(onclick='w3_open();')
       i.fa.fa-bars
       |   Menu
-    a.w3-bar-item.w3-right.w3-blue.w3-padding(href='/home') 
-      img(src="/favicon.ico")
-      |   Choral Cloud
-      
+    .app-header-logo
+      a.w3-blue.w3-padding.app-header-logo-link(href='/home')
+        img(src="/favicon.ico")
+        |   Choral Cloud
+
   // epoch js makes all the charts have a z-index of 999 or 1000 we want the
   // menu to be above that
   div(style="z-index=1001")
     if googleUser
       +menu(googleUser)
-  .w3-main(style='margin-left:300px;margin-top:55px;margin-bottom:75px;')
-    .w3-container
+  .w3-main(style='margin-left:300px;margin-bottom:75px;')
+    .body-content
       if flash.info
         div.flash.bg-info= flash.info
       if flash.success

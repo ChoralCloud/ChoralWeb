@@ -4,14 +4,77 @@ block content
   header.w3-container(style='padding-top:22px')
     - var c = (chorals.length == 1 ? 'choral' : 'chorals')
     h4 You have <b>#{chorals.length} active #{c}</b> running at <b>#{stats.rps} requests per second</b>.
+  .w3-container
+    div.add-choral-btn-container 
+      a(role='button' href='/chorals/new').w3-btn.w3-blue.add-choral-btn New Choral
+      a.link-margin(role='button' href='/devices/new').w3-btn.w3-blue.add-device-btn New Device
   br
-  each choral in chorals
+  each choral in rootChorals
     .col-sm-8.col-md-8.col-lg-4.mt-3
-      .card(onclick="location.href='/chorals/"+choral.choralId+"';")
+      - var choralId = choral.choralId
+      .card(onclick="window.location.href='/chorals/"+choralId+"'")
         .card-block
           h4.card-title.mt-3= choral.name
           .meta.card-text
             |  #{1/choral.sampleRate} Requests per second
           .card-text
             |  Composed of #{choral.children.length} chorals
+          .card-data
+            div(id=choral.choralId style='width: 100%; height: 400px')
+          .card-footer
+            a(href="/chorals/edit/"+choral.choralId) Edit
+            a.link-margin.delete-choral-btn(href="/home" data-choral-id=choral.choralId) Delete
       br
+    
+  script.
+    document.addEventListener("DOMContentLoaded", function(event) {
+      var chorals = !{JSON.stringify(chorals)};
+      var rootChorals = !{JSON.stringify(rootChorals)};
+      var nodes = !{JSON.stringify(nodes)};
+      var edges = !{JSON.stringify(edges)};
+      // create an array with nodes
+      // create a network
+
+      for(i in rootChorals) {
+        var vNodes = new vis.DataSet(nodes[rootChorals[i].choralId]);
+        var vEdges = new vis.DataSet(edges[rootChorals[i].choralId]);
+        var container = document.getElementById(rootChorals[i].choralId);
+
+        // provide the data in the vis format
+        var data = {
+            nodes: vNodes,
+            edges: vEdges
+        };
+        var options = {
+          layout: {
+            hierarchical: {
+              sortMethod: "directed"
+            }
+          },
+          edges: {
+            smooth: true
+          },
+          interaction: {
+            zoomView: false
+          }
+        };
+
+        // initialize your network!
+        var network = new vis.Network(container, data, options);
+
+        network.on("click", function (params) {
+          var choralId = this.getNodeAt(params.pointer.DOM);
+          var choral = chorals.find(function(choral) { return choral.choralId == choralId; })
+          if(choral) {
+            location.href = "/chorals/" + choralId;
+          }
+        });
+      }
+
+      var hammer = new vis.Hammer(document.body);
+      hammer.on('tap', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        e.stopImmediatePropagation();
+      });
+    });
