@@ -1,13 +1,14 @@
 extends layout
+include modal_mixins
 
 block content
   header.w3-container(style='padding-top:22px')
     - var c = (chorals.length == 1 ? 'choral' : 'chorals')
     h4 You have <b>#{chorals.length} active #{c}</b> running at <b>#{stats.rps} requests per second</b>.
   .w3-container
-    div.add-choral-btn-container 
-      a(role='button' href='/chorals/new').w3-btn.w3-blue.add-choral-btn New Choral
-      a.link-margin(role='button' href='/devices/new').w3-btn.w3-blue.add-device-btn New Device
+    div.choral-btn-container 
+      a(role='button' href='/chorals/new').choral-btn-add New Choral
+      +device_modal
   br
   each choral in rootChorals
     .col-sm-8.col-md-8.col-lg-4.mt-3

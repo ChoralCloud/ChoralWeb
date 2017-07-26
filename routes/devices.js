@@ -43,10 +43,7 @@ router.post('/', function(req, res, next) {
       return next(err);
     }
     logHelper.createLog("success", 'New device created: ' + JSON.stringify(attrs), ["devices", "createNew"]);
-    res.render('newDevice', {googleUser: req.user, devID: device.choralId});
-    console.log('Device Created!')
-    console.log('Device Name: ' + req.body.deviceName);
-    console.log('Device ID: ' + device.choralId);
+    res.redirect('/devices');
   });
 });
 
