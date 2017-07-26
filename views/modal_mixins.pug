@@ -1,0 +1,32 @@
+mixin device_modal()
+  button(type='button' data-toggle="modal" data-target="#myModal").choral-btn-add New Device
+  #myModal.modal.fade(role="dialog")
+    .modal-dialog
+      .modal-content
+        .modal-header
+          button.close(type="button" data-dismiss="modal") &times;
+          h4.modal-title Register Device
+        .modal-body
+          header.w3-container(style='padding-top:22px')
+            form(method='POST' action='/devices').new-device-form
+              .form-group
+                  label(for="deviceName") Device Name: 
+                  input#deviceName.form-control(type='text' name='deviceName')
+              .form-group
+                  label(for='sampleRate') Sample Rate (seconds): 
+                  input#sampleRate.form-control(type='number' name='sampleRate' value='5' min='1')
+              button.w3-right.choral-btn-add(type='submit') Create Device
+
+mixin choral_modal()
+  button.btn.btn-info.btn-lg(type="button" data-toggle="modal" data-target="#myModal") Open Modal
+  #myModal.modal.fade(role="dialog")
+    .modal-dialog
+      .modal-content
+        .modal-header
+          button.close(type="button" data-dismiss="modal") &times;
+          h4.modal-title Modal Header
+        .modal-body
+          p Some text in the modal
+        .modal-footer
+          button.btn.btn-default(type="button" data-dismiss="modal") Close
+

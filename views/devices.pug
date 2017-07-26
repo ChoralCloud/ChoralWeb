@@ -1,4 +1,5 @@
 extends layout
+include modal_mixins
 
 block content
   header.w3-container(style='padding-top:22px')
@@ -6,7 +7,8 @@ block content
   hr
   .w3-container
     div.choral-btn-container
-      a(role='button' href='/devices/new').choral-btn-add New Device
+      +device_modal
+
     table.w3-table.w3-striped.w3-bordered.w3-border.w3-hoverable.w3-white.choral-table
       tr
         td Name
@@ -25,3 +27,4 @@ block content
           td
             a.w3-right.w3-btn.w3-red.delete-choral-btn(data-choral-id=device.choralId)
               span.glyphicon.glyphicon-trash
+
