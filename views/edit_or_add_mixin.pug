@@ -44,4 +44,4 @@ mixin children_add(thisChoral)
           each choral in chorals
             -if(!thisChoral || (choral.choralId != thisChoral.choralId))
               option(value=choral)= choral.name
-        button.w3-btn.w3-blue.w3-right(type='button' onclick='adoptChild(childChoral.value)') Add Child
+        button.choral-btn-add.w3-right(type='button' onclick='adoptChild(childChoral.value)') Add Child

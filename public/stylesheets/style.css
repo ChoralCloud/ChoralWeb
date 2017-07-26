@@ -201,12 +201,42 @@
   border-radius: 4px;
 }
 
-.add-choral-btn-container {
-  margin-bottom: 10px;
+.choral-sidebar-button {
+  text-decoration: none !important;
 }
 
-.add-device-btn-container {
-  margin-bottom: 10px;
+/*
+ * button stuff
+ */
+
+.choral-btn-container {
+  display: flex;
+  justify-content: flex-start;
+}
+
+.choral-btn-add {
+  background-color: #2196F3;
+  color: white;
+  text-decoration: none !important;
+  border: none;
+  padding: 8px 16px;
+  transition: all 0.2s;
+}
+
+.choral-btn-add:hover {
+  background-color: #2a86d0;
+  color: white;
+  -webkit-box-shadow: 0px 1px 5px 0px rgba(0,0,0,0.57);
+  -moz-box-shadow: 0px 1px 5px 0px rgba(0,0,0,0.57);
+  box-shadow: 0px 1px 5px 0px rgba(0,0,0,0.57);
+}
+
+/*
+ * End button stuff
+ */
+
+.choral-table {
+  margin-top: 10px;
 }
 
 .center {

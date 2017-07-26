@@ -246,7 +246,7 @@ router.get('/:choralId', function(req, res, next) {
     // get parent past data in cassandra, and add to parent object
     return new Promise((resolve, reject) => {
       const query = 'SELECT * FROM choraldatastream.raw_data WHERE device_id = ? order by device_timestamp DESC limit ?';
-      cass_client.execute( query , [ choralId,  timeFrame/parentObj.choralInfo.sampleRate], { prepare: true }, function( err, result ) {
+      cass_client.execute( query , [ choralId,  1 + (timeFrame/parentObj.choralInfo.sampleRate)], { prepare: true }, function( err, result ) {
         if(err || !result) {
           logHelper.createLog("error", 'Choral data was not found in cassandra: ' + err, ["chorals", "get"]);
           console.log(err);
