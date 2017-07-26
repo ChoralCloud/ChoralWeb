@@ -1,12 +1,3 @@
-function addViewChoralHandlers() {
-  var $buttonNodes = document.getElementsByClassName('view-choral-btn');
-
-  for (var i = 0; i < $buttonNodes.length; i++) {
-    var $node = $buttonNodes[i];
-    $node.onclick = viewChoralHandler;
-  }
-}
-
 function addCopyChoralHandlers() {
   var $buttonNodes = document.getElementsByClassName('copy-choral-btn');
 
@@ -49,5 +40,4 @@ function deleteChoralHandler(e) {
 $(document).ready(function() {
   addDeleteChoralHandlers();
   addCopyChoralHandlers();
-  addViewChoralHandlers();
 });
