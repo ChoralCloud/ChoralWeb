@@ -1,31 +1,33 @@
 extends layout
+include modal_mixins
 
 block content
   header.w3-container(style='padding-top:22px')
     - var c = (chorals.length == 1 ? 'choral' : 'chorals')
     h4 You have <b>#{chorals.length} active #{c}</b> running at <b>#{stats.rps} requests per second</b>.
   .w3-container
-    div.add-choral-btn-container 
-      a(role='button' href='/chorals/new').w3-btn.w3-blue.add-choral-btn New Choral
-      a.link-margin(role='button' href='/devices/new').w3-btn.w3-blue.add-device-btn New Device
+    div.choral-btn-container 
+      a(role='button' href='/chorals/new').choral-btn-add New Choral
+      +device_modal
   br
-  each choral in rootChorals
-    .col-sm-8.col-md-8.col-lg-4.mt-3
-      - var choralId = choral.choralId
-      .card(onclick="window.location.href='/chorals/"+choralId+"'")
-        .card-block
-          h4.card-title.mt-3= choral.name
-          .meta.card-text
-            |  #{1/choral.sampleRate} Requests per second
-          .card-text
-            |  Composed of #{choral.children.length} chorals
-          .card-data
-            div(id=choral.choralId style='width: 100%; height: 400px')
-          .card-footer
-            a(href="/chorals/edit/"+choral.choralId) Edit
-            a.link-margin.delete-choral-btn(href="/home" data-choral-id=choral.choralId) Delete
-      br
-    
+  .w3-container
+    each choral in rootChorals
+      .col-sm-8.col-md-8.col-lg-4.mt-3
+        - var choralId = choral.choralId
+        .card(onclick="window.location.href='/chorals/"+choralId+"'")
+          .card-block
+            h4.card-title.mt-3= choral.name
+            .meta.card-text
+              |  #{(1/choral.sampleRate).toFixed(3)} Requests per second
+            .card-text
+              |  Composed of #{choral.children.length} chorals
+            .card-data
+              div(id=choral.choralId style='width: 100%; height: 400px')
+            .card-footer
+              a(href="/chorals/edit/"+choral.choralId) Edit
+              a.link-margin.delete-choral-btn(href="/home" data-choral-id=choral.choralId) Delete
+        br
+      
   script.
     document.addEventListener("DOMContentLoaded", function(event) {
       var chorals = !{JSON.stringify(chorals)};

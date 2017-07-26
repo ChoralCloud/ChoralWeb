@@ -1,13 +1,15 @@
 extends layout
+include modal_mixins
 
 block content
   header.w3-container(style='padding-top:22px')
     h5 My Devices
   hr
   .w3-container
-    div.add-device-btn-container 
-      a(role='button' href='/devices/new').w3-btn.w3-blue.add-device-btn New Device
-    table.w3-table.w3-striped.w3-bordered.w3-border.w3-hoverable.w3-white
+    div.choral-btn-container
+      +device_modal
+
+    table.w3-table.w3-striped.w3-bordered.w3-border.w3-hoverable.w3-white.choral-table
       tr
         td Name
         td Type

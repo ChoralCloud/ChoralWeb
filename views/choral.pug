@@ -2,13 +2,16 @@ extends layout
 
 block content
   header.w3-container(style='padding-top:22px')
-    h5.w3-left #{choralInfo.name}
+    h1.w3-left #{choralInfo.name}
     h5.w3-right
       select#timeFrame.form-control(name='timeframe' onchange='window.location.href = "?timeFrame=" + this.value')
         option(value=600) 10 min
         option(value=3600) 1 hour
         option(value=86400) 1 day
         option(value=604800) 1 week
+
+  .w3-container
+    p ID: #{choralInfo.choralId}
 
   .w3-row-padding.w3-margin-bottom
     ul.nav.nav-tabs.graph-tabs
@@ -24,17 +27,18 @@ block content
           div.choral-chart.epoch.category10(id= "areaChart"+tabs[i] style="width: 900px; height: 200px")
 
     div.child-area(style="position: relative; top: 210px;")
-      h3.child-area-head Children
-      each child in childData
-        div.child-card(onclick="location.href='/chorals/"+child.choralId+"';")
-          h4.child-card-header= child.name
-          div.child-card-body
-            - var device_data = JSON.parse(child.device_data);
-            - for( var entry in device_data )
-              - var data_value = device_data[entry]
-              - if( !isNaN(parseFloat(data_value)) && isFinite(data_value) )
-                h5.child-card-body-label= entry
-                h5.child-card-body-data(id=child.choralId class=entry)= JSON.stringify(device_data[entry])
+      - if( !(Object.keys(childData).length === 0 && childData.constructor === Object) )
+        h3.child-area-head Children
+        each child in childData
+          div.child-card(onclick="location.href='/chorals/"+child.choralId+"';")
+            h4.child-card-header= child.name
+            div.child-card-body
+              - var device_data = JSON.parse(child.device_data);
+              - for( var entry in device_data )
+                - var data_value = device_data[entry]
+                - if( !isNaN(parseFloat(data_value)) && isFinite(data_value) )
+                  h5.child-card-body-label= entry
+                  h5.child-card-body-data(id=child.choralId class=entry)= JSON.stringify(device_data[entry])
 
   script.
     document.addEventListener("DOMContentLoaded", function(event) {
@@ -46,7 +50,7 @@ block content
       var sampleRate = choralInfo.sampleRate;
       var chartsData = {};
       window.charts = {};
-      
+
       var options = document.getElementById('timeFrame').options;
       for(var i = 0; i < options.length; i++){
         if(options[i].value == timeFrame){
