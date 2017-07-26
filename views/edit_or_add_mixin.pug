@@ -34,14 +34,6 @@ mixin editScript(children, chorals, thisChoral)
       displayChildren()
     })
 
-    $("#mainForm").submit(() => {
-      if($("#childChoral").val()){
-        return confirm("You have not added the child selected to the choral, should we continue?")
-      }
-      return true;
-    })
-
-
 mixin children_add(thisChoral)
   .form-group
     .inline-select
@@ -53,4 +45,8 @@ mixin children_add(thisChoral)
           each choral in chorals
             -if(!thisChoral || (choral.choralId != thisChoral.choralId))
               option(value=choral)= choral.name
-        button.choral-btn-add.w3-right(type='button' onclick='adoptChild(childChoral.value)') Add Child
+
+  script.
+    $("#childChoral").change(function(e) {
+      adoptChild($(this).val())
+    });
