@@ -42,7 +42,7 @@ router.get('/home', function(req, res, next) {
       stats.rps += (1/tree.rootChorals[i].sampleRate)
     }
 
-    stats.rps = Math.round(stats.rps * 1000) / 1000;
+    stats.rps = stats.rps.toFixed(3);
 
     res.render('home', { 
       googleUser: googleUser,
