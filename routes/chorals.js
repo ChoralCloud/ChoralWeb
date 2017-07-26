@@ -128,6 +128,13 @@ router.get('/new', function(req, res, next) {
 router.get('/:choralId', function(req, res, next) {
   var choralId = req.params.choralId;
   var userModel = res.locals.userModel;
+  var timeFrame;
+
+  if(req.query.timeFrame){
+    timeFrame = req.query.timeFrame;
+  } else {
+    timeFrame = '600';
+  }
 
   //get parent Choral
   let p1 = new Promise((resolve, reject) => {
@@ -239,7 +246,7 @@ router.get('/:choralId', function(req, res, next) {
     // get parent past data in cassandra, and add to parent object
     return new Promise((resolve, reject) => {
       const query = 'SELECT * FROM choraldatastream.raw_data WHERE device_id = ? order by device_timestamp DESC limit ?';
-      cass_client.execute( query , [ choralId,  3600/parentObj.choralInfo.sampleRate], { prepare: true }, function( err, result ) {
+      cass_client.execute( query , [ choralId,  timeFrame/parentObj.choralInfo.sampleRate], { prepare: true }, function( err, result ) {
         if(err || !result) {
           logHelper.createLog("error", 'Choral data was not found in cassandra: ' + err, ["chorals", "get"]);
           console.log(err);
@@ -283,7 +290,8 @@ router.get('/:choralId', function(req, res, next) {
       tabs: parentData.tabs,
       pastData: parentData.pastData,
       choralInfo: parentData.choralInfo,
-      childData: childData
+      childData: childData,
+      timeFrame: timeFrame
     });
   });
 });
