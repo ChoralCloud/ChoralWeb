@@ -26,12 +26,11 @@ block content
           | }
 
     if defaultFuncs.length > 0
-      .form-group
+      .form-group.inline-select
         label(for='choralDefaultFuncInput') Quick Function
-          select(name='defaultFunc' type='text').form-control#choralDefaultFuncInput
-            option(value="") Custom Function
+          select(name='defaultFunc').form-control.add-child-input#choralDefaultFuncInput
             each func in defaultFuncs
-              option(value=func.func)= func.fileName
+              option(value=func.func)= func.fileName.replace(".js", "")
 
 
     +children_add()
