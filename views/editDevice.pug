@@ -1,0 +1,26 @@
+extends layout
+include edit_or_add_mixin
+
+block content
+  // !PAGE CONTENT!
+  header.w3-container(style='padding-top:22px')
+    h5
+      b
+        i.fa.fa-dashboard
+        |  Edit Device
+  form.w3-container(method='POST' action='/devices/edit/'+ deviceEdit.choralId id='mainForm').new-choral-form
+    .form-group
+      label(for='choralIdInput') ID
+      input#choralIdInput.form-control(name='id' type='text' readonly value=deviceEdit.choralId)
+    .form-group
+      label(for='choralNameInput') Name
+      input#choralNameInput.form-control(name='name' type='text' value=deviceEdit.name)
+    .form-group
+      label(for='choralSampleRateInput') Sample Rate (seconds)
+      .input-group
+        input#choralSampleRateInput.form-control(name='sampleRate' type='text', value=deviceEdit.sampleRate)
+        .input-group-addon.w3-button.w3-blue seconds (>= 1)
+
+    //Submit main form
+    br
+    button.w3-btn.w3-blue(type='submit' form='mainForm') Submit Changes

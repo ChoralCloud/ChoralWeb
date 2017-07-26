@@ -47,6 +47,56 @@ router.post('/', function(req, res, next) {
   });
 });
 
+router.get('/edit/:choralId', function(req, res, next) {
+  var googleUser = req.user;
+  var userModel = res.locals.userModel;
+  var choralId = req.params.choralId;
+
+  Choral.findOne({
+    userId: userModel,
+    choralType: "device",
+    choralId: choralId
+    }, (err, device) => {
+    res.render('editDevice', {
+      googleUser: googleUser,
+      userModel: userModel,
+      deviceEdit: device
+    });
+  });
+});
+
+
+router.post('/edit/:choralId', function(req, res, next) {
+  var googleUser = req.user;
+  var userModel = res.locals.userModel;
+  var choralId = req.params.choralId;
+
+  var attrs = {
+    user: userModel,
+    sampleRate: req.body.sampleRate,
+    type: 'device',
+    name: req.body.name,
+    func: req.body.func
+  };
+
+  Choral.findOne({ choralId: choralId }, (err, device) => {
+    if (err || !device) {
+      console.log(err);
+      res.flash('error', 'Device does not exist');
+      return res.send('404'); // notify client of failure
+    }
+    device.edit(attrs, (err) => {
+      if(err){
+        console.log(err);
+        res.flash('error', 'Device validation failed: ' + err);
+        return res.redirect(req.originalUrl + '/');
+      }
+      res.flash('success', 'Device Edited');
+      res.redirect(req.baseUrl + '/');
+    });
+  });
+});
+
 router.get('/new', function(req, res, next) {
   res.render('newDevice', {
     googleUser: req.user
