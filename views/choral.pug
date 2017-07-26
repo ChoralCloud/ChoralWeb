@@ -2,13 +2,16 @@ extends layout
 
 block content
   header.w3-container(style='padding-top:22px')
-    h5.w3-left #{choralInfo.name}
+    h1.w3-left #{choralInfo.name}
     h5.w3-right
       select#timeFrame.form-control(name='timeframe' onchange='window.location.href = "?timeFrame=" + this.value')
         option(value=600) 10 min
         option(value=3600) 1 hour
         option(value=86400) 1 day
         option(value=604800) 1 week
+
+  .w3-container
+    p ID: #{choralInfo.choralId}
 
   .w3-row-padding.w3-margin-bottom
     ul.nav.nav-tabs.graph-tabs

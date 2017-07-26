@@ -217,6 +217,7 @@ router.get('/:choralId', function(req, res, next) {
       choralInfo: {
         sampleRate: choral.sampleRate,
         name: choral.name,
+        choralId: choral.choralId
       }
     };
     return new Promise((resolve,reject) => {
