@@ -56,7 +56,7 @@
 }
 
 .app-header {
-  position: relative;
+  position: fixed;
   display: flex;
   align-items: center;
   width: 100%;
@@ -100,6 +100,10 @@
   .app-header-logo {
     width: 100%;
   }
+}
+
+.body-content {
+  padding-top: 59px;
 }
 
 /*
@@ -177,6 +181,10 @@
 /* Epoch js stupidly sets the z-index of their charts which makes them
  * overlay ontop of our sidebar this sets the svg on the page to be beneath the sidebar
  */
+
+#mySidebar {
+  margin-top: 59px;
+}
 
 .new-choral-form {
   max-width: 500px;
