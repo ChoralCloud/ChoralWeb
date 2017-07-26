@@ -16,7 +16,7 @@ block content
         .card-block
           h4.card-title.mt-3= choral.name
           .meta.card-text
-            |  #{1/choral.sampleRate} Requests per second
+            |  #{(1/choral.sampleRate).toFixed(3)} Requests per second
           .card-text
             |  Composed of #{choral.children.length} chorals
           .card-data
