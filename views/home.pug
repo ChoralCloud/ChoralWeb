@@ -19,7 +19,10 @@ block content
           .meta.card-text
             |  #{(1/choral.sampleRate).toFixed(3)} Requests per second
           .card-text
-            |  Composed of #{choral.children.length} chorals
+            if nodes[choral.choralId].length == 1
+              |  Composed of #{nodes[choral.choralId].length} choral
+            else
+              |  Composed of #{nodes[choral.choralId].length} chorals
           .card-data
             div(id=choral.choralId style='width: 100%; height: 400px')
           .card-footer

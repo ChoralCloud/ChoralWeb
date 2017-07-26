@@ -64,7 +64,7 @@ router.post('/', function(req, res, next) {
     type: 'choral',
     name: req.body.name,
     // if both default and custom func submitted, use custom
-    func: req.body.func || req.body.defaultFunc,
+    func: req.body.defaultFunc || req.body.func,
     children: children
   };
 

@@ -6,7 +6,11 @@ mixin editScript(children, chorals, thisChoral)
     var chorals = !{JSON.stringify(chorals)};
 
     function abortChild(index){
-      children.splice(index, 1)
+      var child = children.splice(index, 1)
+      $("#childChoral").append($('<option>', {
+        value: JSON.stringify(child[0]),
+        text: child[0].name
+      }))
       displayChildren()
     }
 
@@ -22,10 +26,12 @@ mixin editScript(children, chorals, thisChoral)
 
     function adoptChild(child){
       var child = JSON.parse(child)
+      
       // dont add in things that are already in the list
       if(children.find((val) => val.choralId == child.choralId )) {
         return;
       }
+
       children.push(child)
       displayChildren()
     }
@@ -41,7 +47,13 @@ mixin children_add(thisChoral)
         div#children-list
       div
         select#childChoral.form-control.add-child-input(name='childChoral')
+          option(value="") No Children Added
           each choral in chorals
-            -if(!thisChoral || (choral.choralId != thisChoral.choralId))
+            -if((!thisChoral || (choral.choralId != thisChoral.choralId)) && (!children || !(children.find((c) => c.choralId == choral.choralId))))
               option(value=choral)= choral.name
-        button.choral-btn-add.w3-right(type='button' onclick='adoptChild(childChoral.value)') Add Child
+
+  script.
+    $("#childChoral").change(function(e) {
+      adoptChild($(this).val())
+      $("#childChoral option:selected").remove()
+    })
