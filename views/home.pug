@@ -11,7 +11,8 @@ block content
   br
   each choral in rootChorals
     .col-sm-8.col-md-8.col-lg-4.mt-3
-      .card 
+      - var choralId = choral.choralId
+      .card(onclick="window.location.href='/chorals/"+choralId+"'")
         .card-block
           h4.card-title.mt-3= choral.name
           .meta.card-text
@@ -26,41 +27,54 @@ block content
       br
     
   script.
-    var chorals = !{JSON.stringify(chorals)};
-    var rootChorals = !{JSON.stringify(rootChorals)};
-    var nodes = !{JSON.stringify(nodes)};
-    var edges = !{JSON.stringify(edges)};
-    // create an array with nodes
-    // create a network
+    document.addEventListener("DOMContentLoaded", function(event) {
+      var chorals = !{JSON.stringify(chorals)};
+      var rootChorals = !{JSON.stringify(rootChorals)};
+      var nodes = !{JSON.stringify(nodes)};
+      var edges = !{JSON.stringify(edges)};
+      // create an array with nodes
+      // create a network
 
-    for(i in rootChorals) {
-      var vNodes = new vis.DataSet(nodes[rootChorals[i].choralId]);
-      var vEdges = new vis.DataSet(edges[rootChorals[i].choralId]);
-      var container = document.getElementById(rootChorals[i].choralId);
+      for(i in rootChorals) {
+        var vNodes = new vis.DataSet(nodes[rootChorals[i].choralId]);
+        var vEdges = new vis.DataSet(edges[rootChorals[i].choralId]);
+        var container = document.getElementById(rootChorals[i].choralId);
 
-      // provide the data in the vis format
-      var data = {
-          nodes: vNodes,
-          edges: vEdges
-      };
-      var options = {
-        layout: {
-          hierarchical: {
-            sortMethod: "directed"
+        // provide the data in the vis format
+        var data = {
+            nodes: vNodes,
+            edges: vEdges
+        };
+        var options = {
+          layout: {
+            hierarchical: {
+              sortMethod: "directed"
+            }
+          },
+          edges: {
+            smooth: true
+          },
+          interaction: {
+            zoomView: false
           }
-        },
-        edges: {
-          smooth: true
-        }
-      };
+        };
 
-      // initialize your network!
-      var network = new vis.Network(container, data, options);
+        // initialize your network!
+        var network = new vis.Network(container, data, options);
 
-      network.on("click", function (params) {
-        var choralId = this.getNodeAt(params.pointer.DOM);
-        var choral = chorals.find(function(choral) { return choral.choralId == choralId; })
-        location.href = "/chorals/" + choralId;
+        network.on("click", function (params) {
+          var choralId = this.getNodeAt(params.pointer.DOM);
+          var choral = chorals.find(function(choral) { return choral.choralId == choralId; })
+          if(choral) {
+            location.href = "/chorals/" + choralId;
+          }
+        });
+      }
+
+      var hammer = new vis.Hammer(document.body);
+      hammer.on('tap', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        e.stopImmediatePropagation();
       });
-    }
-    
+    });

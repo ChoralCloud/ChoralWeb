@@ -24,10 +24,12 @@ h5 {
 
 .card:hover .card-footer {
     background-color: #E8E8E8;
+    cursor: pointer;
 }
 
 .card:hover {
     background-color: #E8E8E8;
+    cursor: pointer;
 }
 
 .card-block {
@@ -74,6 +76,10 @@ h5 {
     border-top: 1px solid rgba(0, 0, 0, .05) !important;
     background-color: #FFFFFF;
     transition: background-color 0.2s;
+}
+
+.card-footer > a {
+  text-decoration: none !important;
 }
 
 .card-inverse .btn {
