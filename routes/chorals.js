@@ -99,7 +99,16 @@ router.get('/new', function(req, res, next) {
 router.get('/:choralId', function(req, res, next) {
   var choralId = req.params.choralId;
   var userModel = res.locals.userModel;
+  var timeFrame;
 
+  if(req.query.timeFrame){
+    timeFrame = req.query.timeFrame;
+  } else {
+    timeFrame = '600';
+  }
+
+  console.log("==========================TIMEFRAME IS:===================================");
+  console.log(timeFrame);
   // 1. get sample rate of the chorals
   // 2. default currently is 1 hour of data, so get (3600/sampleRate) data points
   // 3. put them into object where {tabName: [data_points]} so FE doesn't need to do any work
@@ -147,34 +156,43 @@ router.get('/:choralId', function(req, res, next) {
   }).then((ret) => {
     return new Promise((resolve, reject) => {
       cass_client.execute("SELECT * FROM choraldatastream.raw_data WHERE device_id = '" + choralId + "' order by device_timestamp DESC limit " + 3600/ret.choralInfo.sampleRate, function( err, result ) {
-        var sorted_results = {};
-        var rows = result.rows.reverse();
-        for( var i = 0; i < ret.tabs.length; i++ ) {
-          sorted_results[ret.tabs[i]] = [];
-        }
-
-        for( var i = 0; i < rows.length; i++ ) {
-          date = rows[i].device_timestamp;
-          date = Date.parse(date);
-          for( var j = 0; j < ret.tabs.length; j++ ) {
-            data = JSON.parse(rows[i].device_data)
-            sorted_results[ret.tabs[j]].push({
-              time: date/1000,
-              y: data[ret.tabs[j]]
-            });
+        const query = 'SELECT * FROM choraldatastream.raw_data WHERE device_id = ? order by device_timestamp DESC limit ?';
+        cass_client.execute( query , [ choralId,  timeFrame/ret.choralInfo.sampleRate], { prepare: true }, function( err, result ) {
+          if(err || !result) {
+            logHelper.createLog("error", 'Choral data was not found in cassandra: ' + err, ["chorals", "get"]);
+            console.log(err);
+            res.send("Choral not found in database");
           }
-        }
-        ret.pastData = sorted_results;
-        resolve(ret);
+          var sorted_results = {};
+          var rows = result.rows.reverse();
+          for( var i = 0; i < ret.tabs.length; i++ ) {
+            sorted_results[ret.tabs[i]] = [];
+          }
+
+          for( var i = 0; i < rows.length; i++ ) {
+            date = rows[i].device_timestamp;
+            date = Date.parse(date);
+            for( var j = 0; j < ret.tabs.length; j++ ) {
+              data = JSON.parse(rows[i].device_data)
+              sorted_results[ret.tabs[j]].push({
+                time: date/1000,
+                y: data[ret.tabs[j]]
+              });
+            }
+          }
+          ret.pastData = sorted_results;
+          resolve(ret);
+        });
       });
-    });
-  }).then((ret)=> {
-    res.render('choral', {
-      googleUser: req.user,
-      parentChoralId: req.params.choralId,
-      tabs: ret.tabs,
-      pastData: ret.pastData,
-      choralInfo: ret.choralInfo
+    }).then((ret)=> {
+      res.render('choral', {
+        googleUser: req.user,
+        parentChoralId: req.params.choralId,
+        tabs: ret.tabs,
+        pastData: ret.pastData,
+        choralInfo: ret.choralInfo,
+        timeFrame: timeFrame
+      });
     });
   });
 });
