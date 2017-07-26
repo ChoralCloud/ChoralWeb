@@ -2,8 +2,13 @@ extends layout
 
 block content
   header.w3-container(style='padding-top:22px')
-    h3.w3-left #{choralInfo.name}
-    h5.w3-right Dropdown Placeholder
+    h5.w3-left #{choralInfo.name}
+    h5.w3-right
+      select#timeFrame.form-control(name='timeframe' onchange='window.location.href = "?timeFrame=" + this.value')
+        option(value=600) 10 min
+        option(value=3600) 1 hour
+        option(value=86400) 1 day
+        option(value=604800) 1 week
 
   .w3-row-padding.w3-margin-bottom
     ul.nav.nav-tabs.graph-tabs
@@ -37,9 +42,18 @@ block content
       var tabTitles = !{JSON.stringify(tabs)};
       var past = !{JSON.stringify(pastData)};
       var choralInfo = !{JSON.stringify(choralInfo)};
+      var timeFrame = !{JSON.stringify(timeFrame)};
       var sampleRate = choralInfo.sampleRate;
       var chartsData = {};
       window.charts = {};
+      
+      var options = document.getElementById('timeFrame').options;
+      for(var i = 0; i < options.length; i++){
+        if(options[i].value == timeFrame){
+          options[i].selected = true;
+        }
+      }
+
       for( var i = 0; i < tabTitles.length; i++ ) {
         chartsData[tabTitles[i]] = [
           {
@@ -47,7 +61,7 @@ block content
             values: past[tabTitles[i]]
           }
         ];
-        var windowSize = 3600/sampleRate;
+        var windowSize = timeFrame/sampleRate;
         window.charts[tabTitles[i]] = $('#areaChart'+tabTitles[i]).epoch({
           type: 'time.area',
           data: chartsData[tabTitles[i]],
