@@ -35,7 +35,10 @@ mixin editScript(children, chorals, thisChoral)
     })
 
     $("#mainForm").submit(() => {
-      return confirm("You have not added the child selected to the choral, should we continue?")
+      if($("#childChoral").val()){
+        return confirm("You have not added the child selected to the choral, should we continue?")
+      }
+      return true;
     })
 
 
