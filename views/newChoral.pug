@@ -1,4 +1,5 @@
 extends layout
+include edit_or_add_mixin
 
 block content
   // !PAGE CONTENT!
@@ -7,7 +8,7 @@ block content
       b
         i.fa.fa-plus-square-o
         |  Create A New Choral
-  form.w3-container(method='POST' action='/chorals' id='mainForm').new-choral-form
+  form.w3-container(method='POST' action='/chorals/' id='mainForm').new-choral-form
     .form-group
       label(for='choralNameInput') Name
       input#choralNameInput.form-control(name='name' type='text')
@@ -15,11 +16,11 @@ block content
       label(for='choralSampleRateInput') Sample Rate (seconds)
       .input-group
         input#choralSampleRateInput.form-control(name='sampleRate' type='text', placeholder='5')
-        .input-group-addon seconds (>= 1)
+        .input-group-addon.w3-btn.w3-blue seconds (>= 1)
     .form-group
       label(for='choralFuncInput') Function
       textarea#choralFuncInput.form-control(name='func' type='text' placeholder='function(children, done){ done({ val: Math.random() * 50 }); }')
-
+      
     if defaultFuncs.length > 0
       .form-group
         label(for='choralDefaultFuncInput') Quick Function
@@ -28,19 +29,13 @@ block content
               option(value=func.func)= func.fileName
 
 
-    //Add child to cookies
-    .form-group
-      .inline-select
-        label(for='childChoral') Children Chorals
-        div(id='childrenList')
-        select#childChoral.form-control.add-child-input(name='childChoral')
-            each choral in chorals
-              option(value=choral)= choral.name
-    button.btn.btn-default.add-child-btn(
-      type='button' onclick='createChildCookie(childChoral.value)') Add Child
+    +children_add()
+
+    //Submit main form
     br
     br
-    button.w3-btn.w3-blue(type='submit') Create Choral
+    br
+    button.w3-btn.w3-blue(type='submit' form='mainForm') Create Choral
 
-
+  +editScript([], chorals)
   // End page content

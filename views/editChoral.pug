@@ -1,4 +1,5 @@
 extends layout
+include edit_or_add_mixin
 
 block content
   // !PAGE CONTENT!
@@ -7,33 +8,27 @@ block content
       b
         i.fa.fa-dashboard
         |  Edit Choral
-  form.w3-container(method='POST' action='/chorals/edit/'+choralEdit.choralId id='mainForm').new-choral-form
+  form.w3-container(method='POST' action='/chorals/edit/'+ choralEdit.choralId id='mainForm').new-choral-form
+    .form-group
+      label(for='choralIdInput') ID
+      input#choralIdInput.form-control(name='id' type='text' readonly value=choralEdit.choralId)
     .form-group
       label(for='choralNameInput') Name
-      input#choralNameInput.form-control(name='name' type='text' placeholder=choralEdit.name)
+      input#choralNameInput.form-control(name='name' type='text' value=choralEdit.name)
     .form-group
       label(for='choralSampleRateInput') Sample Rate (seconds)
       .input-group
-        input#choralSampleRateInput.form-control(name='sampleRate' type='text', placeholder=choralEdit.sampleRate)
-        .input-group-addon seconds (>= 1)
+        input#choralSampleRateInput.form-control(name='sampleRate' type='text', value=choralEdit.sampleRate)
+        .input-group-addon.w3-button.w3-blue seconds (>= 1)
     .form-group
       label(for='choralFuncInput') Function
-      textarea#choralFuncInput.form-control(name='func' type='text' placeholder=choralEdit.func)
-    .form-group
-      .inline-select
-        label(for='childChoral') Children Chorals
-          each child in children
-            p child
-        div(id='childrenList')
-        select#childChoral.form-control.add-child-input(name='childChoral')
-            each choral in chorals
-              option(value=choral)= choral.name
-    button.btn.btn-default.add-child-btn(type='button' onclick='createChildCookie(childChoral.value)') Add Child
+      textarea#choralFuncInput.form-control(name='func', type='text')= choralEdit.func
+    +children_add(choralEdit)
 
     //Submit main form
     br
     br
     br
-    button.btn.btn-default(type='submit' form='mainForm') Submit Changes
+    button.w3-btn.w3-blue(type='submit' form='mainForm') Submit Changes
 
-  // End page content
+  +editScript(children, chorals)

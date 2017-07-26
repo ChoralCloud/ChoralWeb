@@ -17,14 +17,17 @@ h5 {
     border: none;
     border-radius: .28571429rem;
     box-shadow: 0 1px 3px 0 #d4d4d5, 0 0 0 1px #d4d4d5;
-    background-color: #87CEEB;
+    background-color: #FFFFFF;
     color: #000;
     transition: background-color 0.2s;
 }
 
+.card:hover .card-footer {
+    background-color: #E8E8E8;
+}
+
 .card:hover {
-    background-color: #3885a5;
-    cursor: pointer;
+    background-color: #E8E8E8;
 }
 
 .card-block {
@@ -55,16 +58,22 @@ h5 {
     color: rgba(0, 0, 0, .68);
 }
 
+.card-data {
+    clear: both;
+    margin-top: .5em;
+    color: rgba(0, 0, 0, .68);  
+}
+
 .card-footer {
     font-size: 1em;
     position: static;
     top: 0;
     left: 0;
     max-width: 100%;
-    padding: .75em 1em;
     color: rgba(0, 0, 0, .4);
     border-top: 1px solid rgba(0, 0, 0, .05) !important;
-    background: #fff;
+    background-color: #FFFFFF;
+    transition: background-color 0.2s;
 }
 
 .card-inverse .btn {

@@ -3,7 +3,6 @@ var router = express.Router();
 var Choral = require('../models/choral');
 var viewHelpers = require('../helpers/viewHelpers');
 var logHelper = require('../helpers/logHelper');
-var cookieHelper = require('../helpers/cookieHelper');
 var client = require('redis').createClient(process.env.REDIS_STORE_URI)
 const cassandra = require('cassandra-driver');
 const cass_client = new cassandra.Client({
@@ -38,18 +37,26 @@ router.get('/', function(req, res, next) {
   });
 });
 
+function getChildrenFromRequest(req){
+  var reqChildren = req.body['children[]'];
+  // if the value is a string then convert it to an array
+  // for some reason when only one thing comes in it comes in as a
+  // string instead of an array
+  if (typeof reqChildren === 'string' || reqChildren instanceof String){
+      reqChildren = [ reqChildren ];
+  }
+  var children = [];
+  if(reqChildren && reqChildren.length){
+      children = reqChildren.map((val) => {return { _id: val } } );
+  }
+  return children;
+}
+
 router.post('/', function(req, res, next) {
   var googleUser = req.user;
   var userModel = res.locals.userModel;
-  var cookies = req.get("Cookie");
-  var children = [];
-  var child;
 
-  for(var i = 0; cookieHelper.readCookie('child' + i, cookies) != null; i++){
-    child = cookieHelper.readCookie('child' + i, cookies);
-    child = JSON.parse(child);
-    children.push(child.choralId);
-  }
+  var children = getChildrenFromRequest(req)
 
   var attrs = {
     user: userModel,
@@ -94,12 +101,6 @@ router.get('/new', function(req, res, next) {
     if (err) {
       console.log(err);
       return next(err);
-    }
-
-    //Delete child cookies if page is reloaded
-    var cookies = req.get("Cookie");
-    for(var i = 0; cookieHelper.readCookie('child' + i, cookies) != null; i++){
-      res.clearCookie('child' + i);
     }
 
     getDefaultFuncs() // fetch quick funcs
@@ -147,8 +148,7 @@ router.get('/:choralId', function(req, res, next) {
       }
       resolve(ret);
     });
-  });
-
+  }); 
   p.then((ret) => {
     return new Promise((resolve,reject) => {
       client.hgetall(choralId, (err, data) => {
@@ -242,7 +242,7 @@ router.delete('/:choralId', function(req, res, next) {
       }
 
       res.flash('success', 'Choral successfully deleted.');
-      return res.send('204'); // successful deletion
+      return res.send('204');  // successful deletion
     });
   });
 });
@@ -251,55 +251,38 @@ router.get('/edit/:choralId', function(req, res, next) {
   var googleUser = req.user;
   var userModel = res.locals.userModel;
   var choralId = req.params.choralId;
-  var children = [];
 
-  // grab all chorals belonging to the user.
-  Choral.findAllForUser(userModel, (err, chorals) => {
-    if (err) {
-      console.log(err);
-      return next(err);
-    }
-
-    Choral.findOne({ choralId: choralId }, (err, choral) => {
-      if (err) {
+  Choral.findOne({
+    userId: userModel,
+    choralType: "choral",
+    choralId: choralId
+    })
+    // this follows the object ids in the children array and
+    // populates them with the choral info
+    .populate("children")
+    .exec((err, choral) => {
+      if (err || !choral) {
         console.log(err);
         res.flash('error', 'Choral does not exist');
-        return res.send('404'); // notify client of failure
-      }
-      //Iterate and store all children chorals to be displayed
-      for(var i = 0; i < choral.children.length; i++){
-        Choral.findOne({ _id: choral.children[i] }, (err, child) => {
-          if (err) {
-            console.log(err);
-            res.flash('error', 'Choral does not exist');
-            return res.send('404'); // notify client of failure
-          }
-          console.log(child.name);
-          children.push(child.name);
-          console.log(children);
-        });
-      }
-      //Delete child cookies if page is reloaded
-      var cookies = req.get("Cookie");
-      for(var i = 0; cookieHelper.readCookie('child' + i, cookies) != null; i++){
-        res.clearCookie('child' + i);
+        return res.redirect('/chorals')
       }
       //Pass choral to be edited and list of chorals
-      console.log("CHILDREN PASSED ARE");
-      console.log(children);
+      Choral.findAllForUser(userModel, (err, chorals) => {
+        if (err) {
+          console.log(err);
+          res.flash('error', err.message);
+          return res.redirect('/chorals')
+        }
 
-      //Pass choral to be edited and list of chorals
-      res.render('editChoral',
-        {
+        res.render('editChoral', {
           googleUser: googleUser,
           userModel: userModel,
-          chorals: chorals,
+          chorals: chorals || [],
           choralEdit: choral,
-          children: children
-        }
-      );
+          children: choral.children
+        });
+      })
     });
-  });
 });
 
 router.post('/edit/:choralId', function(req, res, next) {
@@ -307,15 +290,7 @@ router.post('/edit/:choralId', function(req, res, next) {
   var userModel = res.locals.userModel;
   var choralId = req.params.choralId;
 
-  var cookies = req.get("Cookie");
-  var children = [];
-  var child;
-
-  for(var i = 0; cookieHelper.readCookie('child' + i, cookies) != null; i++){
-    child = cookieHelper.readCookie('child' + i, cookies);
-    child = JSON.parse(child);
-    children.push(child.choralId);
-  }
+  var children = getChildrenFromRequest(req)
 
   var attrs = {
     user: userModel,
@@ -327,16 +302,16 @@ router.post('/edit/:choralId', function(req, res, next) {
   };
 
   Choral.findOne({ choralId: choralId }, (err, choral) => {
-    if (err) {
+    if (err || !choral) {
       console.log(err);
       res.flash('error', 'Choral does not exist');
       return res.send('404'); // notify client of failure
     }
-    choral.edit(attrs, (err, choral) => {
+    choral.edit(attrs, (err) => {
       if(err){
         console.log(err);
         res.flash('error', 'Choral validation failed: ' + err);
-        return next(err);
+        return res.redirect(req.originalUrl + '/');
       }
       res.flash('success', 'Choral Edited');
       res.redirect(req.baseUrl + '/');
