@@ -20,6 +20,9 @@ block content
         li(class=active)
           a(data-toggle="tab" href="#"+tabs[i] )= tabs[i]
 
+    if errorMsg
+      .choral-view-error
+        .choral-view-error-msg ERROR: #{errorMsg}
     div.tab-content
       - for( var i = 0; i < tabs.length; i++ )
         - active = (i === 0 ? 'active in' : '')
