@@ -13,9 +13,6 @@ block content
         td Type
         td ID
         td Sample Rate
-        td
-        td
-        td
       each choral in chorals
         tr
           td= choral.name
@@ -24,16 +21,12 @@ block content
               a.w3-right.w3-btn.w3-blue.copy-choral-btn(data-choral-id=choral.choralId)
                 span.glyphicon.glyphicon-copy
           td= choral.sampleRate
-          td
-            if choral.choralType == 'choral'
-              a.link-margin.w3-right.w3-btn.w3-blue(role='button' href='/chorals/edit/' + choral.choralId)
-                span.glyphicon.glyphicon-pencil
-          td
-            a.link-margin.w3-right.w3-btn.w3-blue.view-choral-btn(href='/chorals/' + choral.choralId)
-              span.fa.fa-line-chart
-          td
             a.link-margin.w3-right.w3-btn.w3-red.delete-choral-btn(data-choral-id=choral.choralId)
               span.glyphicon.glyphicon-trash
+            a.link-margin.w3-right.w3-btn.w3-blue(role='button' href='/chorals/edit/' + choral.choralId)
+              span.glyphicon.glyphicon-pencil
+            a.link-margin.w3-right.w3-btn.w3-blue.view-choral-btn(href='/chorals/' + choral.choralId)
+              span.fa.fa-line-chart
 
     script.
       $('.choral-row').on("click", function() {
