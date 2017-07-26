@@ -323,8 +323,18 @@ router.delete('/:choralId', function(req, res, next) {
         return res.send('500'); // notify client of failure
       }
 
-      res.flash('success', 'Choral successfully deleted.');
-      return res.send('204');  // successful deletion
+      // Delete all children choral from parents
+      Choral.update({ children: choral._id }, { $pull: { children: choral._id } }, (err) => {
+          if (err) {
+          logHelper.createLog("error", 'Error removing child choral: ' + err, ["chorals", "children", "delete"]);
+          console.log(err);
+          res.flash('error', 'Error removing child choral');
+          return res.send('500'); // notify client of failure
+        }
+
+        res.flash('success', 'Choral successfully deleted.');
+        return res.send('204');  // successful deletion
+      });
     });
   });
 });
