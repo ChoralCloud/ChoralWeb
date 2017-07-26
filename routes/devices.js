@@ -97,10 +97,4 @@ router.post('/edit/:choralId', function(req, res, next) {
   });
 });
 
-router.get('/new', function(req, res, next) {
-  res.render('newDevice', {
-    googleUser: req.user
-  });
-});
-
 module.exports = router;
