@@ -25,15 +25,24 @@ router.get('/', function(req, res, next) {
       return next(err);
     }
 
-    // serialize the chorals and pass to chorals view
-    res.render('chorals',
-      {
+    getDefaultFuncs() // fetch quick funcs
+    .then(funcs => {
+
+      // prepend empty quick func func, so that default is no quick func
+      funcs.unshift({ fileName: 'None', func: '' });
+
+      res.render('chorals', {
         googleUser: googleUser,
         userModel: userModel,
+        viewHelpers: viewHelpers,
         chorals: chorals,
-        viewHelpers: viewHelpers
-      }
-    );
+        defaultFuncs: funcs
+      });
+    })
+    .catch(err => {
+      console.log(err)
+      next(err);
+    });
   });
 });
 
@@ -79,7 +88,7 @@ router.post('/', function(req, res, next) {
       );
 
       res.flash('error', 'Choral validation failed: ' + err);
-      return res.redirect(req.baseUrl + '/new');
+      return res.redirect(req.baseUrl);
     }
 
     logHelper.createLog(
@@ -89,7 +98,7 @@ router.post('/', function(req, res, next) {
     );
 
     res.flash('success', 'New choral created.');
-    res.redirect(req.baseUrl + '/new');
+    res.redirect(req.baseUrl);
   });
 });
 

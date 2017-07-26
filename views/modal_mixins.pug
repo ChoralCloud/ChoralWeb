@@ -1,3 +1,5 @@
+include edit_or_add_mixin
+
 mixin device_modal()
   button(type='button' data-toggle="modal" data-target="#myModal").choral-btn-add New Device
   #myModal.modal.fade(role="dialog")
@@ -18,15 +20,43 @@ mixin device_modal()
               button.w3-right.choral-btn-add(type='submit') Create Device
 
 mixin choral_modal()
-  button.btn.btn-info.btn-lg(type="button" data-toggle="modal" data-target="#myModal") Open Modal
+  button(type='button' data-toggle="modal" data-target="#myModal").choral-btn-add New Choral
   #myModal.modal.fade(role="dialog")
     .modal-dialog
       .modal-content
         .modal-header
           button.close(type="button" data-dismiss="modal") &times;
-          h4.modal-title Modal Header
+          h4.modal-title Create A New Choral
         .modal-body
-          p Some text in the modal
-        .modal-footer
-          button.btn.btn-default(type="button" data-dismiss="modal") Close
+          header.w3-container(style='padding-top:22px')
+            form(method='POST' action='/chorals/' id='mainForm').new-choral-form
+              .form-group
+                label(for='choralNameInput') Name
+                input#choralNameInput.form-control(name='name' type='text')
+              .form-group
+                label(for='choralSampleRateInput') Sample Rate (seconds)
+                .input-group
+                  input#choralSampleRateInput.form-control(name='sampleRate' type='text', placeholder='5')
+                  .input-group-addon.w3-blue seconds (>= 1)
+              .form-group
+                label(for='choralFuncInput') Function
+                textarea#choralFuncInput.form-control(name='func' type='text' placeholder='function(children, done){ done({ val: Math.random() * 50 }); }')
+                
+              if defaultFuncs.length > 0
+                .form-group
+                  label(for='choralDefaultFuncInput') Quick Function
+                    select(name='defaultFunc' type='text').form-control#choralDefaultFuncInput
+                      each func in defaultFuncs
+                        option(value=func.func)= func.fileName
 
+
+              +children_add()
+
+              //Submit main form
+              br
+              br
+              br
+              button.choral-btn-add(type='submit' form='mainForm') Create Choral
+
+            +editScript([], chorals)
+            // End page content
