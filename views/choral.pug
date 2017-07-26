@@ -35,10 +35,10 @@ block content
             div.child-card-body
               - var device_data = JSON.parse(child.device_data);
               - for( var entry in device_data )
-                - var data_value = device_data[entry]
+                - var data_value = device_data[entry].toFixed(5)
                 - if( !isNaN(parseFloat(data_value)) && isFinite(data_value) )
                   h5.child-card-body-label= entry
-                  h5.child-card-body-data(id=child.choralId class=entry)= JSON.stringify(device_data[entry])
+                  h5.child-card-body-data(id=child.choralId class=entry)= data_value
 
   script.
     document.addEventListener("DOMContentLoaded", function(event) {
@@ -98,9 +98,9 @@ block content
         if(childData.hasOwnProperty(data.device_id)) {
           var device_data = data.device_data;
           for( var key in device_data ) {
-            var data_value = device_data[key];
+            var data_value = device_data[key].toFixed(5);
             if( !isNaN(parseFloat(data_value)) && isFinite(data_value) ) {
-              $("#"+data.device_id+"."+key).text(device_data[key]);
+              $("#"+data.device_id+"."+key).text(data_value);
             }
           }
         } else {
