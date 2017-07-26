@@ -7,7 +7,7 @@ block content
     h4 You have <b>#{chorals.length} active #{c}</b> running at <b>#{stats.rps} requests per second</b>.
   .w3-container
     div.choral-btn-container 
-      a(role='button' href='/chorals/new').choral-btn-add New Choral
+      +choral_modal
       +device_modal
   br
   each choral in rootChorals
@@ -29,7 +29,7 @@ block content
 
   script.
     document.addEventListener("DOMContentLoaded", function(event) {
-      var chorals = !{JSON.stringify(chorals)};
+      var treechorals = !{JSON.stringify(treechorals)};
       var rootChorals = !{JSON.stringify(rootChorals)};
       var nodes = !{JSON.stringify(nodes)};
       var edges = !{JSON.stringify(edges)};
@@ -65,7 +65,7 @@ block content
 
         network.on("click", function (params) {
           var choralId = this.getNodeAt(params.pointer.DOM);
-          var choral = chorals.find(function(choral) { return choral.choralId == choralId; })
+          var choral = treechorals.find(function(choral) { return choral.choralId == choralId; })
           if(choral) {
             location.href = "/chorals/" + choralId;
           }

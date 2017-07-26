@@ -221,6 +221,7 @@
   border: none;
   padding: 8px 16px;
   transition: all 0.2s;
+  margin-right: 5px;
 }
 
 .choral-btn-add:hover {
