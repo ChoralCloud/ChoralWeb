@@ -55,7 +55,7 @@ var choralSchema = new mongoose.Schema({
       function() { return this.type == 'choral' },
       '{PATH} is required for non-device chorals!'
     ],
-    default: "function(children, done){ done({ val: 1 }); }"
+    default: "function(children, done){ done({ val: Math.random() * 50 }); }"
   },
   sampleRate: {
     type: Number,

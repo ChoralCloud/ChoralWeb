@@ -19,7 +19,8 @@ block content
         .input-group-addon.w3-btn.w3-blue seconds (>= 1)
     .form-group
       label(for='choralFuncInput') Function
-      textarea#choralFuncInput.form-control(name='func' type='text' placeholder='function(children, done){ done({ val: 1 }); }')
+      textarea#choralFuncInput.form-control(name='func' type='text' placeholder='function(children, done){ done({ val: Math.random() * 50 }); }')
+      
     if defaultFuncs.length > 0
       .form-group
         label(for='choralDefaultFuncInput') Quick Function
