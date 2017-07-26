@@ -10,23 +10,24 @@ block content
       a(role='button' href='/chorals/new').choral-btn-add New Choral
       +device_modal
   br
-  each choral in rootChorals
-    .col-sm-8.col-md-8.col-lg-4.mt-3
-      - var choralId = choral.choralId
-      .card(onclick="window.location.href='/chorals/"+choralId+"'")
-        .card-block
-          h4.card-title.mt-3= choral.name
-          .meta.card-text
-            |  #{(1/choral.sampleRate).toFixed(3)} Requests per second
-          .card-text
-            |  Composed of #{choral.children.length} chorals
-          .card-data
-            div(id=choral.choralId style='width: 100%; height: 400px')
-          .card-footer
-            a(href="/chorals/edit/"+choral.choralId) Edit
-            a.link-margin.delete-choral-btn(href="/home" data-choral-id=choral.choralId) Delete
-      br
-    
+  .w3-container
+    each choral in rootChorals
+      .col-sm-8.col-md-8.col-lg-4.mt-3
+        - var choralId = choral.choralId
+        .card(onclick="window.location.href='/chorals/"+choralId+"'")
+          .card-block
+            h4.card-title.mt-3= choral.name
+            .meta.card-text
+              |  #{(1/choral.sampleRate).toFixed(3)} Requests per second
+            .card-text
+              |  Composed of #{choral.children.length} chorals
+            .card-data
+              div(id=choral.choralId style='width: 100%; height: 400px')
+            .card-footer
+              a(href="/chorals/edit/"+choral.choralId) Edit
+              a.link-margin.delete-choral-btn(href="/home" data-choral-id=choral.choralId) Delete
+        br
+      
   script.
     document.addEventListener("DOMContentLoaded", function(event) {
       var chorals = !{JSON.stringify(chorals)};
