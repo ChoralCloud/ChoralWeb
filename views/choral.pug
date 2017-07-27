@@ -80,7 +80,7 @@ block content
           tickFormats: { bottom: function(d) {
               var months = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
               var date = new Date(d*1000);
-              var date_month = date.getMonth() + 1;
+              var date_month = date.getMonth();
               var date_day = date.getDate();
               var date_hour = date.getHours();
               var ampm = date_hour < 12 ? "am" : "pm";
