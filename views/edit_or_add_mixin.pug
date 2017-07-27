@@ -5,6 +5,9 @@ mixin editScript(children, chorals, thisChoral)
     var children = !{JSON.stringify(children)};
     var chorals = !{JSON.stringify(chorals)};
 
+    console.log(children);
+    console.log(chorals);
+
     function abortChild(index){
       var child = children.splice(index, 1)
       $("#childChoral").append($('<option>', {
@@ -54,6 +57,7 @@ mixin children_add(thisChoral)
 
   script.
     $("#childChoral").change(function(e) {
+      console.log(e);
       adoptChild($(this).val())
       $("#childChoral option:selected").remove()
     })

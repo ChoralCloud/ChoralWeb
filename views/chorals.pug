@@ -19,24 +19,16 @@ block content
           td= choral.name
           td= choral.choralType
           td= viewHelpers.truncateWithDots(choral.choralId, 30)
-              a.w3-right.w3-btn.w3-blue.copy-choral-btn(data-choral-id=choral.choralId)
+              a.w3-right.w3-btn.w3-blue.copy-choral-btn
                 span.glyphicon.glyphicon-copy
           td= choral.sampleRate
-            a.link-margin.w3-right.w3-btn.w3-red.delete-choral-btn(data-choral-id=choral.choralId)
+            a.link-margin.w3-right.w3-btn.w3-red.delete-choral-btn
               span.glyphicon.glyphicon-trash
             if choral.choralType == 'choral'
-              +edit_choral_modal(choral, chorals, children)
+              +edit_choral_modal(choral, chorals, choral.children)
                 span.glyphicon.glyphicon-pencil
             else
               a.link-margin.w3-right.w3-btn.w3-blue(role='button' href='/devices/edit/' + choral.choralId)
                 span.glyphicon.glyphicon-pencil
             a.link-margin.w3-right.w3-btn.w3-blue.view-choral-btn(href='/chorals/' + choral.choralId)
               span.fa.fa-line-chart
-
-    script.
-      $('.choral-row').on("click", function() {
-        document.location = $(this).data('href');
-      });
-      $('.delete-choral-btn').click( function(evt) {
-        evt.stopPropagation();
-      });

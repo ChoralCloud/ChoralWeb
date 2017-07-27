@@ -31,6 +31,8 @@ router.get('/', function(req, res, next) {
       // prepend empty quick func func, so that default is no quick func
       funcs.unshift({ fileName: 'None', func: '' });
 
+      console.log(chorals);
+
       res.render('chorals', {
         googleUser: googleUser,
         userModel: userModel,
@@ -100,6 +102,11 @@ router.post('/', function(req, res, next) {
     res.flash('success', 'New choral created.');
     res.redirect(req.baseUrl);
   });
+});
+
+router.get('/populate_children', function(req, res, next) {
+  console.log(req.query);
+  res.send("test");
 });
 
 router.get('/new', function(req, res, next) {

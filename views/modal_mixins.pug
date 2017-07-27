@@ -62,7 +62,7 @@ mixin choral_modal()
             // End page content
 
 mixin edit_choral_modal(choral, chorals, children)
-  a.link-margin.w3-right.w3-btn.w3-blue(type='button' href='/chorals/?chorald='+choral.choralId+'#editModal' data-toggle='modal').choral-btn-add
+  a.link-margin.w3-right.w3-btn.w3-blue(type='button' href='/chorals/?chorald='+choral.choralId+'#editModal' data-toggle='modal' onclick="test('" + choral.choralId + "')").choral-btn-add
     span.glyphicon.glyphicon-pencil
   #editModal.modal.fade(role='dialog')
     .modal-dialog
@@ -92,7 +92,12 @@ mixin edit_choral_modal(choral, chorals, children)
               //Submit main form
               br
               br
-              br
               button.choral-btn-add(type='submit' form='mainForm') Submit Changes
 
-            +editScript(children, chorals)
+  //+editScript(children, chorals)
+  script.
+      function test(choralId) {
+        $.get('/chorals/populate_children', choralId, function(res) {
+          console.log(res);
+        });
+      }
