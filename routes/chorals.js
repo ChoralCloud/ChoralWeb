@@ -136,15 +136,18 @@ router.get('/:choralId', function(req, res, next) {
     timeFrame = '600';
   }
 
+  var choralInfo = {}
+
   //get parent Choral
   let p1 = new Promise((resolve, reject) => {
     Choral.findOne({ choralId: choralId }, (err, choral) => {
       if (err || !choral) {
         logHelper.createLog("error", 'Choral does not exist: ' + err, ["chorals", "get"]);
-        console.log(err);
-        res.flash('error', 'Choral does not exist');
         return res.send('404'); // notify client of failure
       }
+      choralInfo.sampleRate = choral.sampleRate;
+      choralInfo.name = choral.name;
+      choralInfo.choralId = choral.choralId;
       resolve(choral);
     });
   });
@@ -161,6 +164,11 @@ router.get('/:choralId', function(req, res, next) {
           if(err) {
             console.log(err);
             return res.send('404 Chorals child does not exist');
+            errorObj = {
+              choralInfo: choralInfo,
+              errorMsg: "This choral can't retrieve a child's information from mongo"
+            };
+            reject(JSON.stringify(errorObj));
           }
           resolve(child);
         });
@@ -182,13 +190,17 @@ router.get('/:choralId', function(req, res, next) {
     return Promise.all(Object.keys(childData).map((choralId) => {
       return new Promise((resolve, reject) => {
         client.hgetall(choralId, (err, data) => {
-          if(err) {
+          if(err || data == null) {
             logHelper.createLog(
               "error",
               'Choral data has not yet been published to redis: ' + err
               , ["chorals", "get"]
             );
-            reject(err);
+            errorObj = {
+              choralInfo: choralInfo,
+              errorMsg: "One of the chorals children does not have any data"
+            };
+            reject(JSON.stringify(errorObj));
           }
           if(data == null) {
             reject("data is null");
@@ -206,7 +218,17 @@ router.get('/:choralId', function(req, res, next) {
       return Promise.resolve(childData);
     });
   }).catch((reason) => {
-    res.send(String(reason));
+    errorObj = JSON.parse(reason);
+    res.render('choral', {
+      googleUser: req.user,
+      parentChoralId: req.params.choralId,
+      tabs: [],
+      pastData: {},
+      choralInfo: errorObj.choralInfo,
+      childData: {},
+      timeFrame: timeFrame,
+      errorMsg: errorObj.errorMsg
+    });
   });
   // this promise has now returned an object of child data.
 
@@ -214,22 +236,22 @@ router.get('/:choralId', function(req, res, next) {
   // do parent stuff
   let p3 = p1.then((choral) => {
     parentObj = {
-      choralInfo: {
-        sampleRate: choral.sampleRate,
-        name: choral.name,
-        choralId: choral.choralId
-      }
+      choralInfo: choralInfo
     };
     return new Promise((resolve,reject) => {
       // get parent data from redis, so we can use that to form tabs
       client.hgetall(choral.choralId, (err, data) => {
-        if(err) {
-          logHelper.createLog("error", 'Choral data has not yet been published to redis: ' + err, ["chorals", "get"]);
-          reject("404 - Choral data not found in redis");
-        }
         var tabs = [];
-        if(data == null) {
-          reject("No data found in redis for this choral");
+        if(err || data == null) {
+          logHelper.createLog(
+            "error",
+            'Choral data has not yet been published to redis: ' + err,
+            ["chorals", "get"]
+          );
+          parentObj.errorMsg = "This choral does not have any data yet.\
+                                Make sure you are sending data to the deviceId\
+                                displayed above";
+          reject(JSON.stringify(parentObj));
         } else {
           var parsedData = JSON.parse(data.device_data);
           for( key in parsedData ) {
@@ -250,8 +272,8 @@ router.get('/:choralId', function(req, res, next) {
       cass_client.execute( query , [ choralId,  1 + (timeFrame/parentObj.choralInfo.sampleRate)], { prepare: true }, function( err, result ) {
         if(err || !result) {
           logHelper.createLog("error", 'Choral data was not found in cassandra: ' + err, ["chorals", "get"]);
-          console.log(err);
-          res.send("Choral not found in database");
+          parentObj.errorMsg = "Choral was not found in database, how did you get here?";
+          res.send(JSON.stringify(parentObj));
         }
         var sorted_results = {};
         var rows = result.rows.reverse();
@@ -275,7 +297,17 @@ router.get('/:choralId', function(req, res, next) {
       });
     });
   }).catch((reason) => {
-    res.send(String(reason));
+    parentObj = JSON.parse(reason);
+    res.render('choral', {
+      googleUser: req.user,
+      parentChoralId: req.params.choralId,
+      tabs: [],
+      pastData: {},
+      choralInfo: parentObj.choralInfo,
+      childData: {},
+      timeFrame: timeFrame,
+      errorMsg: parentObj.errorMsg
+    });
   });
   // this promise has now return an object containing the parent data
   // this is the content we are going to display on the graph
