@@ -30,7 +30,7 @@ block content
       - if( !(Object.keys(childData).length === 0 && childData.constructor === Object) )
         h3.child-area-head Children
         each child in childData
-          div.child-card(onclick="location.href='/chorals/"+child.choralId+"';")
+          div.child-card(onclick="location.href='/chorals/"+child.choralId+"?timeFrame=" + timeFrame + "';")
             h4.child-card-header= child.name
             div.child-card-body
               - var device_data = JSON.parse(child.device_data);
