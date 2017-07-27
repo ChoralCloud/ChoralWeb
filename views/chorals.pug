@@ -7,7 +7,7 @@ block content
   hr
   .w3-container
     div.choral-btn-container 
-      +choral_modal()
+      +choral_modal
     table.w3-table.w3-striped.w3-bordered.w3-border.w3-hoverable.w3-white.choral-table
       tr
         td Name
@@ -25,7 +25,7 @@ block content
             a.link-margin.w3-right.w3-btn.w3-red.delete-choral-btn(data-choral-id=choral.choralId)
               span.glyphicon.glyphicon-trash
             if choral.choralType == 'choral'
-              a.link-margin.w3-right.w3-btn.w3-blue(role='button' href='/chorals/edit/' + choral.choralId)
+              +edit_choral_modal
                 span.glyphicon.glyphicon-pencil
             else
               a.link-margin.w3-right.w3-btn.w3-blue(role='button' href='/devices/edit/' + choral.choralId)
