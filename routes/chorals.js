@@ -89,7 +89,7 @@ router.post('/', function(req, res, next) {
     );
 
     res.flash('success', 'New choral created.');
-    res.redirect(req.baseUrl + '/new');
+    res.redirect("/home");
   });
 });
 
