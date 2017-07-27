@@ -323,7 +323,7 @@ router.delete('/:choralId', function(req, res, next) {
         return res.send('500'); // notify client of failure
       }
 
-      // Delete all children choral from parents
+      // Delete this choral from any parents it has
       Choral.update({ children: choral._id }, { $pull: { children: choral._id } }, (err) => {
           if (err) {
           logHelper.createLog("error", 'Error removing child choral: ' + err, ["chorals", "children", "delete"]);
