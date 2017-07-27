@@ -136,6 +136,8 @@ router.get('/:choralId', function(req, res, next) {
     timeFrame = '600';
   }
 
+  var choralInfo = {}
+
   //get parent Choral
   let p1 = new Promise((resolve, reject) => {
     Choral.findOne({ choralId: choralId }, (err, choral) => {
@@ -143,6 +145,9 @@ router.get('/:choralId', function(req, res, next) {
         logHelper.createLog("error", 'Choral does not exist: ' + err, ["chorals", "get"]);
         return res.send('404'); // notify client of failure
       }
+      choralInfo.sampleRate = choral.sampleRate;
+      choralInfo.name = choral.name;
+      choralInfo.choralId = choral.choralId;
       resolve(choral);
     });
   });
@@ -159,15 +164,11 @@ router.get('/:choralId', function(req, res, next) {
           if(err) {
             console.log(err);
             return res.send('404 Chorals child does not exist');
-            dataObj = {
-              choralInfo: {
-                sampleRate: choral.sampleRate,
-                name: choral.name,
-                choralId: choral.choralId
-              },
+            errorObj = {
+              choralInfo: choralInfo,
               errorMsg: "This choral can't retrieve a child's information from mongo"
             };
-            reject(JSON.stringify(dataObj));
+            reject(JSON.stringify(errorObj));
           }
           resolve(child);
         });
@@ -195,15 +196,11 @@ router.get('/:choralId', function(req, res, next) {
               'Choral data has not yet been published to redis: ' + err
               , ["chorals", "get"]
             );
-            dataObj = {
-              choralInfo: {
-                sampleRate: choral.sampleRate,
-                name: choral.name,
-                choralId: choral.choralId
-              },
+            errorObj = {
+              choralInfo: choralInfo,
               errorMsg: "One of the chorals children does not have any data"
             };
-            reject(JSON.stringify(dataObj));
+            reject(JSON.stringify(errorObj));
           }
           if(data == null) {
             reject("data is null");
@@ -221,16 +218,16 @@ router.get('/:choralId', function(req, res, next) {
       return Promise.resolve(childData);
     });
   }).catch((reason) => {
-    dataObj = JSON.parse(reason);
+    errorObj = JSON.parse(reason);
     res.render('choral', {
       googleUser: req.user,
       parentChoralId: req.params.choralId,
       tabs: [],
       pastData: {},
-      choralInfo: dataObj.choralInfo,
+      choralInfo: errorObj.choralInfo,
       childData: {},
       timeFrame: timeFrame,
-      errorMsg: dataObj.errorMsg
+      errorMsg: errorObj.errorMsg
     });
   });
   // this promise has now returned an object of child data.
@@ -239,28 +236,18 @@ router.get('/:choralId', function(req, res, next) {
   // do parent stuff
   let p3 = p1.then((choral) => {
     parentObj = {
-      choralInfo: {
-        sampleRate: choral.sampleRate,
-        name: choral.name,
-        choralId: choral.choralId
-      }
+      choralInfo: choralInfo
     };
     return new Promise((resolve,reject) => {
       // get parent data from redis, so we can use that to form tabs
       client.hgetall(choral.choralId, (err, data) => {
-        if(err) {
+        var tabs = [];
+        if(err || data == null) {
           logHelper.createLog(
             "error",
             'Choral data has not yet been published to redis: ' + err,
             ["chorals", "get"]
           );
-          parentObj.errorMsg = "This choral does not have any data yet.\
-                                Make sure you are sending data to the deviceId\
-                                displayed above";
-          reject(JSON.stringify(parentObj));
-        }
-        var tabs = [];
-        if(data == null) {
           parentObj.errorMsg = "This choral does not have any data yet.\
                                 Make sure you are sending data to the deviceId\
                                 displayed above";
