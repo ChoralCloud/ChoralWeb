@@ -162,12 +162,14 @@
 
 
 .child-card-body-label {
-  width: 70%;
+  width: 50%;
   padding-left: 15px;
 }
 
 .child-card-body-data {
-  width: 30%;
+  width: 50%;
+  word-wrap: break-word;
+  padding-right: 15px;
 }
 
 /*
