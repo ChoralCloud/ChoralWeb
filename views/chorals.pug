@@ -25,7 +25,7 @@ block content
             a.link-margin.w3-right.w3-btn.w3-red.delete-choral-btn(data-choral-id=choral.choralId)
               span.glyphicon.glyphicon-trash
             if choral.choralType == 'choral'
-              +edit_choral_modal
+              +edit_choral_modal(choral, chorals, children)
                 span.glyphicon.glyphicon-pencil
             else
               a.link-margin.w3-right.w3-btn.w3-blue(role='button' href='/devices/edit/' + choral.choralId)

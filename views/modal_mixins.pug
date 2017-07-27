@@ -61,29 +61,38 @@ mixin choral_modal()
             +editScript([], chorals)
             // End page content
 
-mixin edit_choral_modal()
-  button.link-margin.w3-right.w3-btn.w3-blue(type='button' data-toggle="modal" data-target="#myModal").choral-btn-add Edit Choral
-  #myModal.modal.fade(role="dialog")
+mixin edit_choral_modal(choral, chorals, children)
+  a.link-margin.w3-right.w3-btn.w3-blue(type='button' href='/chorals/?chorald='+choral.choralId+'#editModal' data-toggle='modal').choral-btn-add
+    span.glyphicon.glyphicon-pencil
+  #editModal.modal.fade(role='dialog')
     .modal-dialog
       .modal-content
         .modal-header
-          button.close(type="button" data-dismiss="modal") &times;
+          button.close(type='button' data-dismiss='modal') &times;
           h4.modal-title Edit Choral
         .modal-body
           header.w3-container(style='padding-top:22px')
-            form.w3-container(method='POST' action='/devices/edit/'+ deviceEdit.choralId id='mainForm').new-choral-form
+            form.w3-container(method='POST' action='/chorals/edit/'+ choral.choralId id='mainForm').new-choral-form
               .form-group
                 label(for='choralIdInput') ID
-                input#choralIdInput.form-control(name='id' type='text' readonly value=deviceEdit.choralId)
+                input#choralIdInput.form-control(name='id' type='text' readonly value=choral.choralId)
               .form-group
                 label(for='choralNameInput') Name
-                input#choralNameInput.form-control(name='name' type='text' value=deviceEdit.name)
+                input#choralNameInput.form-control(name='name' type='text' value=choral.name)
               .form-group
                 label(for='choralSampleRateInput') Sample Rate (seconds)
                 .input-group
-                  input#choralSampleRateInput.form-control(name='sampleRate' type='text', value=deviceEdit.sampleRate)
-                  .input-group-addon.w3-button.w3-blue seconds (>= 1)
+                  input#choralSampleRateInput.form-control(name='sampleRate' type='text', value=choral.sampleRate)
+                  .input-group-addon.w3-blue seconds (>= 1)
+              .form-group
+                label(for='choralFuncInput') Function
+                textarea#choralFuncInput.form-control(name='func', type='text')= choral.func
+              +children_add(choral)
 
               //Submit main form
               br
-              button.w3-btn.w3-blue(type='submit' form='mainForm') Submit Changes
+              br
+              br
+              button.choral-btn-add(type='submit' form='mainForm') Submit Changes
+
+            +editScript(children, chorals)
